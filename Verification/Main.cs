@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace Verification
 {
@@ -19,6 +16,7 @@ namespace Verification
             InitializeComponent();
             Distribution = new Distribution();
             Distribution.NewDiagramAdded += AddDiagram;
+            Distribution.SomethingChanged += UpdateGUIState;
             dataGridView1.Font = new Font("Microsoft Sans Serif", 14);
         }
 
@@ -61,6 +59,24 @@ namespace Verification
             if (dataGridView1.Columns.Count == 0)
                 dataGridView1.Columns.Add("diagramName", "");
             dataGridView1.Rows.Add(name);
+        }
+
+        // Обновление картинок и списка ошибок
+        private void UpdateGUIState()
+        {
+            if (dataGridView1.SelectedCells.Count !=0)
+            {
+                var selectedName = dataGridView1.SelectedCells[0].Value.ToString();
+                var selectedDiagram = Distribution.AllDiagrams.Find(a => a.Name == selectedName);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox1.Image = selectedDiagram.Image.Bitmap;
+            }
+        }
+
+        // Обновление выделенной диаграммы
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateGUIState();
         }
 
         // При закрытии формы
