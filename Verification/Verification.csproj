@@ -64,6 +64,9 @@
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainHelpers.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Mistake.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

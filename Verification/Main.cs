@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -18,21 +17,13 @@ namespace Verification
             Distribution.NewDiagramAdded += AddDiagram;
             Distribution.SomethingChanged += UpdateGUIState;
             dataGridView1.Font = new Font("Microsoft Sans Serif", 14);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         // Выбор файлов
         private void выбратьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Выберите xmi и png файлы";
-            openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Файлы xmi и png|*.xmi; *.png";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                var allFiles = openFileDialog.FileNames.ToList();
-                Distribution.CreateDiagrams(allFiles);
-            }
+            ChooseFiles();
         }
 
         // Сохранение результата
@@ -53,24 +44,30 @@ namespace Verification
 
         }
 
-        // Добавление новой диаграммы в GUI
-        private void AddDiagram(string name)
+        // Кнопка "добавить" диаграмму
+        private void button4_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Columns.Count == 0)
-                dataGridView1.Columns.Add("diagramName", "");
-            dataGridView1.Rows.Add(name);
+            ChooseFiles();
         }
 
-        // Обновление картинок и списка ошибок
-        private void UpdateGUIState()
+        // Кнопка "удалить" диаграмму
+        private void button3_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedCells.Count !=0)
+            if (dataGridView1.SelectedCells.Count == 0)
             {
-                var selectedName = dataGridView1.SelectedCells[0].Value.ToString();
-                var selectedDiagram = Distribution.AllDiagrams.Find(a => a.Name == selectedName);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBox1.Image = selectedDiagram.Image.Bitmap;
+                MessageBox.Show($"Необходимо выбрать диаграмму", "Верификация диаграмм UML", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
+
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                var selectedName = row.Cells[0].Value.ToString();
+                Distribution.AllDiagrams.RemoveAll(a => a.Name == selectedName);
+                dataGridView1.Rows.RemoveAt(row.Index);
+            }
+
+            if (dataGridView1.Rows.Count == 0)
+                button3.Enabled = false;
         }
 
         // Обновление выделенной диаграммы
