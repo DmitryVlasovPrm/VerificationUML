@@ -10,13 +10,13 @@ namespace Verification
 {
     public class Distribution
     {
-        public List<Diagram> AllDiagrams;
+        public Dictionary<string, Diagram> AllDiagrams;
         public Action<string> NewDiagramAdded;
         public Action SomethingChanged;
 
         public Distribution()
         {
-            AllDiagrams = new List<Diagram>();
+            AllDiagrams = new Dictionary<string, Diagram>();
         }
 
         public void CreateDiagrams(List<string> files)
@@ -33,9 +33,8 @@ namespace Verification
                 {
                     var pathToXmi = xmiFiles[i];
                     var name = Path.GetFileNameWithoutExtension(pathToXmi);
-                    var diagramId = AllDiagrams.FindIndex(a => a.Name == name);
-                    if (diagramId != -1)
-                    {
+                    if (AllDiagrams.ContainsKey(name))
+                    {// Если такая диаграмма уже существует
                         var dialogResult = MessageBox.Show($"Диаграмма c именем {name} уже существует.\nПерезаписать ее?", "Верификация диаграмм UML",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (dialogResult == DialogResult.No)
@@ -44,7 +43,7 @@ namespace Verification
                         }
                         else
                         {
-                            AllDiagrams.RemoveAt(diagramId);
+                            AllDiagrams.Remove(name);
                         }
                     }
                     var pathToPng = files.Find(a => Path.GetFileNameWithoutExtension(a) == name);
@@ -58,7 +57,7 @@ namespace Verification
                     if (pathToPng != null)
                         image = new Image<Bgra, byte>(pathToPng);
                     var diagram = new Diagram(name, root, image);
-                    AllDiagrams.Add(diagram);
+                    AllDiagrams.Add(name, diagram);
 
                     NewDiagramAdded?.Invoke(name);
                     isSomethingChanged = true;
@@ -70,13 +69,13 @@ namespace Verification
                 {
                     var pathToFile = files[i];
                     var name = Path.GetFileNameWithoutExtension(pathToFile);
-                    var diagramId = AllDiagrams.FindIndex(a => a.Name == name);
-                    if (diagramId != -1)
+                   
+                    if (AllDiagrams.ContainsKey(name))
                     {
-                        if (AllDiagrams[diagramId].Image == null)
+                        if (AllDiagrams[name].Image == null)
                         {
                             Image<Bgra, byte> image = new Image<Bgra, byte>(pathToFile);
-                            AllDiagrams[diagramId].Image = image;
+                            AllDiagrams[name].Image = image;
                         }
                         else
                         {
@@ -89,7 +88,7 @@ namespace Verification
                             else
                             {
                                 Image<Bgra, byte> image = new Image<Bgra, byte>(pathToFile);
-                                AllDiagrams[diagramId].Image = image;
+                                AllDiagrams[name].Image = image;
                             }
                         }
                         isSomethingChanged = true;

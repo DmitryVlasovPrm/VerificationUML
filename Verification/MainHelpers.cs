@@ -25,6 +25,14 @@ namespace Verification
         {
             if (diagramsGV.Columns.Count == 0)
                 diagramsGV.Columns.Add("diagramName", "");
+            for (int i = 0; i < diagramsGV.Rows.Count; i++)
+            {
+                var row = diagramsGV.Rows[i];
+                var cell = diagramsGV.Rows[i].Cells[0];
+                if (cell.Value.ToString() == name)
+                    diagramsGV.Rows.Remove(row);
+            }
+
             diagramsGV.Rows.Add(name);
             btVerify.Enabled = true;
             btDelete.Enabled = true;
@@ -43,8 +51,8 @@ namespace Verification
                 diagramsGV.SelectedCells[0].Selected = true;
 
             var selectedName = diagramsGV.SelectedCells[0].Value.ToString();
-            var selectedDiagram = Distribution.AllDiagrams.Find(a => a.Name == selectedName);
-            if (selectedDiagram.Image != null)
+            Distribution.AllDiagrams.TryGetValue(selectedName, out Diagram selectedDiagram);
+            if (selectedDiagram != null && selectedDiagram.Image != null)
                 diagramPicture.Image = selectedDiagram.Image.Bitmap;
             else
                 diagramPicture.Image = null;
