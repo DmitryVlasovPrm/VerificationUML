@@ -43,8 +43,8 @@ namespace Verification
                 diagramsGV.SelectedCells[0].Selected = true;
 
             var selectedName = diagramsGV.SelectedCells[0].Value.ToString();
-            var selectedDiagram = Distribution.AllDiagrams.Find(a => a.Name == selectedName);
-            if (selectedDiagram.Image != null)
+            Distribution.AllDiagrams.TryGetValue(selectedName, out Diagram selectedDiagram);
+            if (selectedDiagram != null && selectedDiagram.Image != null)
                 diagramPicture.Image = selectedDiagram.Image.Bitmap;
             else
                 diagramPicture.Image = null;

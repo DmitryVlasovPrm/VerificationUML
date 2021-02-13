@@ -41,7 +41,8 @@ namespace Verification
         // Кнопка "верифицировать"
         private void btVerify_Click(object sender, EventArgs e)
         {
-
+            var selected = diagramsGV.CurrentCell;
+            
         }
 
         // Кнопка "добавить" диаграмму
@@ -62,7 +63,7 @@ namespace Verification
             foreach (DataGridViewRow row in diagramsGV.SelectedRows)
             {
                 var selectedName = row.Cells[0].Value.ToString();
-                Distribution.AllDiagrams.RemoveAll(a => a.Name == selectedName);
+                Distribution.AllDiagrams.Remove(selectedName);
                 diagramsGV.Rows.RemoveAt(row.Index);
             }
 
