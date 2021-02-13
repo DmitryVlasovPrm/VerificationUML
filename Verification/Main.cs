@@ -33,25 +33,25 @@ namespace Verification
         }
 
         // Кнопка "пакетная обработка"
-        private void button1_Click(object sender, EventArgs e)
+        private void btPackage_Click(object sender, EventArgs e)
         {
 
         }
 
         // Кнопка "верифицировать"
-        private void button2_Click(object sender, EventArgs e)
+        private void btVerify_Click(object sender, EventArgs e)
         {
 
         }
 
         // Кнопка "добавить" диаграмму
-        private void button4_Click(object sender, EventArgs e)
+        private void btAdd_Click(object sender, EventArgs e)
         {
             ChooseFiles();
         }
 
         // Кнопка "удалить" диаграмму
-        private void button3_Click(object sender, EventArgs e)
+        private void btDelete_Click(object sender, EventArgs e)
         {
             if (diagramsGV.SelectedCells.Count == 0)
             {
@@ -71,7 +71,7 @@ namespace Verification
         }
 
         // Обновление выделенной диаграммы
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void diagramsGV_SelectionChanged(object sender, EventArgs e)
         {
             UpdateGUIState();
         }

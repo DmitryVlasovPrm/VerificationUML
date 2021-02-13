@@ -197,7 +197,7 @@ namespace Verification
             this.diagramsGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.diagramsGV.Size = new System.Drawing.Size(393, 262);
             this.diagramsGV.TabIndex = 0;
-            this.diagramsGV.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            this.diagramsGV.SelectionChanged += new System.EventHandler(this.diagramsGV_SelectionChanged);
             // 
             // groupBox1
             // 
@@ -251,7 +251,7 @@ namespace Verification
             this.btDelete.TabIndex = 0;
             this.btDelete.Text = "Удалить";
             this.btDelete.UseVisualStyleBackColor = true;
-            this.btDelete.Click += new System.EventHandler(this.button3_Click);
+            this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
             // 
             // btAdd
             // 
@@ -263,7 +263,7 @@ namespace Verification
             this.btAdd.TabIndex = 1;
             this.btAdd.Text = "Добавить";
             this.btAdd.UseVisualStyleBackColor = true;
-            this.btAdd.Click += new System.EventHandler(this.button4_Click);
+            this.btAdd.Click += new System.EventHandler(this.btAdd_Click);
             // 
             // tableLayoutPanel3
             // 
@@ -295,7 +295,7 @@ namespace Verification
             this.btPackage.TabIndex = 0;
             this.btPackage.Text = "Пакетная обработка";
             this.btPackage.UseVisualStyleBackColor = true;
-            this.btPackage.Click += new System.EventHandler(this.button1_Click);
+            this.btPackage.Click += new System.EventHandler(this.btPackage_Click);
             // 
             // btVerify
             // 
@@ -308,7 +308,7 @@ namespace Verification
             this.btVerify.TabIndex = 1;
             this.btVerify.Text = "Верифицировать";
             this.btVerify.UseVisualStyleBackColor = true;
-            this.btVerify.Click += new System.EventHandler(this.button2_Click);
+            this.btVerify.Click += new System.EventHandler(this.btVerify_Click);
             // 
             // Main
             // 
