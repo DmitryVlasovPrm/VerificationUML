@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace Verification
 {
@@ -19,22 +15,15 @@ namespace Verification
             InitializeComponent();
             Distribution = new Distribution();
             Distribution.NewDiagramAdded += AddDiagram;
-            dataGridView1.Font = new Font("Microsoft Sans Serif", 14);
+            Distribution.SomethingChanged += UpdateGUIState;
+            diagramsGV.Font = new Font("Microsoft Sans Serif", 14);
+            diagramPicture.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         // Выбор файлов
         private void выбратьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Выберите xmi и png файлы";
-            openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Файлы xmi и png|*.xmi; *.png";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                var allFiles = openFileDialog.FileNames.ToList();
-                Distribution.CreateDiagrams(allFiles);
-            }
+            ChooseFiles();
         }
 
         // Сохранение результата
@@ -44,23 +33,48 @@ namespace Verification
         }
 
         // Кнопка "пакетная обработка"
-        private void button1_Click(object sender, EventArgs e)
+        private void btPackage_Click(object sender, EventArgs e)
         {
 
         }
 
         // Кнопка "верифицировать"
-        private void button2_Click(object sender, EventArgs e)
+        private void btVerify_Click(object sender, EventArgs e)
         {
-
+            var selected = diagramsGV.CurrentCell;
+            
         }
 
-        // Добавление новой диаграммы в GUI
-        private void AddDiagram(string name)
+        // Кнопка "добавить" диаграмму
+        private void btAdd_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Columns.Count == 0)
-                dataGridView1.Columns.Add("diagramName", "");
-            dataGridView1.Rows.Add(name);
+            ChooseFiles();
+        }
+
+        // Кнопка "удалить" диаграмму
+        private void btDelete_Click(object sender, EventArgs e)
+        {
+            if (diagramsGV.SelectedCells.Count == 0)
+            {
+                MessageBox.Show($"Необходимо выбрать диаграмму", "Верификация диаграмм UML", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            foreach (DataGridViewRow row in diagramsGV.SelectedRows)
+            {
+                var selectedName = row.Cells[0].Value.ToString();
+                Distribution.AllDiagrams.Remove(selectedName);
+                diagramsGV.Rows.RemoveAt(row.Index);
+            }
+
+            if (diagramsGV.Rows.Count == 0)
+                btDelete.Enabled = false;
+        }
+
+        // Обновление выделенной диаграммы
+        private void diagramsGV_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateGUIState();
         }
 
         // При закрытии формы
