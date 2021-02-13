@@ -25,6 +25,14 @@ namespace Verification
         {
             if (diagramsGV.Columns.Count == 0)
                 diagramsGV.Columns.Add("diagramName", "");
+            for (int i = 0; i < diagramsGV.Rows.Count; i++)
+            {
+                var row = diagramsGV.Rows[i];
+                var cell = diagramsGV.Rows[i].Cells[0];
+                if (cell.Value.ToString() == name)
+                    diagramsGV.Rows.Remove(row);
+            }
+
             diagramsGV.Rows.Add(name);
             btVerify.Enabled = true;
             btDelete.Enabled = true;
