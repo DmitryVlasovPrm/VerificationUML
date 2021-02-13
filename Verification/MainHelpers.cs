@@ -23,31 +23,31 @@ namespace Verification
         // Добавление новой диаграммы в GUI
         private void AddDiagram(string name)
         {
-            if (dataGridView1.Columns.Count == 0)
-                dataGridView1.Columns.Add("diagramName", "");
-            dataGridView1.Rows.Add(name);
-            button2.Enabled = true;
-            button3.Enabled = true;
+            if (diagramsGV.Columns.Count == 0)
+                diagramsGV.Columns.Add("diagramName", "");
+            diagramsGV.Rows.Add(name);
+            btVerify.Enabled = true;
+            btDelete.Enabled = true;
         }
 
         // Обновление картинок и списка ошибок
         private void UpdateGUIState()
         {
-            if (dataGridView1.Rows.Count == 0)
+            if (diagramsGV.Rows.Count == 0)
             {
-                pictureBox1.Image = null;
+                diagramPicture.Image = null;
                 return;
             }
 
-            if (dataGridView1.SelectedCells.Count == 0)
-                dataGridView1.SelectedCells[0].Selected = true;
+            if (diagramsGV.SelectedCells.Count == 0)
+                diagramsGV.SelectedCells[0].Selected = true;
 
-            var selectedName = dataGridView1.SelectedCells[0].Value.ToString();
+            var selectedName = diagramsGV.SelectedCells[0].Value.ToString();
             var selectedDiagram = Distribution.AllDiagrams.Find(a => a.Name == selectedName);
             if (selectedDiagram.Image != null)
-                pictureBox1.Image = selectedDiagram.Image.Bitmap;
+                diagramPicture.Image = selectedDiagram.Image.Bitmap;
             else
-                pictureBox1.Image = null;
+                diagramPicture.Image = null;
         }
     }
 }

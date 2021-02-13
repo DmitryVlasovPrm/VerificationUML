@@ -16,8 +16,8 @@ namespace Verification
             Distribution = new Distribution();
             Distribution.NewDiagramAdded += AddDiagram;
             Distribution.SomethingChanged += UpdateGUIState;
-            dataGridView1.Font = new Font("Microsoft Sans Serif", 14);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            diagramsGV.Font = new Font("Microsoft Sans Serif", 14);
+            diagramPicture.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         // Выбор файлов
@@ -33,45 +33,45 @@ namespace Verification
         }
 
         // Кнопка "пакетная обработка"
-        private void button1_Click(object sender, EventArgs e)
+        private void btPackage_Click(object sender, EventArgs e)
         {
 
         }
 
         // Кнопка "верифицировать"
-        private void button2_Click(object sender, EventArgs e)
+        private void btVerify_Click(object sender, EventArgs e)
         {
 
         }
 
         // Кнопка "добавить" диаграмму
-        private void button4_Click(object sender, EventArgs e)
+        private void btAdd_Click(object sender, EventArgs e)
         {
             ChooseFiles();
         }
 
         // Кнопка "удалить" диаграмму
-        private void button3_Click(object sender, EventArgs e)
+        private void btDelete_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedCells.Count == 0)
+            if (diagramsGV.SelectedCells.Count == 0)
             {
                 MessageBox.Show($"Необходимо выбрать диаграмму", "Верификация диаграмм UML", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow row in diagramsGV.SelectedRows)
             {
                 var selectedName = row.Cells[0].Value.ToString();
                 Distribution.AllDiagrams.RemoveAll(a => a.Name == selectedName);
-                dataGridView1.Rows.RemoveAt(row.Index);
+                diagramsGV.Rows.RemoveAt(row.Index);
             }
 
-            if (dataGridView1.Rows.Count == 0)
-                button3.Enabled = false;
+            if (diagramsGV.Rows.Count == 0)
+                btDelete.Enabled = false;
         }
 
         // Обновление выделенной диаграммы
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void diagramsGV_SelectionChanged(object sender, EventArgs e)
         {
             UpdateGUIState();
         }
