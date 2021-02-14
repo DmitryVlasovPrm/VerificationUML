@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using Verification.type_definer;
 
 namespace Verification
 {
@@ -41,8 +42,29 @@ namespace Verification
         // Кнопка "верифицировать"
         private void btVerify_Click(object sender, EventArgs e)
         {
-            var selected = diagramsGV.CurrentCell;
-            
+            var selectedKey = diagramsGV.CurrentCell.Value.ToString();
+            var curDiagram = Distribution.AllDiagrams[selectedKey];
+            var type = TypeDefiner.DefineDiagramType(curDiagram.XmlInfo);
+
+            switch (type)
+            {
+                case EDiagramTypes.AD:
+                    {
+                        break;
+                    }
+                case EDiagramTypes.UCD:
+                    {
+                        break;
+                    }
+                case EDiagramTypes.CD:
+                    {
+                        break;
+                    }
+                case EDiagramTypes.UNDEF:
+                    {
+                        break;
+                    }
+            }
         }
 
         // Кнопка "добавить" диаграмму
