@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ActivityDiagramVer;
+using ActivityDiagramVer.parser;
+using ActivityDiagramVer.result;
+using ActivityDiagramVer.verification.lexical;
+using ActivityDiagramVer.verification.syntax;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Verification.type_definer;
+using System.Linq;
+using ActivityDiagramVer.verification;
 
 namespace Verification
 {
@@ -50,6 +57,8 @@ namespace Verification
             {
                 case EDiagramTypes.AD:
                     {
+                        MistakeFactory.diagram = curDiagram;
+                        startADVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.UCD:
@@ -64,6 +73,39 @@ namespace Verification
                     {
                         break;
                     }
+            }
+        }
+        private void startADVer(Diagram diagram)
+        {
+            ADNodesList adNodesList = new ADNodesList();
+            XmiParser parser = new XmiParser(adNodesList);
+
+            parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Условный перед join.xmi");
+            //parser.Parse(diagram.Name);     //TODO: путь до xmi
+
+            Debug.println("----------------------");
+            for (int i = 0; i < adNodesList.size(); i++)
+            {
+                Debug.println(adNodesList.get(i).getId() + " " + adNodesList.get(i).getType());
+            }
+            Debug.println("----------------------");
+            adNodesList.connect();
+            adNodesList.print();
+
+
+            LexicalAnalizator lexicalAnalizator = new LexicalAnalizator(Level.EASY);
+            lexicalAnalizator.setDiagramElements(adNodesList);
+            lexicalAnalizator.check();
+
+            SyntaxAnalizator syntaxAnalizator = new SyntaxAnalizator(Level.EASY);
+            syntaxAnalizator.setDiagramElements(adNodesList);
+            syntaxAnalizator.check();
+
+
+            if (!diagram.Mistakes.Any(x => x.Seriousness == (int)Level.FATAL))
+            {
+                PetriNet petriNet = new PetriNet();
+                petriNet.petriCheck(adNodesList);
             }
         }
 

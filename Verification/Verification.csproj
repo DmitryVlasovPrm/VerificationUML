@@ -71,9 +71,7 @@
     <Compile Include="ad_ver\entities\MergeNode.cs" />
     <Compile Include="ad_ver\entities\Swimlane.cs" />
     <Compile Include="ad_ver\parser\XmiParser.cs" />
-    <Compile Include="ad_ver\result\Mistake.cs" />
     <Compile Include="ad_ver\result\MistakeFactory.cs" />
-    <Compile Include="ad_ver\result\Mistakes.cs" />
     <Compile Include="ad_ver\verification\ADNodesList.cs" />
     <Compile Include="ad_ver\verification\Level.cs" />
     <Compile Include="ad_ver\verification\lexical\LexicalAnalizator.cs" />

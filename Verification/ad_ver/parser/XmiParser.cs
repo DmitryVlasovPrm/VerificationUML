@@ -25,7 +25,7 @@ namespace ActivityDiagramVer.parser
 
         private XmlNode findActivePackageEl(XmlNodeList xPackagedList)
         {
-            foreach(XmlNode node in xPackagedList)
+            foreach (XmlNode node in xPackagedList)
             {
                 var attr = node.Attributes["xsi:type"];
                 if (attr == null) continue;
@@ -39,7 +39,7 @@ namespace ActivityDiagramVer.parser
             if (!File.Exists(path))
             {
                 Debug.println("[x] File is not exist");
-                return false; 
+                return false;
             }
             xmlFile = new XmlDocument();
             xmlFile.Load(path);
@@ -76,12 +76,13 @@ namespace ActivityDiagramVer.parser
                 return false;
             }
 
-            foreach (XmlNode node in xRoot.ChildNodes){
+            foreach (XmlNode node in xRoot.ChildNodes)
+            {
                 var elAttr = node.Attributes["xsi:type"];
                 if (elAttr == null) continue;
 
 
-                if (elAttr.Value=="uml:OpaqueAction"|| elAttr.Value == "uml:InitialNode" || elAttr.Value == "uml:ActivityFinalNode" || 
+                if (elAttr.Value == "uml:OpaqueAction" || elAttr.Value == "uml:InitialNode" || elAttr.Value == "uml:ActivityFinalNode" ||
                     elAttr.Value == "uml:FlowFinalNode" || elAttr.Value == "uml:DecisionNode" || elAttr.Value == "uml:MergeNode" ||
                     elAttr.Value == "uml:ForkNode" || elAttr.Value == "uml:JoinNode")
                 {
@@ -138,7 +139,7 @@ namespace ActivityDiagramVer.parser
                     {
                         String idsIn = node.Attributes["incoming"]?.Value;
                         String idsOut = node.Attributes["outgoing"]?.Value;
-                        nodeFromXMI.addIn(idsIn==null? "": idsIn);
+                        nodeFromXMI.addIn(idsIn == null ? "" : idsIn);
                         nodeFromXMI.addOut(idsOut == null ? "" : idsOut);
                     }
                 }
@@ -158,15 +159,15 @@ namespace ActivityDiagramVer.parser
                 // создаем дорожку
                 else if (node.Attributes["xsi:type"].Value.Equals("uml:ActivityPartition"))
                 {
-                    
+
                     Swimlane temp = new Swimlane(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["name"]));
                     temp.setType(ElementType.SWIMLANE);
                     adNodesList.addLast(temp);
-                    
+
                 }
             }
 
-            XmlNode coordRoot=null;
+            XmlNode coordRoot = null;
             try
             {
                 coordRoot = xmlFile.GetElementsByTagName("plane")[0];
@@ -193,18 +194,24 @@ namespace ActivityDiagramVer.parser
          */
         private void findCoordinates(XmlNode packagedElement)
         {
-            foreach(XmlNode nodeCh in packagedElement.ChildNodes)
+            foreach (XmlNode nodeCh in packagedElement.ChildNodes)
             {
                 var attr = nodeCh.Attributes["xsi:type"];
                 if (attr == null) continue;     // если эл-т не имеет атрибут type, он нас не интересует 
                 String id = nodeCh.Attributes["modelElement"]?.Value;
                 String xStr = nodeCh.Attributes["x"]?.Value;
                 String yStr = nodeCh.Attributes["y"]?.Value;
-                int x = 0, y = 0;
-                if (xStr!=null)
+                String widthStr = nodeCh.Attributes["width"]?.Value;
+                String heightStr = nodeCh.Attributes["height"]?.Value;
+                int x = 0, y = 0, width = 0, height = 0;
+                if (xStr != null)
                     x = int.Parse(xStr);
-                if (yStr!=null)
+                if (yStr != null)
                     y = int.Parse(yStr);
+                if (widthStr != null)
+                    width = int.Parse(widthStr);
+                if (heightStr != null)
+                    height = int.Parse(heightStr);
 
                 if (x != 0)
                 {
@@ -216,8 +223,10 @@ namespace ActivityDiagramVer.parser
                 BaseNode node = adNodesList.get(id);
                 if (node != default)
                 {
-                    node.x = x;
-                    node.y = y;
+                    node.X = x;
+                    node.Y = y;
+                    node.Width = width;
+                    node.Height = height;
                 }
             }
 
