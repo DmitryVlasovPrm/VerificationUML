@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Verification.uc_ver
 {
-    public static class Types
+    public static class ElementTypes
     {
         public const string
             Actor = "uml:Actor",
