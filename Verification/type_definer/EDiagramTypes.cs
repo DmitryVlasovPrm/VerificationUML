@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Verification.type_definer
 {
-    enum EDiagramTypes
+    public enum EDiagramTypes
     {
         AD,
         UCD,
