@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Verification.type_definer;
+using Verification.uc_ver;
 
 namespace Verification
 {
@@ -54,6 +55,8 @@ namespace Verification
                     }
                 case EDiagramTypes.UCD:
                     {
+                        var vetificatorUC = new VerificatorUC(curDiagram.XmlInfo);
+                        vetificatorUC.Verificate();
                         break;
                     }
                 case EDiagramTypes.CD:

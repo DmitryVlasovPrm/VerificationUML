@@ -73,6 +73,12 @@
     <Compile Include="Distribution.cs" />
     <Compile Include="type_definer\EDiagramTypes.cs" />
     <Compile Include="type_definer\TypeDefiner.cs" />
+    <Compile Include="uc_ver\Arrow.cs" />
+    <Compile Include="uc_ver\Checker.cs" />
+    <Compile Include="uc_ver\Element.cs" />
+    <Compile Include="uc_ver\Reader.cs" />
+    <Compile Include="uc_ver\Types.cs" />
+    <Compile Include="uc_ver\VerificatorUC.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +108,7 @@
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\EMGU.CV.4.0.1.3373\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.4.0.1.3373\build\EMGU.CV.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
