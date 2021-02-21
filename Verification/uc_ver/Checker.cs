@@ -27,7 +27,7 @@ namespace Verification.uc_ver
         #region Checks
         void CheckActors()
         {
-            var actors = elements.Where(element => element.Value.Type == Types.Actor);
+            var actors = elements.Where(element => element.Value.Type == ElementTypes.Actor);
             foreach (var actorName in actors.GroupBy(a => a.Value.Name))
             {
                 if (actorName.Count() > 1)
@@ -38,32 +38,32 @@ namespace Verification.uc_ver
 
             foreach(var actor in actors)
             {
-                if(!HaveConnection(actor.Key, Types.Association))
+                if(!HaveConnection(actor.Key, ElementTypes.Association))
                     output.Text += $"Актор не имеет ни одной связи типа ассоцияция с прецедентами: {actor.Value.Name}\n";
             }
         }
         void CheckComments()
         {
-            var comments = elements.Where(element => element.Value.Type == Types.Comment);
+            var comments = elements.Where(element => element.Value.Type == ElementTypes.Comment);
             foreach (var comment in comments)
                 if (string.IsNullOrEmpty(comment.Value.Name.Trim()))
                     output.Text += $"Ошибка: Отсутствует текст в условии расширения\n";
         }
         void СheckPackages()
         {
-            var packages = elements.Where(element => element.Value.Type == Types.Package);
+            var packages = elements.Where(element => element.Value.Type == ElementTypes.Package);
             foreach (var package in packages)
                 if (string.IsNullOrEmpty(package.Value.Name.Trim()))
                     output.Text += $"Ошибка: Отсутствует назние системы\n";
         }
         void CheckPrecedents()
         {
-            var extensionPoints = elements.Where(element => element.Value.Type == Types.ExtensionPoint);
+            var extensionPoints = elements.Where(element => element.Value.Type == ElementTypes.ExtensionPoint);
             foreach (var point in extensionPoints)
                 if (string.IsNullOrEmpty(point.Value.Name.Trim()))
                     output.Text += $"Ошибка: Отсутствует текст в точке расширения прецедента\n";
 
-            var precedents = elements.Where(element => element.Value.Type == Types.Precedent);
+            var precedents = elements.Where(element => element.Value.Type == ElementTypes.Precedent);
             foreach (var precedentName in precedents.GroupBy(p => p.Value.Name))
             {
                 if (precedentName.Count() > 1)
@@ -74,10 +74,10 @@ namespace Verification.uc_ver
 
             foreach (var precedent in precedents)
             {
-                bool haveAssociation = HaveConnection(precedent.Value.Id, Types.Association),
-                    haveGeneralization = HaveConnection(precedent.Value.Id, Types.Generalization),
-                    haveExtendsion = HaveConnection(precedent.Value.Id, Types.Extend),
-                    haveIncluding = HaveConnection(precedent.Value.Id, Types.Include);
+                bool haveAssociation = HaveConnection(precedent.Value.Id, ElementTypes.Association),
+                    haveGeneralization = HaveConnection(precedent.Value.Id, ElementTypes.Generalization),
+                    haveExtendsion = HaveConnection(precedent.Value.Id, ElementTypes.Extend),
+                    haveIncluding = HaveConnection(precedent.Value.Id, ElementTypes.Include);
 
                 if (!haveAssociation && !haveGeneralization && !haveExtendsion && !haveIncluding)
                     output.Text += $"Ошибка: Прецедент должен иметь связь с актором в виде ассоциации," +
@@ -88,14 +88,14 @@ namespace Verification.uc_ver
                 {
                     bool havePoint = elements.Where(element =>
                     {
-                        if (element.Value.Type != Types.ExtensionPoint) return false;
+                        if (element.Value.Type != ElementTypes.ExtensionPoint) return false;
                         if (((Arrow)element.Value).To.Equals(precedent.Key))
                             return true;
                         return false;
                     }).Count() > 0;
                     bool extended = elements.Where(element =>
                     {
-                        if (element.Value.Type != Types.Extend) return false;
+                        if (element.Value.Type != ElementTypes.Extend) return false;
                         if (((Arrow)element.Value).To.Equals(precedent.Key))
                             return true;
                         return false;
@@ -109,7 +109,7 @@ namespace Verification.uc_ver
                 {
                     int includesCount = elements.Where(element =>
                     {
-                        if (element.Value.Type != Types.Include) return false;
+                        if (element.Value.Type != ElementTypes.Include) return false;
                         if (((Arrow)element.Value).From.Equals(precedent.Key))
                             return true;
                         return false;

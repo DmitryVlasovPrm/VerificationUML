@@ -14,27 +14,23 @@ namespace Verification.uc_ver
             this.elements = elements;
         }
 
-        public void ReadData(XmlNode root)
+        public void ReadData(XmlElement root)
         {
-            XmlNode coordinates = null;
-            foreach (XmlNode childnode in root.ChildNodes)
+            foreach (XmlNode childnode in root.FirstChild.ChildNodes)
             {
-                if (childnode.Name == "packageImport")
+                if (childnode.Name == "packageImport" || childnode.Name == "xmi:Extension")
                     continue;
-
-                if (childnode.Name == "xmi:Extension")
-                    coordinates = childnode;
 
                 string type = getType(childnode),
                 parent = getParent(childnode),
                 name = getName(childnode),
                 id = getId(childnode);
 
-                if (Types.List.Contains(type))
+                if (ElementTypes.List.Contains(type))
                 {
                     switch (type)
                     {
-                        case Types.Association:
+                        case ElementTypes.Association:
                             {
                                 // обработка ассоциации
                                 string from = childnode.ChildNodes[1].Attributes.GetNamedItem("type")?.Value,
@@ -42,19 +38,19 @@ namespace Verification.uc_ver
                                 elements.Add(id, new Arrow(id, type, name, parent, from, to));
                                 break;
                             }
-                        case Types.Actor:
+                        case ElementTypes.Actor:
                             {
                                 ReadActor(childnode);
                                 elements.Add(id, new Element(id, type, name, parent));
                                 break;
                             }
-                        case Types.Package:
+                        case ElementTypes.Package:
                             {
                                 ReadPackage(childnode);
                                 elements.Add(id, new Element(id, type, name, parent));
                                 break;
                             }
-                        case Types.Precedent:
+                        case ElementTypes.Precedent:
                             {
                                 elements.Add(id, new Element(id, type, name, parent));
                                 ReadPrecedent(childnode);
@@ -62,9 +58,9 @@ namespace Verification.uc_ver
                             }
                         default:
                             {
-                                if (childnode.Name == Types.Comment)
+                                if (childnode.Name == ElementTypes.Comment)
                                 {
-                                    type = Types.Comment;
+                                    type = ElementTypes.Comment;
                                     string to = childnode.Attributes.GetNamedItem("annotatedElement")?.Value;
                                     name = childnode.Attributes.GetNamedItem("body")?.Value;
                                     elements.Add(id, new Arrow(id, type, name, parent, null, to));
@@ -79,25 +75,40 @@ namespace Verification.uc_ver
                     Console.WriteLine($"Недопустимый элемент: {type} - {name}");
             }
 
-            if (coordinates != null)
-                ReadCoordinates(coordinates);
+            if (!ReadCoordinates(root))
+                Console.WriteLine("Координаты отсутствуют");
         }
 
-        private void ReadCoordinates(XmlNode coordinates)
+        private bool ReadCoordinates(XmlElement root)
         {
-            XmlNode eAnnotations = coordinates.FirstChild,
-                contents = null;
-            foreach (XmlNode node in eAnnotations.ChildNodes)
-                if (node.Name == "contens")
-                    contents = node;
-
-            if(contents != null)
+            XmlNode coordRoot;
+            try
             {
-                foreach(XmlNode node in contents.ChildNodes)
-                {
-
-                }
+                coordRoot = root.GetElementsByTagName("plane")[0];
             }
+            catch (NullReferenceException)
+            {
+                return false;
+            }
+
+            foreach (XmlNode node in coordRoot.ChildNodes)
+            {
+                if (node.Attributes["xsi:type"] == null) continue;
+
+                string id = node.Attributes["modelElement"]?.Value,
+                x = node.Attributes["x"]?.Value,
+                y = node.Attributes["y"]?.Value,
+                w = node.Attributes["width"]?.Value,
+                h = node.Attributes["height"]?.Value;
+
+                var element = elements[id];
+                element.X = x;
+                element.Y = y;
+                element.W = w;
+                element.H = h;
+            }
+
+            return true;
         }
 
         private void ReadPackage(XmlNode package)
@@ -114,7 +125,7 @@ namespace Verification.uc_ver
 
                 switch (type)
                 {
-                    case Types.Association:
+                    case ElementTypes.Association:
                         {
                             // обработка ассоциации
                             string from = childnode.ChildNodes[1].Attributes.GetNamedItem("type")?.Value,
@@ -122,7 +133,7 @@ namespace Verification.uc_ver
                             elements.Add(id, new Arrow(id, type, name, parent, from, to));
                             break;
                         }
-                    case Types.Precedent:
+                    case ElementTypes.Precedent:
                         {
                             elements.Add(id, new Element(id, type, name, parent));
                             ReadPrecedent(childnode);
@@ -130,9 +141,9 @@ namespace Verification.uc_ver
                         }
                     default:
                         {
-                            if (childnode.Name == Types.Comment)
+                            if (childnode.Name == ElementTypes.Comment)
                             {
-                                type = Types.Comment;
+                                type = ElementTypes.Comment;
                                 string to = childnode.Attributes.GetNamedItem("annotatedElement")?.Value;
                                 name = childnode.Attributes.GetNamedItem("body")?.Value;
                                 elements.Add(id, new Arrow(id, type, name, parent, null, to));
@@ -159,21 +170,21 @@ namespace Verification.uc_ver
 
                 switch (type)
                 {
-                    case Types.Include:
+                    case ElementTypes.Include:
                         {
                             string from = childnode.Attributes.GetNamedItem("includingCase")?.Value,
                                 to = childnode.Attributes.GetNamedItem("addition")?.Value;
                             elements.Add(id, new Arrow(id, type, name, parent, from, to));
                             break;
                         }
-                    case Types.Extend:
+                    case ElementTypes.Extend:
                         {
                             string from = childnode.Attributes.GetNamedItem("extension")?.Value,
                                 to = childnode.Attributes.GetNamedItem("extendedCase")?.Value;
                             elements.Add(id, new Arrow(id, type, name, parent, from, to));
                             break;
                         }
-                    case Types.ExtensionPoint:
+                    case ElementTypes.ExtensionPoint:
                         {
                             string to = childnode.Attributes.GetNamedItem("useCase")?.Value;
                             elements.Add(id, new Arrow(id, type, name, parent, null, to));
@@ -200,9 +211,9 @@ namespace Verification.uc_ver
                 name = getName(childnode),
                 id = getId(childnode);
 
-                if (childnode.Name == Types.Generalization)
+                if (childnode.Name == ElementTypes.Generalization)
                 {
-                    type = Types.Generalization;
+                    type = ElementTypes.Generalization;
                     string from = childnode.Attributes.GetNamedItem("specific")?.Value,
                         to = childnode.Attributes.GetNamedItem("general")?.Value;
 

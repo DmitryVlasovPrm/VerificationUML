@@ -11,11 +11,11 @@ namespace Verification.uc_ver
     {
         private static Dictionary<string, Element> elements = new Dictionary<string, Element>();
         Reader reader;
-        XmlNode root;
-        public VerificatorUC(XmlNode root)
+        XmlElement root;
+        public VerificatorUC(XmlElement root)
         {
             reader = new Reader(elements);
-            this.root = root.FirstChild;
+            this.root = root;
         }
 
         public void Verificate()
