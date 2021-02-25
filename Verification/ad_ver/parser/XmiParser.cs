@@ -38,7 +38,7 @@ namespace ActivityDiagramVer.parser
         {
             if (!File.Exists(path))
             {
-                Debug.println("[x] File is not exist");
+                Console.WriteLine("[x] File is not exist");
                 return false;
             }
             xmlFile = new XmlDocument();
@@ -52,7 +52,7 @@ namespace ActivityDiagramVer.parser
             }
             catch (NullReferenceException e)
             {
-                Debug.println("[x] Тег packagedElement не найден");
+                Console.WriteLine("[x] Тег packagedElement не найден");
                 return false;
             }
 
@@ -60,19 +60,19 @@ namespace ActivityDiagramVer.parser
             xRoot = findActivePackageEl(xPackagedList);
             if (xRoot == null)
             {
-                Debug.println("[x] Вид диаграммы не AD");
+                Console.WriteLine("[x] Вид диаграммы не AD");
                 return false;
             }
 
             var attr = xRoot.Attributes["xsi:type"];
             if (attr == null)
             {
-                Debug.println("[x] Не удалось распарсить xmi файл");
+                Console.WriteLine("[x] Не удалось распарсить xmi файл");
                 return false;
             }
             if (!attr.Value.Equals("uml:Activity"))
             {
-                Debug.println("[x] Вид диаграммы не AD");
+                Console.WriteLine("[x] Вид диаграммы не AD");
                 return false;
             }
 
@@ -174,7 +174,7 @@ namespace ActivityDiagramVer.parser
             }
             catch (NullReferenceException e)
             {
-                Debug.println("[x] Тег packagedElement не найден");
+                Console.WriteLine("[x] Тег packagedElement не найден");
                 return false;
             }
 

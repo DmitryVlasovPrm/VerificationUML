@@ -90,9 +90,9 @@ namespace ActivityDiagramVer.verification.lexical
             {
                 if (!flow.getText().Equals(""))
                 {
-                    if (!isCond) MistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);
+                    if (!isCond) ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);
                 }
-                else if (notCondButHaveMark) MistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);//writeMistake(Level.HARD.toString(), flow.getType().toString(), "", MISTAKES.HAVE_MARK.toString() + " - \"" + flow.getText() + "\"");
+                else if (notCondButHaveMark) ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);//writeMistake(Level.HARD.toString(), flow.getType().toString(), "", MISTAKES.HAVE_MARK.toString() + " - \"" + flow.getText() + "\"");
             }
         }
 
@@ -101,7 +101,7 @@ namespace ActivityDiagramVer.verification.lexical
             // проверка на заглавную букву
             if ((!swimlane.getName().Substring(0, 1).ToUpper().Equals(swimlane.getName().Substring(0, 1))))
             {
-                MistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), swimlane);
+                ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), swimlane);
                 //            writeMistake(Level.HARD.toString(), swimlane.getType().toString(), swimlane.getName(), MISTAKES.SMALL_LETTER.toString());
             }
         }
@@ -110,15 +110,15 @@ namespace ActivityDiagramVer.verification.lexical
             // проверка на заглавную букву
             if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1))))
             {
-                MistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
                 //            writeMistake(Level.HARD.toString(), activity.getType().toString(), activity.getName(), MISTAKES.SMALL_LETTER.toString());
             }
             // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
             String firstWord = activity.getName().Split(' ')[0];
-            Debug.println(firstWord);
+            //Console.WriteLine(firstWord);
 
             if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
-                MistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.NOT_NOUN), node);
+                ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.NOT_NOUN), node);
             //writeMistake(Level.EASY.toString(), activity.getType().toString(), activity.getName(), MISTAKES.NOT_NOUN.toString());
         }
         private void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
@@ -140,12 +140,12 @@ namespace ActivityDiagramVer.verification.lexical
 
             // поиск совпадающих названий
             if (checkAlt)
-                decision.findEqualAlternatives().ForEach(x => MistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.REPEATED_ALT) + " - " + x, node));// writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.REPEATED_ALT.toString()+" - "+x)
+                decision.findEqualAlternatives().ForEach(x => ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.REPEATED_ALT) + " - " + x, node));// writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.REPEATED_ALT.toString()+" - "+x)
 
             // проверка на альтернативу без подписи
             if (checkAlt)
                 if (decision.findEmptyAlternative())
-                    MistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_EMPTY_ALT), node);
+                    ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_EMPTY_ALT), node);
             //                writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.HAVE_EMPTY_ALT.toString());
 
             // проверка, что альтернативы начинаются с заглавных букв
@@ -155,7 +155,7 @@ namespace ActivityDiagramVer.verification.lexical
                     String alter = decision.getAlternative(i);
                     if (!alter.Equals(""))
                         if (!alter.Substring(0, 1).ToUpper().Equals(alter.Substring(0, 1)))
-                            MistakeFactory.createMistake(level,  " альтернатива \"" + alter + "\"" + MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                            ADMistakeFactory.createMistake(level,  " альтернатива \"" + alter + "\"" + MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
                     //                        writeMistake(level.toString(), decision.getType().toString(), decision.getQuestion()+" альтернатива \""+alter+"\"", MISTAKES.SMALL_LETTER.toString());
                 }
 
@@ -164,7 +164,7 @@ namespace ActivityDiagramVer.verification.lexical
             // проверка, что имеется условие
             if (decision.getQuestion().Equals(""))
             {
-                MistakeFactory.createMistake(Level.HARD,  MistakesAdapter.toString(MISTAKES.HAVE_NOT_QUEST), node);
+                ADMistakeFactory.createMistake(Level.HARD,  MistakesAdapter.toString(MISTAKES.HAVE_NOT_QUEST), node);
                 //            writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.HAVE_NOT_QUEST.toString());
                 checkQuest = false; // дальнейшие проверки условия не требуются (его нет)
             }
@@ -173,13 +173,13 @@ namespace ActivityDiagramVer.verification.lexical
             if (checkQuest)
                 if ((!decision.getQuestion().Substring(0, 1).ToUpper().Equals(decision.getQuestion().Substring(0, 1))))
                 {
-                    MistakeFactory.createMistake(level,  MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                    ADMistakeFactory.createMistake(level,  MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
                     //            writeMistake(level.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.SMALL_LETTER.toString());
                 }
             // заканчивается на знак вопроса
             if (checkQuest)
                 if ((!decision.getQuestion().EndsWith("?")))
-                    MistakeFactory.createMistake(level,  MistakesAdapter.toString(MISTAKES.END_WITH_QUEST), node);
+                    ADMistakeFactory.createMistake(level,  MistakesAdapter.toString(MISTAKES.END_WITH_QUEST), node);
             //            writeMistake(level.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.END_WITH_QUEST.toString());
         }
 

@@ -73,7 +73,7 @@ namespace ActivityDiagramVer.verification.syntax
                 stepResultMasks.Add(copyMask(stepMask));   // Если список масок не изменится, то будет тупик, тк текущая маска уже добавлена в использованные
 
                 int i = 0;
-                Debug.println("Or: " + maskToString(originMask));
+                // Console.WriteLine("Or: " + maskToString(originMask));
 
                 // проходим по всем элементам маски, находим активированные
                 // и проверяем, можно ли активировать следующий элемент
@@ -199,7 +199,7 @@ namespace ActivityDiagramVer.verification.syntax
                 foreach (List<Token> stepResultMask in stepResultMasks)
                 {
                     stepResultMask.ForEach(x=>x.type = x.type == NEW_TOKEN ? TOKEN : x.type);
-                    Debug.println("Re: " + maskToString(stepResultMask));
+                    //Console.WriteLine("Re: " + maskToString(stepResultMask));
                 }
 
                 // заканчиваем тогда, когда leaves пустой или невозможно передвинуть ни один токен
@@ -213,9 +213,9 @@ namespace ActivityDiagramVer.verification.syntax
                             activateIndexes.Append(j).Append(" ");      // сохраняем маску тупика
                     }
                     //                writeMistake("При активации элементов " + activateIndexes+" возник" + MISTAKES.DEAD_ROAD);
-                    MistakeFactory.createMistake(Level.HARD, activateIndexes + " " + MistakeAdapter.toString(MISTAKES.DEAD_ROAD));
+                    ADMistakeFactory.createMistake(Level.HARD, activateIndexes + " " + MistakeAdapter.toString(MISTAKES.DEAD_ROAD));
                 }
-                Debug.print("");
+                //Debug.print("");
                 // проверяем, что новой маски нет во множестве обработанных и добавляем в необработанные в таком случае
                 foreach (List<Token> resultMask in stepResultMasks)
                 {
@@ -237,7 +237,7 @@ namespace ActivityDiagramVer.verification.syntax
                             canReachFinal = true;
                             if (resultMask[indexOfFinalNode].peekLastColor() != NO_COLOR)
                             {
-                                MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.FINAL_COLOR_TOKEN));
+                                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.FINAL_COLOR_TOKEN));
                                 return;
                             }
                             //region Проверка, что не осталось токенов
@@ -253,7 +253,7 @@ namespace ActivityDiagramVer.verification.syntax
                             }
                             if (tokenCount > 1)
                             {
-                                MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END));
+                                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END));
                                 return;
                             }
                             //endregion
@@ -270,12 +270,12 @@ namespace ActivityDiagramVer.verification.syntax
             // проверяем, что конечное состояние было достигнуто
             if (!canReachFinal)
             {
-                MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.COULD_NOT_REACH_FINAL));
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.COULD_NOT_REACH_FINAL));
 
             }
             else
             {
-                Debug.println("Достигли конечное состояние");
+                //Console.WriteLine("Достигли конечное состояние");
             }
         }
 
@@ -338,9 +338,9 @@ namespace ActivityDiagramVer.verification.syntax
                 {
                     //writeMistake("", type.toString(), type==ElementType.ACTIVITY? ((ActivityNode) curNode.getValue()).getName():"", MISTAKES.TWO_TOKENS.toString());
                     if (curNode.getValue().getType() != ElementType.FINAL_NODE)
-                        MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode);
+                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode);
                     else
-                        MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode);
+                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode);
                     return true;
                 }
             }

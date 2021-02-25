@@ -120,17 +120,17 @@ namespace ActivityDiagramVer
             {
                 if (node.getValue() is DiagramElement)
                 {
-                    Debug.print("Cur: [" + ((DiagramElement)node.getValue()).petriId + "] " + ((DiagramElement)node.getValue()).getDescription() + " " + node.getValue().getType() + " | ");
+                    Console.WriteLine("Cur: [" + ((DiagramElement)node.getValue()).petriId + "] " + ((DiagramElement)node.getValue()).getDescription() + " " + node.getValue().getType() + " | ");
                     for (int i = 0; i < node.next.Count; i++)
                     {
-                        Debug.print(node.getNext(i).getValue().getType() + " ");
+                        Console.WriteLine(node.getNext(i).getValue().getType() + " ");
                     }
-                    Debug.print(" || ");
+                    Console.WriteLine(" || ");
                     for (int i = 0; i < node.prev.Count; i++)
                     {
-                        Debug.print(node.prev[i].getValue().getType() + " ");
+                        Console.WriteLine(node.prev[i].getValue().getType() + " ");
                     }
-                    Debug.println("");
+                    Console.WriteLine("");
                 }
             }
         }

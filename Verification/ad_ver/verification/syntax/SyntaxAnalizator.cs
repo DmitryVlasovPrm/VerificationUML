@@ -55,14 +55,14 @@ namespace ActivityDiagramVer.verification.syntax
                     case ElementType.INITIAL_NODE:
                         checkIfInPartion((DiagramElement)currentNode, "", diagramElements.getNode(i));
                         if (((DiagramElement)currentNode).outSize() == 0)
-                            MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_OUT), diagramElements.getNode(i));
+                            ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_OUT), diagramElements.getNode(i));
                         //                        writeMistake(Level.HARD.toString(), currentNode.getType().toString(), "", MISTAKES.NO_OUT.toString());
                         checkInitial();
                         break;
                     case ElementType.FINAL_NODE:
                         checkIfInPartion((DiagramElement)currentNode, "", diagramElements.getNode(i));
                         if (((DiagramElement)currentNode).inSize() == 0)
-                            MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_IN), diagramElements.getNode(i));
+                            ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_IN), diagramElements.getNode(i));
                         //                        writeMistake(Level.HARD.toString(), currentNode.getType().toString(), "", MISTAKES.NO_IN.toString());
                         checkFinal();
                         break;
@@ -94,13 +94,13 @@ namespace ActivityDiagramVer.verification.syntax
                 }
             }
             if (finalCount == 0)
-                MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_FINAL));
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_FINAL));
             //            writeMistake(Level.HARD.toString()+" "+MISTAKES.NO_FINAL.toString());
             if (initialCount == 0)
-                MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_INITIAL));
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_INITIAL));
             //            writeMistake(Level.HARD.toString()+" "+MISTAKES.NO_INITIAL.toString());
             if (activityCount == 0)
-                MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_ACTIVITIES));
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_ACTIVITIES));
             //            writeMistake(Level.HARD.toString()+" "+MISTAKES.NO_ACTIVITIES.toString());
 
             // проверка, что имена активностей уникальны
@@ -110,7 +110,7 @@ namespace ActivityDiagramVer.verification.syntax
                 for (int j = i + 1; j < activities.Count; j++)
                 {
                     if (activities[i].getName().Equals(activities[j].getName()))
-                        MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.REPEATED_ACT), diagramElements.getNode(activities[i].getId()));
+                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.REPEATED_ACT), diagramElements.getNode(activities[i].getId()));
                     //                    writeMistake(Level.HARD.toString(), activities[i].getType().toString(), activities[i].getName(), MISTAKES.REPEATED_ACT.toString());
                 }
             }
@@ -124,7 +124,7 @@ namespace ActivityDiagramVer.verification.syntax
         private void checkIfInPartion(DiagramElement currentNode, String name, ADNodesList.ADNode node)
         {
             if (currentNode.getInPartition().Equals(""))
-                MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_PARTION), node);
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_PARTION), node);
             //            writeMistake(Level.HARD.toString(), currentNode.getType().toString(), name, MISTAKES.NO_PARTION.toString());
         }
 
@@ -137,12 +137,12 @@ namespace ActivityDiagramVer.verification.syntax
         {
             if (currentNode is MergeNode)
                 if ((currentNode).inSize() == 1)
-                    MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MERGE_HAS_1_IN), node);
+                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MERGE_HAS_1_IN), node);
             if ((currentNode).inSize() == 0)
-                MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), node);
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), node);
             //            writeMistake(Level.HARD.toString(), currentNode.getType().toString(), name, MISTAKES.NO_IN.toString());
             if ((currentNode).outSize() == 0)
-                MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), node);
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), node);
             //            writeMistake(Level.HARD.toString(), currentNode.getType().toString(), name, MISTAKES.NO_OUT.toString());
         }
 
@@ -152,7 +152,7 @@ namespace ActivityDiagramVer.verification.syntax
             {
                 ElementType elementType = diagramElements.get(((ControlFlow)diagramElements.get(fork.getOutId(i))).getTarget()).getType();
                 if (elementType != ElementType.ACTIVITY && elementType != ElementType.DECISION && elementType != ElementType.FORK)
-                    MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.OUT_NOT_IN_ACT), node);
+                    ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.OUT_NOT_IN_ACT), node);
                 //                writeMistake(level.toString(), fork.getType().toString(), "", MISTAKES.OUT_NOT_IN_ACT.toString());
             }
         }
@@ -160,7 +160,7 @@ namespace ActivityDiagramVer.verification.syntax
         private void checkInitial()
         {
             initialCount++;
-            if (initialCount > 1) MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));//writeMistake("["+Level.HARD.toString()+"] "+MISTAKES.MORE_THAN_ONE_INIT.toString());
+            if (initialCount > 1) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));//writeMistake("["+Level.HARD.toString()+"] "+MISTAKES.MORE_THAN_ONE_INIT.toString());
 
         }
         private void checkFinal()
@@ -172,7 +172,7 @@ namespace ActivityDiagramVer.verification.syntax
             activityCount++;
             // активность имеет больше одного выходящего перехода
             if (activity.outSize() >= 2)
-                MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
             //            writeMistake(Level.HARD.toString(), activity.getType().toString(), activity.getName(), MISTAKES.MORE_THAN_ONE_OUT.toString());
         }
 
@@ -182,7 +182,7 @@ namespace ActivityDiagramVer.verification.syntax
             // проверка, что альтернативы есть
             if (decision.alternativeSize() == 0)
             {
-                MistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.DO_NOT_HAVE_ALT), node);
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.DO_NOT_HAVE_ALT), node);
                 //            writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.DO_NOT_HAVE_ALT.toString());
                 checkAlt = false;
             }
@@ -191,7 +191,7 @@ namespace ActivityDiagramVer.verification.syntax
             if (checkAlt)
                 if (decision.alternativeSize() == 1)
                 {
-                    MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.ONLY_ONE_ALT), node);
+                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.ONLY_ONE_ALT), node);
                     //            writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.ONLY_ONE_ALT.toString());
                 }
 
@@ -204,18 +204,18 @@ namespace ActivityDiagramVer.verification.syntax
                     for (int j = i + 1; j < decision.outSize(); j++)
                     {
                         if (targetId.Equals(((ControlFlow)diagramElements.get(decision.getOutId(j))).getTarget()))
-                            MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SAME_TARGET), node);
+                            ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SAME_TARGET), node);
                         //                        writeMistake(Level.HARD.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.SAME_TARGET.toString());
                         
                     }
                     if (diagramElements.get(targetId).getType() == ElementType.DECISION)
-                        MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
+                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
                     //                        writeMistake(level.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.NEXT_DECISION.toString());
                 }
                 // проверка на последовательность условных операторов
                 String targetId2 = ((ControlFlow)diagramElements.get(decision.getOutId(decision.outSize() - 1))).getTarget();
                 if (diagramElements.get(targetId2).getType() == ElementType.DECISION)
-                    MistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
+                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
                 //                writeMistake(level.toString(), decision.getType().toString(), decision.getQuestion(), MISTAKES.NEXT_DECISION.toString());
 
             }
