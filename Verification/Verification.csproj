@@ -92,6 +92,9 @@
     <Compile Include="Distribution.cs" />
     <Compile Include="type_definer\EDiagramTypes.cs" />
     <Compile Include="type_definer\TypeDefiner.cs" />
+    <Compile Include="WaitingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

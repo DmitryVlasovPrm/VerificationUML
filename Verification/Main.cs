@@ -19,7 +19,6 @@ namespace Verification
     public partial class Main : Form
     {
         public Distribution Distribution;
-
         public Main()
         {
             InitializeComponent();
@@ -48,46 +47,54 @@ namespace Verification
 
         }
 
+
         // Кнопка "верифицировать"
         private void btVerify_Click(object sender, EventArgs e)
         {
             var selectedKey = diagramsGV.CurrentCell.Value.ToString();
             var curDiagram = Distribution.AllDiagrams[selectedKey];
 
-            showMsg("Определяем тип диаграммы", "Сообщение");
+            //showMsg("Определяем тип диаграммы", "Сообщение");
             var type = TypeDefiner.DefineDiagramType(curDiagram.XmlInfo);
 
-            var bw = new BackgroundWorker();
 
+            string waitingFormMsg = "";
+            BackgroundWorker bw = new BackgroundWorker();
             switch (type)
             {
                 case EDiagramTypes.AD:
                     {
-                        showMsg("Верификация диаграммы активностей начата", "Сообщение");
+                        //showMsg("Верификация диаграммы активностей начата", "Сообщение");
                         ADMistakeFactory.diagram = curDiagram;
-                        bw.DoWork += (obj, ex)=>startADVer(curDiagram);
-                        startADVer(curDiagram);
+                        waitingFormMsg = "Верификация ДА";
+                        bw.DoWork += (obj, ex) => startADVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.UCD:
                     {
+                        waitingFormMsg = "Верификация ДП";
+                        bw.DoWork += (obj, ex) => startUCDVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.CD:
                     {
+                        waitingFormMsg = "Верификация ДК";
+                        bw.DoWork += (obj, ex) => startCDVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.UNDEF:
                     {
                         showMsg("Тип диаграммы не определен", "Сообщение");
-                        break;
+                        return;
                     }
             }
-
-            InitializationWaitingForm();
-            waitingForm.Show();
-            bw.RunWorkerCompleted += bw_RunWorkerCompleted;
+            WaitingForm waitingForm = new WaitingForm();
+            waitingForm.InitializationWaitingForm(this, waitingFormMsg);        // инициализация прогресс бара
+            waitingForm.show();
+            bw.RunWorkerCompleted += waitingForm.bw_RunWorkerCompleted;
             bw.RunWorkerAsync();
+
+
         }
         private void showMsg(string msg, string title)
         {
@@ -118,7 +125,7 @@ namespace Verification
             //Console.WriteLine("----------------------");
             if (!isSuccess)
             {
-                showMsg("Не удалось получить диаграмму активности из xmi файла: \n"+diagram.Name, "Сообщение");
+                showMsg("Не удалось получить диаграмму активности из xmi файла: \n" + diagram.Name, "Сообщение");
                 return;
             }
             adNodesList.connect();
@@ -141,52 +148,8 @@ namespace Verification
             }
             showMsg("Верификация завершена", "Сообщение");
         }
-
-        Form waitingForm;
-        ProgressBar pBar;
-
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            pBar.MarqueeAnimationSpeed = 0;
-            pBar.Style = ProgressBarStyle.Blocks;
-            pBar.Value = pBar.Minimum;
-            waitingForm.Close();
-            waitingForm.Dispose();
-        }
-        private void OnLostFocus(object sender, EventArgs e)
-        {
-            base.OnLostFocus(e);
-            waitingForm.Focus();
-        }
-
-        private void InitializationWaitingForm()
-        {
-            waitingForm = new Form();
-            waitingForm.Owner = this;
-            waitingForm.FormBorderStyle = FormBorderStyle.Sizable;
-            waitingForm.ControlBox = false;
-            waitingForm.StartPosition = FormStartPosition.CenterScreen;
-
-            waitingForm.LostFocus += OnLostFocus;
-            waitingForm.TopMost = true;
-
-            waitingForm.Width = 200;
-            waitingForm.Height = 100;
-
-            Label label = new Label();
-            label.Text = "Ожидание завершения операции";
-            label.Dock = DockStyle.Top;
-            waitingForm.Controls.Add(label);
-
-
-
-            pBar = new ProgressBar();
-            pBar.Dock = DockStyle.Bottom;
-            pBar.Style = ProgressBarStyle.Marquee;
-            pBar.MarqueeAnimationSpeed = 50;
-            waitingForm.Controls.Add(pBar);
-            waitingForm.Visible = false;
-        }
+        private void startUCDVer(Diagram diagram) { }
+        private void startCDVer(Diagram diagram) { }
 
 
         // Кнопка "добавить" диаграмму
