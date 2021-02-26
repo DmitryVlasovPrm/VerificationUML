@@ -6,7 +6,7 @@ using Verification.type_definer;
 
 namespace Verification.uc_ver
 {
-    public class MistakeGenerator
+    public class UCMistakeFactory
     {
         private static int noCoordinates = -1;
         public static Diagram diagram;

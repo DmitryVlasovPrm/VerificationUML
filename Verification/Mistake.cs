@@ -5,37 +5,24 @@ namespace Verification
 {
     public class Mistake
     {
-        public Guid Id;
+        private Guid Id { get; set; }
 
         [Obsolete("This field is obsolete. Use NewProperty instead.", false)]
-        public int Type;
-        public EDiagramTypes eType;     // Добавлен enum вместо 
+        private EDiagramTypes EType { get; set; }
+        private int Seriousness { get; set; }
+        private string Text { get; set; }
+        private int X { get; set; }
+        private int Y { get; set; }
+        private int W { get; set; }
+        private int H { get; set; }
 
-        public int Seriousness;
-        public string Text;
-        public int X;
-        public int Y;
-        public int W;
-        public int H;
-
-        [Obsolete("This constructor is obsolete. Use another instead.", false)]
-        public Mistake(int type, int seriousness, string text, int x, int y, int w, int h)
-        {
-            Id = new Guid();
-            Type = type;
-            Seriousness = seriousness;
-            Text = text;
-            X = x;
-            Y = y;
-            W = w;
-            H = h;
-        }
+        [Obsolete]
         public Mistake(EDiagramTypes eType, int seriousness, string text, int x, int y, int w, int h)
         {
             Id = new Guid();
-            this.eType = eType;
+            EType = eType;
             Seriousness = seriousness;
-            Text = text;
+            Text = $"{MistakesTypes.Strings[seriousness]}: {text}";
             X = x;
             Y = y;
             W = w;
