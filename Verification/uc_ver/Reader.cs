@@ -103,6 +103,8 @@ namespace Verification.uc_ver
                 w = node.Attributes["width"]?.Value,
                 h = node.Attributes["height"]?.Value;
 
+                if (!elements.ContainsKey(id)) continue;
+
                 var element = elements[id];
                 element.X = x;
                 element.Y = y;

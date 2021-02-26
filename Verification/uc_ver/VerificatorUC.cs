@@ -9,11 +9,12 @@ namespace Verification.uc_ver
 {
     class VerificatorUC
     {
-        private static Dictionary<string, Element> elements = new Dictionary<string, Element>();
+        private Dictionary<string, Element> elements;
         private Reader reader;
         private Diagram diagram;
         public VerificatorUC(Diagram diagram)
         {
+            elements = new Dictionary<string, Element>();
             reader = new Reader(elements, diagram.Mistakes);
             this.diagram = diagram;
         }

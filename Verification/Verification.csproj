@@ -81,6 +81,9 @@
     <Compile Include="uc_ver\MistakeGenerator.cs" />
     <Compile Include="uc_ver\Reader.cs" />
     <Compile Include="uc_ver\VerificatorUC.cs" />
+    <Compile Include="WaitingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
