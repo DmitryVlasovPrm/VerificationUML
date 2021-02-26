@@ -1,24 +1,26 @@
 ﻿using System;
+using Verification.type_definer;
 
 namespace Verification
 {
     public class Mistake
     {
-        public Guid Id;
-        public int Type;
-        public int Seriousness;
-        public string Text;
-        public int X;
-        public int Y;
-        public int W;
-        public int H;
+        private Guid Id { get; set; }
 
-        public Mistake(int type, int seriousness, string text, int x, int y, int w, int h)
+        private EDiagramTypes EType { get; set; }
+        private int Seriousness { get; set; }
+        private string Text { get; set; }
+        private int X { get; set; }
+        private int Y { get; set; }
+        private int W { get; set; }
+        private int H { get; set; }
+
+        public Mistake(EDiagramTypes eType, int seriousness, string text, int x, int y, int w, int h)
         {
             Id = new Guid();
-            Type = type;
+            EType = eType;
             Seriousness = seriousness;
-            Text = text;
+            Text = $"{MistakesTypes.Strings[seriousness]}: {text}";
             X = x;
             Y = y;
             W = w;

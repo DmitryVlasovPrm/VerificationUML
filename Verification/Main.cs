@@ -4,6 +4,10 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Verification.type_definer;
+using Verification.uc_ver;
+using System.Linq;
+using System.ComponentModel;
+using System.Threading;
 
 namespace Verification
 {
@@ -44,28 +48,64 @@ namespace Verification
         {
             var selectedKey = diagramsGV.CurrentCell.Value.ToString();
             var curDiagram = Distribution.AllDiagrams[selectedKey];
+
+            //ShowMsg("Определяем тип диаграммы", "Сообщение");
             var type = TypeDefiner.DefineDiagramType(curDiagram.XmlInfo);
+
+            string waitingFormMsg = "";
+            var bw = new BackgroundWorker();
+            curDiagram.Mistakes.Clear();
 
             switch (type)
             {
                 case EDiagramTypes.AD:
                     {
+                        waitingFormMsg = "Верификация ДА";
+                        bw.DoWork += (obj, ex) => StartADVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.UCD:
                     {
+                        waitingFormMsg = "Верификация ДП";
+                        bw.DoWork += (obj, ex) => StartUCDVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.CD:
                     {
+                        waitingFormMsg = "Верификация ДК";
+                        bw.DoWork += (obj, ex) => StartCDVer(curDiagram);
                         break;
                     }
                 case EDiagramTypes.UNDEF:
                     {
-                        break;
+                        ShowMsg("Тип диаграммы не определен", "Сообщение");
+                        return;
                     }
             }
+            var waitingForm = new WaitingForm();
+            waitingForm.InitializationWaitingForm(this, waitingFormMsg); // инициализация прогресс бара
+            waitingForm.show();
+            bw.RunWorkerCompleted += waitingForm.bw_RunWorkerCompleted;
+            bw.RunWorkerAsync();
         }
+        private void ShowMsg(string msg, string title)
+        {
+            DialogResult result = MessageBox.Show(
+            msg,
+            title,
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information,
+            MessageBoxDefaultButton.Button1,
+            MessageBoxOptions.DefaultDesktopOnly);
+        }
+        private void StartADVer(Diagram diagram) { }
+        private void StartUCDVer(Diagram diagram)
+        {
+            var vetificatorUC = new VerificatorUC(diagram);
+            vetificatorUC.Verificate();
+        }
+        private void StartCDVer(Diagram diagram) { }
+
 
         // Кнопка "добавить" диаграмму
         private void btAdd_Click(object sender, EventArgs e)
