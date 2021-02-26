@@ -16,7 +16,7 @@ namespace Verification.uc_ver
             this.mistakes = mistakes;
         }
 
-        public void ReadData(XmlElement root)
+        public List<Mistake> ReadData(XmlElement root)
         {
             foreach (XmlNode childnode in root.FirstChild.ChildNodes)
             {
@@ -68,17 +68,23 @@ namespace Verification.uc_ver
                                     elements.Add(id, new Arrow(id, type, name, parent, null, to));
                                 }
                                 else
-                                    Console.WriteLine($"Элемент находится за пределами системы: {type} - {name}");
+                                    mistakes.Add(UCMistakeFactory.Create(
+                                        MistakesTypes.ERROR,
+                                        $"Элемент находится за пределами системы: {type} - {name}"));
                                 break;
                             }
                     }
                 }
                 else
-                    Console.WriteLine($"Недопустимый элемент: {type} - {name}");
+                    mistakes.Add(UCMistakeFactory.Create(
+                        MistakesTypes.ERROR,
+                        $"Недопустимый элемент: {type} - {name}"));
             }
 
             if (!ReadCoordinates(root))
-                Console.WriteLine("Координаты отсутствуют");
+                mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
+
+            return mistakes;
         }
 
         private bool ReadCoordinates(XmlElement root)
@@ -106,13 +112,25 @@ namespace Verification.uc_ver
                 if (!elements.ContainsKey(id)) continue;
 
                 var element = elements[id];
-                element.X = x;
-                element.Y = y;
-                element.W = w;
-                element.H = h;
+                element.X = ConvertCoordinates(x);
+                element.Y = ConvertCoordinates(y);
+                element.W = ConvertCoordinates(w);
+                element.H = ConvertCoordinates(h);
             }
 
             return true;
+        }
+
+        int ConvertCoordinates(string str)
+        {
+            try
+            {
+                return int.Parse(str);
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
         }
 
         private void ReadPackage(XmlNode package)
@@ -153,7 +171,9 @@ namespace Verification.uc_ver
                                 elements.Add(id, new Arrow(id, type, name, parent, null, to));
                             }
                             else
-                                Console.WriteLine($"Недопустимый элемент внутри системы {getName(package)}: {id} - {name}");
+                                mistakes.Add(UCMistakeFactory.Create(
+                                    MistakesTypes.ERROR,
+                                    $"Недопустимый элемент внутри системы {getName(package)}: {id} - {name}"));
                             break;
                         }
                 }
@@ -196,7 +216,9 @@ namespace Verification.uc_ver
                         }
                     default:
                         {
-                            Console.WriteLine($"Недопустимый элемент элемент внутри системы {getName(precedent.ParentNode)}: {type} - {name}");
+                            mistakes.Add(UCMistakeFactory.Create(
+                                MistakesTypes.ERROR,
+                                $"Недопустимый элемент элемент внутри системы {getName(precedent.ParentNode)}: {type} - {name}"));
                             break;
                         }
                 }
@@ -224,7 +246,7 @@ namespace Verification.uc_ver
                     elements.Add(id, new Arrow(id, type, name, parent, from, to));
                 }
                 else
-                    Console.WriteLine($"Недопустимый элемент: {type} - {name}");
+                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.ERROR, $"Недопустимый элемент: {type} - {name}"));
             }
         }
 

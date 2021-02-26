@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Verification.uc_ver
 {
-    class Arrow : Element
+    public class Arrow : Element
     {
         public string From { get; set; }
         public string To { get; set; }

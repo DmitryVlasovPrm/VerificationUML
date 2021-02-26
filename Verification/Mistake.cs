@@ -7,7 +7,6 @@ namespace Verification
     {
         private Guid Id { get; set; }
 
-        [Obsolete("This field is obsolete. Use NewProperty instead.", false)]
         private EDiagramTypes EType { get; set; }
         private int Seriousness { get; set; }
         private string Text { get; set; }
@@ -16,7 +15,6 @@ namespace Verification
         private int W { get; set; }
         private int H { get; set; }
 
-        [Obsolete]
         public Mistake(EDiagramTypes eType, int seriousness, string text, int x, int y, int w, int h)
         {
             Id = new Guid();

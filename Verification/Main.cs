@@ -52,9 +52,10 @@ namespace Verification
             ShowMsg("Определяем тип диаграммы", "Сообщение");
             var type = TypeDefiner.DefineDiagramType(curDiagram.XmlInfo);
 
-
             string waitingFormMsg = "";
-            BackgroundWorker bw = new BackgroundWorker();
+            var bw = new BackgroundWorker();
+            curDiagram.Mistakes.Clear();
+
             switch (type)
             {
                 case EDiagramTypes.AD:
@@ -81,13 +82,11 @@ namespace Verification
                         return;
                     }
             }
-            WaitingForm waitingForm = new WaitingForm();
+            var waitingForm = new WaitingForm();
             waitingForm.InitializationWaitingForm(this, waitingFormMsg); // инициализация прогресс бара
             waitingForm.show();
             bw.RunWorkerCompleted += waitingForm.bw_RunWorkerCompleted;
             bw.RunWorkerAsync();
-
-
         }
         private void ShowMsg(string msg, string title)
         {

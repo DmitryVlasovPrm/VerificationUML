@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Verification.uc_ver
 {
-    class Element
+    public class Element
     {
         public string Id { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
         public string Parent { get; set; }
-        public string X { get; set; }
-        public string Y { get; set; }
-        public string H { get; set; }
-        public string W { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int H { get; set; }
+        public int W { get; set; }
 
 
         public Element(string id, string type, string name, string parent)
@@ -24,6 +24,7 @@ namespace Verification.uc_ver
             Type = type;
             Name = name;
             Parent = parent;
+            X = Y = H = W = -1;
         }
     }
 
