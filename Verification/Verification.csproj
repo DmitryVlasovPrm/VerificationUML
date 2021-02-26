@@ -76,8 +76,10 @@
     <Compile Include="uc_ver\Arrow.cs" />
     <Compile Include="uc_ver\Checker.cs" />
     <Compile Include="uc_ver\Element.cs" />
+    <Compile Include="uc_ver\ElementTypes.cs" />
+    <Compile Include="uc_ver\ErrorTypes.cs" />
+    <Compile Include="uc_ver\MistakeGenerator.cs" />
     <Compile Include="uc_ver\Reader.cs" />
-    <Compile Include="uc_ver\Types.cs" />
     <Compile Include="uc_ver\VerificatorUC.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

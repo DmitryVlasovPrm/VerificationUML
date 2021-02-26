@@ -8,10 +8,12 @@ namespace Verification.uc_ver
     class Reader
     {
         private Dictionary<string, Element> elements;
+        private List<Mistake> mistakes;
 
-        public Reader(Dictionary<string, Element> elements)
+        public Reader(Dictionary<string, Element> elements, List<Mistake> mistakes)
         {
             this.elements = elements;
+            this.mistakes = mistakes;
         }
 
         public void ReadData(XmlElement root)

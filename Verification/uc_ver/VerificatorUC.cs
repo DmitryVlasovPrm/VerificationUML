@@ -10,17 +10,17 @@ namespace Verification.uc_ver
     class VerificatorUC
     {
         private static Dictionary<string, Element> elements = new Dictionary<string, Element>();
-        Reader reader;
-        XmlElement root;
-        public VerificatorUC(XmlElement root)
+        private Reader reader;
+        private Diagram diagram;
+        public VerificatorUC(Diagram diagram)
         {
-            reader = new Reader(elements);
-            this.root = root;
+            reader = new Reader(elements, diagram.Mistakes);
+            this.diagram = diagram;
         }
 
         public void Verificate()
         {
-            reader.ReadData(root);
+            reader.ReadData(diagram.XmlInfo);
         }
     }
 }

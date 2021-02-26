@@ -55,7 +55,7 @@ namespace Verification
                     }
                 case EDiagramTypes.UCD:
                     {
-                        var vetificatorUC = new VerificatorUC(curDiagram.XmlInfo);
+                        var vetificatorUC = new VerificatorUC(curDiagram);
                         vetificatorUC.Verificate();
                         break;
                     }
