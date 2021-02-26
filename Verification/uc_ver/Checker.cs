@@ -9,12 +9,12 @@ namespace Verification.uc_ver
 {
     class Checker
     {
-        private RichTextBox output;
         private Dictionary<string, Element> elements;
-        public Checker(RichTextBox output, Dictionary<string, Element> elements)
+        private List<Mistake> mistakes;
+        public Checker(Dictionary<string, Element> elements, List<Mistake> mistakes)
         {
-            this.output = output;
             this.elements = elements;
+            this.mistakes = mistakes;
         }
         public void Check()
         {
@@ -31,15 +31,42 @@ namespace Verification.uc_ver
             foreach (var actorName in actors.GroupBy(a => a.Value.Name))
             {
                 if (actorName.Count() > 1)
-                    output.Text += $"Ошибка: Имя актора повторяется: {actorName.Key}\n";
+                {
+                    var errorElements = elements
+                        .Where(element => element.Value.Type == ElementTypes.Actor && element.Value.Name == actorName.Key);
+
+                    foreach (var element in errorElements)
+                    {
+                        mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Ошибка: Имя актора повторяется: {actorName.Key}",
+                            element.Value));
+                    }
+                }
                 if (string.IsNullOrEmpty(actorName.Key.Trim()) || !char.IsUpper(actorName.Key[0]))
-                    output.Text += $"Ошибка: Имя актора должно быть представлено в виде существительного с заглавной буквы: {actorName.Key}\n";
+                {
+                    var errorElements = elements
+                       .Where(element => element.Value.Type == ElementTypes.Actor && element.Value.Name == actorName.Key);
+
+                    foreach (var element in errorElements)
+                    {
+                        mistakes.Add(UCMistakeFactory.Create(
+                           MistakesTypes.ERROR,
+                           $"Ошибка: Имя актора должно быть представлено в виде существительного с заглавной буквы: {actorName.Key}",
+                           element.Value));
+                    }
+                }
             }
 
-            foreach(var actor in actors)
+            foreach (var actor in actors)
             {
-                if(!HaveConnection(actor.Key, ElementTypes.Association))
-                    output.Text += $"Актор не имеет ни одной связи типа ассоцияция с прецедентами: {actor.Value.Name}\n";
+                if (!HaveConnection(actor.Key, ElementTypes.Association))
+                {
+                    mistakes.Add(UCMistakeFactory.Create(
+                           MistakesTypes.ERROR,
+                           $"Актор не имеет ни одной связи типа ассоцияция с прецедентами: {actor.Value.Name}",
+                           actor.Value));
+                }
             }
         }
         void CheckComments()
@@ -101,7 +128,7 @@ namespace Verification.uc_ver
                         return false;
                     }).Count() > 0;
 
-                    if(extended && !havePoint)
+                    if (extended && !havePoint)
                         output.Text += $"Ошибка: Отсутствие точки расширения у прецедента с связью расширения: {precedent.Value.Name}\n";
                 }
 
@@ -115,7 +142,7 @@ namespace Verification.uc_ver
                         return false;
                     }).Count();
 
-                    if(includesCount > 0 && includesCount < 2)
+                    if (includesCount > 0 && includesCount < 2)
                         output.Text += $"Предупреждение: Прецедент включает всего один прецедент: {precedent.Value.Name}\n";
                 }
             }
