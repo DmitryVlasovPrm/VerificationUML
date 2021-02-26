@@ -39,7 +39,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
-                            $"Ошибка: Имя актора повторяется: {actorName.Key}",
+                            $"Имя актора повторяется: {actorName.Key}",
                             element.Value));
                     }
                 }
@@ -52,7 +52,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.ERROR,
-                           $"Ошибка: Имя актора должно быть представлено в виде существительного с заглавной буквы: {actorName.Key}",
+                           $"Имя актора должно быть представлено в виде существительного с заглавной буквы: {actorName.Key}",
                            element.Value));
                     }
                 }
@@ -74,29 +74,66 @@ namespace Verification.uc_ver
             var comments = elements.Where(element => element.Value.Type == ElementTypes.Comment);
             foreach (var comment in comments)
                 if (string.IsNullOrEmpty(comment.Value.Name.Trim()))
-                    output.Text += $"Ошибка: Отсутствует текст в условии расширения\n";
+                {
+                    mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                             $"Отсутствует текст в условии расширения",
+                            comment.Value));
+                }
         }
         void СheckPackages()
         {
             var packages = elements.Where(element => element.Value.Type == ElementTypes.Package);
             foreach (var package in packages)
                 if (string.IsNullOrEmpty(package.Value.Name.Trim()))
-                    output.Text += $"Ошибка: Отсутствует назние системы\n";
+                {
+                    mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Отсутствует назние системы",
+                            package.Value));
+                }
         }
         void CheckPrecedents()
         {
             var extensionPoints = elements.Where(element => element.Value.Type == ElementTypes.ExtensionPoint);
             foreach (var point in extensionPoints)
                 if (string.IsNullOrEmpty(point.Value.Name.Trim()))
-                    output.Text += $"Ошибка: Отсутствует текст в точке расширения прецедента\n";
+                {
+                    mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Отсутствует текст в точке расширения прецедента",
+                            point.Value));
+                }
 
             var precedents = elements.Where(element => element.Value.Type == ElementTypes.Precedent);
             foreach (var precedentName in precedents.GroupBy(p => p.Value.Name))
             {
                 if (precedentName.Count() > 1)
-                    output.Text += $"Ошибка: Имя прецедента повторяется: {precedentName.Key}\n";
+                {
+                    var errorElements = elements
+                        .Where(element => element.Value.Type == ElementTypes.Precedent && element.Value.Name == precedentName.Key);
+
+                    foreach (var element in errorElements)
+                    {
+                        mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Имя прецедента повторяется: {precedentName.Key}",
+                            element.Value));
+                    }
+                }
                 if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]))
-                    output.Text += $"Ошибка: Имя прецедента должно быть представлено в виде действия, начинаясь с заглавной буквы: {precedentName.Key}\n";
+                {
+                    var errorElements = elements
+                        .Where(element => element.Value.Type == ElementTypes.Precedent && element.Value.Name == precedentName.Key);
+
+                    foreach (var element in errorElements)
+                    {
+                        mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Имя прецедента должно быть представлено в виде действия, начинаясь с заглавной буквы: {precedentName.Key}",
+                            element.Value));
+                    }
+                }
             }
 
             foreach (var precedent in precedents)
@@ -107,9 +144,14 @@ namespace Verification.uc_ver
                     haveIncluding = HaveConnection(precedent.Value.Id, ElementTypes.Include);
 
                 if (!haveAssociation && !haveGeneralization && !haveExtendsion && !haveIncluding)
-                    output.Text += $"Ошибка: Прецедент должен иметь связь с актором в виде ассоциации," +
+                {
+                    mistakes.Add(UCMistakeFactory.Create(
+                        MistakesTypes.ERROR,
+                        $"Прецедент должен иметь связь с актором в виде ассоциации," +
                         $" либо иметь отношения расширения," +
-                        $" дополнения или включения с другими прецедентами: {precedent.Value.Name}\n";
+                        $" дополнения или включения с другими прецедентами: {precedent.Value.Name}",
+                        precedent.Value));
+                }
 
                 if (haveExtendsion)
                 {
@@ -129,7 +171,12 @@ namespace Verification.uc_ver
                     }).Count() > 0;
 
                     if (extended && !havePoint)
-                        output.Text += $"Ошибка: Отсутствие точки расширения у прецедента с связью расширения: {precedent.Value.Name}\n";
+                    {
+                        mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Отсутствие точки расширения у прецедента с связью расширения: {precedent.Value.Name}",
+                            precedent.Value));
+                    }
                 }
 
                 if (haveIncluding)
@@ -143,7 +190,12 @@ namespace Verification.uc_ver
                     }).Count();
 
                     if (includesCount > 0 && includesCount < 2)
-                        output.Text += $"Предупреждение: Прецедент включает всего один прецедент: {precedent.Value.Name}\n";
+                    {
+                        mistakes.Add(UCMistakeFactory.Create(
+                           MistakesTypes.WARNING,
+                           $"Прецедент включает всего один прецедент: {precedent.Value.Name}",
+                           precedent.Value));
+                    }
                 }
             }
         }

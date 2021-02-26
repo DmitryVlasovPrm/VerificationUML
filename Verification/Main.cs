@@ -49,7 +49,7 @@ namespace Verification
             var selectedKey = diagramsGV.CurrentCell.Value.ToString();
             var curDiagram = Distribution.AllDiagrams[selectedKey];
 
-            ShowMsg("Определяем тип диаграммы", "Сообщение");
+            //ShowMsg("Определяем тип диаграммы", "Сообщение");
             var type = TypeDefiner.DefineDiagramType(curDiagram.XmlInfo);
 
             string waitingFormMsg = "";

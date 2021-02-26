@@ -68,18 +68,18 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Mistake.cs" />
+    <Compile Include="MistakesTypes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Distribution.cs" />
     <Compile Include="type_definer\EDiagramTypes.cs" />
     <Compile Include="type_definer\TypeDefiner.cs" />
-    <Compile Include="uc_ver\Arrow.cs" />
+    <Compile Include="uc_ver\elements\Arrow.cs" />
     <Compile Include="uc_ver\Checker.cs" />
-    <Compile Include="uc_ver\Element.cs" />
-    <Compile Include="uc_ver\ElementTypes.cs" />
-    <Compile Include="uc_ver\ErrorTypes.cs" />
-    <Compile Include="uc_ver\MistakeGenerator.cs" />
+    <Compile Include="uc_ver\elements\Element.cs" />
+    <Compile Include="uc_ver\elements\ElementTypes.cs" />
     <Compile Include="uc_ver\Reader.cs" />
+    <Compile Include="uc_ver\UCMistakeFactory.cs" />
     <Compile Include="uc_ver\VerificatorUC.cs" />
     <Compile Include="WaitingForm.cs">
       <SubType>Form</SubType>
@@ -109,9 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="License-LGPL.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

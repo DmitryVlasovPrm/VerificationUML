@@ -24,6 +24,7 @@ namespace Verification.uc_ver
         public void Verificate()
         {
             reader.ReadData(diagram.XmlInfo);
+            checker.Check();
         }
     }
 }

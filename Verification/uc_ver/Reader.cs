@@ -16,7 +16,7 @@ namespace Verification.uc_ver
             this.mistakes = mistakes;
         }
 
-        public List<Mistake> ReadData(XmlElement root)
+        public void ReadData(XmlElement root)
         {
             foreach (XmlNode childnode in root.FirstChild.ChildNodes)
             {
@@ -83,8 +83,6 @@ namespace Verification.uc_ver
 
             if (!ReadCoordinates(root))
                 mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
-
-            return mistakes;
         }
 
         private bool ReadCoordinates(XmlElement root)
