@@ -1,13 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Emgu.CV;
-using Emgu.CV.Structure;
 using Verification.type_definer;
 using Verification.uc_ver;
-using System.Linq;
-using System.ComponentModel;
-using System.Threading;
 
 namespace Verification
 {
@@ -48,32 +44,36 @@ namespace Verification
         {
             var selectedKey = diagramsGV.CurrentCell.Value.ToString();
             var curDiagram = Distribution.AllDiagrams[selectedKey];
+            Verificate(curDiagram);
+        }
 
+        private void Verificate(Diagram diagram)
+        {
             //ShowMsg("Определяем тип диаграммы", "Сообщение");
-            var type = TypeDefiner.DefineDiagramType(curDiagram.XmlInfo);
+            var type = TypeDefiner.DefineDiagramType(diagram.XmlInfo);
 
             string waitingFormMsg = "";
             var bw = new BackgroundWorker();
-            curDiagram.Mistakes.Clear();
+            diagram.Mistakes.Clear();
 
             switch (type)
             {
                 case EDiagramTypes.AD:
                     {
                         waitingFormMsg = "Верификация ДА";
-                        bw.DoWork += (obj, ex) => StartADVer(curDiagram);
+                        bw.DoWork += (obj, ex) => StartADVer(diagram);
                         break;
                     }
                 case EDiagramTypes.UCD:
                     {
                         waitingFormMsg = "Верификация ДП";
-                        bw.DoWork += (obj, ex) => StartUCDVer(curDiagram);
+                        bw.DoWork += (obj, ex) => StartUCDVer(diagram);
                         break;
                     }
                 case EDiagramTypes.CD:
                     {
                         waitingFormMsg = "Верификация ДК";
-                        bw.DoWork += (obj, ex) => StartCDVer(curDiagram);
+                        bw.DoWork += (obj, ex) => StartCDVer(diagram);
                         break;
                     }
                 case EDiagramTypes.UNDEF:

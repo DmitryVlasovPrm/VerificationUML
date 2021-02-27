@@ -1,7 +1,7 @@
-﻿using System.Xml;
-using System.Collections.Generic;
-using Emgu.CV;
+﻿using Emgu.CV;
 using Emgu.CV.Structure;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace Verification
 {

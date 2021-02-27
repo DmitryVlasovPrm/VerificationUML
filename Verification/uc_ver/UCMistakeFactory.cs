@@ -1,5 +1,4 @@
-﻿using System;
-using Verification.type_definer;
+﻿using Verification.type_definer;
 
 namespace Verification.uc_ver
 {
