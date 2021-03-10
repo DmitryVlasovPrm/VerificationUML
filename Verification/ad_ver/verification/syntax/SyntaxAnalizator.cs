@@ -276,7 +276,7 @@ namespace ActivityDiagramVer.verification.syntax
                 case MISTAKES.SAME_TARGET:
                     return "альтернативы ведут в один и тот же элемент";
                 case MISTAKES.OUT_NOT_IN_ACT:
-                    return "переход ведет не в активность или в разветвитель";
+                    return "переход ведет не в активность, разветвитель или в условный переход";
                 case MISTAKES.NEXT_DECISION:
                     return "альтернатива ведет в условный переход";
                 default:
