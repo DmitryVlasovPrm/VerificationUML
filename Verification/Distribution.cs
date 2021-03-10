@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Xml;
-using System.Windows.Forms;
-using Emgu.CV;
+﻿using Emgu.CV;
 using Emgu.CV.Structure;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace Verification
 {
@@ -69,7 +69,7 @@ namespace Verification
                 {
                     var pathToFile = files[i];
                     var name = Path.GetFileNameWithoutExtension(pathToFile);
-                   
+
                     if (AllDiagrams.ContainsKey(name))
                     {
                         if (AllDiagrams[name].Image == null)
