@@ -8,7 +8,7 @@ namespace Verification
         private Guid Id { get; set; }
 
         private EDiagramTypes EType { get; set; }
-        private int Seriousness { get; set; }
+        public int Seriousness { get; set; }
         private string Text { get; set; }
         private int X { get; set; }
         private int Y { get; set; }

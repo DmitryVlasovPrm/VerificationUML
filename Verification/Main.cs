@@ -1,6 +1,11 @@
-﻿using System;
+﻿using ActivityDiagramVer;
+using ActivityDiagramVer.parser;
+using ActivityDiagramVer.verification.lexical;
+using ActivityDiagramVer.verification.syntax;
+using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Verification.type_definer;
 using Verification.uc_ver;
@@ -98,7 +103,44 @@ namespace Verification
             MessageBoxDefaultButton.Button1,
             MessageBoxOptions.DefaultDesktopOnly);
         }
-        private void StartADVer(Diagram diagram) { }
+        private void StartADVer(Diagram diagram) {
+            ADNodesList adNodesList = new ADNodesList();
+            XmiParser parser = new XmiParser(adNodesList);
+
+            var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Условный перед join.xmi");
+            parser.Parse(diagram.Name);     //TODO: путь до xmi
+
+            Console.WriteLine("----------------------");
+            for (int i = 0; i < adNodesList.size(); i++)
+            {
+                Console.WriteLine(adNodesList.get(i).getId() + " " + adNodesList.get(i).getType());
+            }
+            Console.WriteLine("----------------------");
+            if (!isSuccess)
+            {
+                ShowMsg("Не удалось получить диаграмму активности из xmi файла: \n" + diagram.Name, "Сообщение");
+                return;
+            }
+            //adNodesList.connect();
+            //// adNodesList.print();
+
+
+            //LexicalAnalizator lexicalAnalizator = new LexicalAnalizator();
+            //lexicalAnalizator.setDiagramElements(adNodesList);
+            //lexicalAnalizator.check();
+
+            //SyntaxAnalizator syntaxAnalizator = new SyntaxAnalizator();
+            //syntaxAnalizator.setDiagramElements(adNodesList);
+            //syntaxAnalizator.check();
+
+
+            //if (!diagram.Mistakes.Any(x => x.Seriousness == (int)MistakesTypes.FATAL))
+            //{
+            //    PetriNet petriNet = new PetriNet();
+            //    petriNet.petriCheck(adNodesList);
+            //}
+            ShowMsg("Верификация завершена", "Сообщение");
+        }
         private void StartUCDVer(Diagram diagram)
         {
             var vetificatorUC = new VerificatorUC(diagram);
