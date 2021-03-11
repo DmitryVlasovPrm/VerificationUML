@@ -1,5 +1,6 @@
 ﻿using ActivityDiagramVer;
 using ActivityDiagramVer.parser;
+using ActivityDiagramVer.result;
 using ActivityDiagramVer.verification.lexical;
 using ActivityDiagramVer.verification.syntax;
 using System;
@@ -106,14 +107,15 @@ namespace Verification
         private void StartADVer(Diagram diagram) {
             ADNodesList adNodesList = new ADNodesList();
             XmiParser parser = new XmiParser(adNodesList);
+            ADMistakeFactory.diagram = diagram;
 
-            var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Условный перед join.xmi");
+            var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Левые элементы.xmi");
             parser.Parse(diagram.Name);     //TODO: путь до xmi
 
             Console.WriteLine("----------------------");
             for (int i = 0; i < adNodesList.size(); i++)
             {
-                Console.WriteLine(adNodesList.get(i).getId() + " " + adNodesList.get(i).getType());
+                Console.WriteLine(adNodesList.get(i).getId() + " " + adNodesList.get(i).getType()+ adNodesList.get(i).X);
             }
             Console.WriteLine("----------------------");
             if (!isSuccess)
@@ -121,6 +123,7 @@ namespace Verification
                 ShowMsg("Не удалось получить диаграмму активности из xmi файла: \n" + diagram.Name, "Сообщение");
                 return;
             }
+            diagram.Mistakes.ForEach(x => Console.WriteLine($"[{x.Seriousness}] " + x.Text));
             //adNodesList.connect();
             //// adNodesList.print();
 

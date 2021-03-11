@@ -62,7 +62,7 @@ namespace ActivityDiagramVer.verification.syntax
                         checkInOut((DiagramElement)currentNode, ((DecisionNode)currentNode).getQuestion(), diagramElements.getNode(i));
                         checkDecision((DecisionNode)diagramElements.get(i), diagramElements.getNode(i));
                         break;
-                    case ElementType.STRANGE:
+                    case ElementType.UNKNOWN:
                         break;
                 }
             }

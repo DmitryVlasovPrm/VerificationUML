@@ -15,18 +15,6 @@ namespace ActivityDiagramVer
         {
             nodes = new List<ADNode>();
         }
-
-        /**
-         * Копировать объект (по факту просто копирует массив ссылок на объекты массива nodes)
-         * @param old
-         */
-        public ADNodesList(ADNodesList old)
-        {
-            //this.nodes = old.nodes.stream().map(x->new ADNode(x)).collect(Collectors.toList());
-            this.nodes = old.nodes;
-            this.diagramElementId = old.diagramElementId;
-        }
-
         /**
          * Возвращает колво элементов, используемых для проверки сетью Петри
          * @return
@@ -135,11 +123,6 @@ namespace ActivityDiagramVer
             }
         }
 
-        //region Getter-Setter
-        public void add(int index, BaseNode node)
-        {
-
-        }
         public int size()
         {
             return nodes.Count;
@@ -152,10 +135,6 @@ namespace ActivityDiagramVer
                 diagramElementId++;
             }
             nodes.Add(new ADNode(node));
-        }
-        public void add(String id, BaseNode node)
-        {
-
         }
         public BaseNode get(int index)
         {

@@ -11,10 +11,10 @@ namespace ActivityDiagramVer.entities
     {
         protected String id;
         protected ElementType type;
-        private int x;
-        private int y;
-        private int width;
-        private int height;
+        private int x = -1;
+        private int y = -1;
+        private int width = -1;
+        private int height = -1;
 
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }
@@ -43,12 +43,6 @@ namespace ActivityDiagramVer.entities
         {
             return id;
         }
-
-        public void setId(String id)
-        {
-            this.id = id;
-        }
-
         public ElementType getType()
         {
             return type;

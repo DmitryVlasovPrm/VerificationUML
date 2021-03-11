@@ -6,7 +6,7 @@ namespace ActivityDiagramVer.entities
 {
     public enum ElementType
     {
-        STRANGE,
+        UNKNOWN,
         FLOW,
         ACTIVITY,
         FORK,
@@ -33,7 +33,7 @@ namespace ActivityDiagramVer.entities
                 case ElementType.FINAL_NODE: return "Конечное состояние";
                 case ElementType.INITIAL_NODE: return "Начальное состояние";
                 case ElementType.SWIMLANE: return "Дорожка участника";
-                case ElementType.STRANGE: return "";
+                case ElementType.UNKNOWN: return "";
                 default: throw new ArgumentException();
             }
         }

@@ -41,7 +41,7 @@ namespace ActivityDiagramVer.verification.lexical
                     case ElementType.SWIMLANE:
                         checkSwimlane((Swimlane)diagramElements.get(i));
                         break;
-                    case ElementType.STRANGE:
+                    case ElementType.UNKNOWN:
                         break;
                 }
             }

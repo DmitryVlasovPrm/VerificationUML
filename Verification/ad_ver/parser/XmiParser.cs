@@ -5,6 +5,8 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Linq;
+using ActivityDiagramVer.result;
+using Verification.ad_ver.entities;
 
 namespace ActivityDiagramVer.parser
 {
@@ -14,6 +16,7 @@ namespace ActivityDiagramVer.parser
         private XmlDocument xmlFile = null;
         private XmlElement root = null;
         private ADNodesList adNodesList;
+        private List<BaseNode> unknownNodes = new List<BaseNode>();
         private int xMin = int.MaxValue;
         private int yMin = int.MaxValue;
 
@@ -81,6 +84,7 @@ namespace ActivityDiagramVer.parser
                 var elAttr = node.Attributes["xsi:type"];
                 if (elAttr == null) continue;
 
+                Console.WriteLine(elAttr.Value);
 
                 if (elAttr.Value == "uml:OpaqueAction" || elAttr.Value == "uml:InitialNode" || elAttr.Value == "uml:ActivityFinalNode" ||
                     elAttr.Value == "uml:FlowFinalNode" || elAttr.Value == "uml:DecisionNode" || elAttr.Value == "uml:MergeNode" ||
@@ -165,6 +169,13 @@ namespace ActivityDiagramVer.parser
                     adNodesList.addLast(temp);
 
                 }
+                // неизвестный элемент
+                else
+                {
+                    var unknownNode = new UnknownNode(node.Attributes["xmi:id"].Value);
+                    unknownNode.setType(ElementType.UNKNOWN);
+                    unknownNodes.Add(unknownNode);
+                }
             }
 
             XmlNode coordRoot = null;
@@ -204,30 +215,50 @@ namespace ActivityDiagramVer.parser
                 String widthStr = nodeCh.Attributes["width"]?.Value;
                 String heightStr = nodeCh.Attributes["height"]?.Value;
                 int x = 0, y = 0, width = 0, height = 0;
+                bool noCoord = true;
                 if (xStr != null)
-                    x = int.Parse(xStr);
-                if (yStr != null)
-                    y = int.Parse(yStr);
-                if (widthStr != null)
-                    width = int.Parse(widthStr);
-                if (heightStr != null)
-                    height = int.Parse(heightStr);
-
-                if (x != 0)
                 {
-                    xMin = Math.Min(x, xMin);
-                    yMin = Math.Min(y, yMin);
+                    x = int.Parse(xStr);
+                    noCoord = false;
                 }
+                if (yStr != null)
+                {
+                    y = int.Parse(yStr);
+                    noCoord = false;
+                }
+                if (widthStr != null)
+                {
+                    width = int.Parse(widthStr);
+                    noCoord = false;
+                }
+                if (heightStr != null)
+                {
+                    height = int.Parse(heightStr);
+                    noCoord = false;
+                }
+                if (noCoord){
+                    x = y = width = height = -1;
+                }
+                
+
+                //if (x != -1)
+                //{
+                //    xMin = Math.Min(x, xMin);
+                //    yMin = Math.Min(y, yMin);
+                //}
                 // Debug.println("[x] xMin=" + xMin + " yMin=" + yMin);
                 // ищем эл-т по ид
                 BaseNode node = adNodesList.get(id);
-                if (node != default)
+                if (node == default)
                 {
-                    node.X = x;
-                    node.Y = y;
-                    node.Width = width;
-                    node.Height = height;
+                    node = unknownNodes.Find(n => n.getId().Equals(id));
+                    if (node == default) continue;
+                    ADMistakeFactory.createMistake(verification.Level.FATAL, "Используется недопустимый элемент - " + node.getType());
                 }
+                node.X = x;
+                node.Y = y;
+                node.Width = width;
+                node.Height = height;
             }
 
             //for (int i = 0; i < adNodesList.size(); i++)

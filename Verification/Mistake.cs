@@ -9,7 +9,7 @@ namespace Verification
 
         private EDiagramTypes EType { get; set; }
         public int Seriousness { get; set; }
-        private string Text { get; set; }
+        public string Text { get; set; }
         private int X { get; set; }
         private int Y { get; set; }
         private int W { get; set; }
