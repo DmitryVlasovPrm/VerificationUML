@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ActivityDiagramVer.entities
-{
-    public enum ElementType
-    {
+namespace ActivityDiagramVer.entities {
+    public enum ElementType {
         UNKNOWN,
         FLOW,
         ACTIVITY,
@@ -18,12 +16,9 @@ namespace ActivityDiagramVer.entities
         SWIMLANE
     }
 
-    public class ElementTypeAdapter
-    {
-        public static String toString(ElementType type)
-        {
-            switch (type)
-            {
+    public class ElementTypeAdapter {
+        public static String toString(ElementType type) {
+            switch (type) {
                 case ElementType.DECISION: return "Условный переход";
                 case ElementType.ACTIVITY: return "Активность";
                 case ElementType.MERGE: return "Узел слияния";

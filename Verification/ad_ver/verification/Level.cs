@@ -10,21 +10,5 @@ namespace ActivityDiagramVer.verification
         HARD,
         FATAL       // любая ошибка считается за серьезную
     }
-
-        
-    public class LevelAdapter
-    {
-        public String toString(Level level)
-        {
-            switch (level)
-            {
-                case Level.EASY: return "[WARNING!]";
-                case Level.HARD: return "[EXCEPTION!] ";
-                case Level.FATAL: return "[FATAL]";
-                default: throw new ArgumentException();
-            }
-        }
-    }
-    
 }
 

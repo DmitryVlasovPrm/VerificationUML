@@ -6,6 +6,7 @@ using ActivityDiagramVer.verification.syntax;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Verification.type_definer;
@@ -105,43 +106,39 @@ namespace Verification
             MessageBoxOptions.DefaultDesktopOnly);
         }
         private void StartADVer(Diagram diagram) {
+            //if (!File.Exists(diagram.Name)) {
+            //    ShowMsg($"Файл\n{diagram.Name}\n не существует","Сообщение");
+            //    return;
+            //}
             ADNodesList adNodesList = new ADNodesList();
             XmiParser parser = new XmiParser(adNodesList);
             ADMistakeFactory.diagram = diagram;
-
-            var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Левые элементы.xmi");
-            parser.Parse(diagram.Name);     //TODO: путь до xmi
-
-            Console.WriteLine("----------------------");
-            for (int i = 0; i < adNodesList.size(); i++)
-            {
-                Console.WriteLine(adNodesList.get(i).getId() + " " + adNodesList.get(i).getType()+ adNodesList.get(i).X);
-            }
-            Console.WriteLine("----------------------");
+            
+            var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Ошибка синхронизатора3.xmi");
+            //parser.Parse(diagram.Name);     //TODO: путь до xmi
             if (!isSuccess)
             {
                 ShowMsg("Не удалось получить диаграмму активности из xmi файла: \n" + diagram.Name, "Сообщение");
                 return;
             }
-            diagram.Mistakes.ForEach(x => Console.WriteLine($"[{x.Seriousness}] " + x.Text));
-            //adNodesList.connect();
-            //// adNodesList.print();
+            adNodesList.connect();
+            // adNodesList.print();
 
 
-            //LexicalAnalizator lexicalAnalizator = new LexicalAnalizator();
-            //lexicalAnalizator.setDiagramElements(adNodesList);
-            //lexicalAnalizator.check();
+            LexicalAnalizator lexicalAnalizator = new LexicalAnalizator();
+            lexicalAnalizator.setDiagramElements(adNodesList);
+            lexicalAnalizator.check();
 
-            //SyntaxAnalizator syntaxAnalizator = new SyntaxAnalizator();
-            //syntaxAnalizator.setDiagramElements(adNodesList);
-            //syntaxAnalizator.check();
+            SyntaxAnalizator syntaxAnalizator = new SyntaxAnalizator();
+            syntaxAnalizator.setDiagramElements(adNodesList);
+            syntaxAnalizator.check();
 
 
-            //if (!diagram.Mistakes.Any(x => x.Seriousness == (int)MistakesTypes.FATAL))
-            //{
-            //    PetriNet petriNet = new PetriNet();
-            //    petriNet.petriCheck(adNodesList);
-            //}
+            if (!diagram.Mistakes.Any(x => x.Seriousness == (int)MistakesTypes.FATAL)) {
+                PetriNet petriNet = new PetriNet();
+                petriNet.petriCheck(adNodesList);
+            }
+            diagram.Mistakes.ForEach(x => Console.WriteLine(x.Text));
             ShowMsg("Верификация завершена", "Сообщение");
         }
         private void StartUCDVer(Diagram diagram)

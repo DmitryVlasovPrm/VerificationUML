@@ -4,25 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ActivityDiagramVer.verification.lexical
-{
+namespace ActivityDiagramVer.verification.lexical {
     /**
  * Этап лексического анализа
  */
-    class LexicalAnalizator
-    {
+    class LexicalAnalizator {
         private ADNodesList diagramElements;
-        public void setDiagramElements(ADNodesList diagramElements)
-        {
+        public void setDiagramElements(ADNodesList diagramElements) {
             this.diagramElements = diagramElements;
         }
 
-        public void check()
-        {
-            for (int i = 0; i < diagramElements.size(); i++)
-            {
-                switch (diagramElements.get(i).getType())
-                {
+        public void check() {
+            for (int i = 0; i < diagramElements.size(); i++) {
+                switch (diagramElements.get(i).getType()) {
                     case ElementType.FLOW:
                         checkFlow((ControlFlow)diagramElements.get(i));
                         break;
@@ -47,43 +41,36 @@ namespace ActivityDiagramVer.verification.lexical
             }
         }
 
-        private void checkFlow(ControlFlow flow)
-        {
+        private void checkFlow(ControlFlow flow) {
             bool notCondButHaveMark = false;
             bool isCond = false;
             // если это не условие, проверяем подпись
-            if (diagramElements.get(flow.getTarget()).getType() != ElementType.DECISION)
-            {
-                if (!flow.getText().Equals(""))
-                {
+            if (diagramElements.get(flow.getTarget()).getType() != ElementType.DECISION) {
+                if (!flow.getText().Equals("")) {
                     notCondButHaveMark = true;
                 }
-            }
-            else isCond = true;
+            } else isCond = true;
 
-            if (diagramElements.get(flow.getSrc()).getType() != ElementType.DECISION)
-            {
-                if (!flow.getText().Equals(""))
-                {
+            if (diagramElements.get(flow.getSrc()).getType() != ElementType.DECISION) {
+                if (!flow.getText().Equals("")) {
                     if (!isCond) ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);
-                }
-                else if (notCondButHaveMark) ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);//writeMistake(Level.HARD.toString(), flow.getType().toString(), "", MISTAKES.HAVE_MARK.toString() + " - \"" + flow.getText() + "\"");
+                } else if (notCondButHaveMark) ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);//writeMistake(Level.HARD.toString(), flow.getType().toString(), "", MISTAKES.HAVE_MARK.toString() + " - \"" + flow.getText() + "\"");
             }
         }
 
-        private void checkSwimlane(Swimlane swimlane)
-        {
+        private void checkSwimlane(Swimlane swimlane) {
             // проверка на заглавную букву
-            if ((!swimlane.getName().Substring(0, 1).ToUpper().Equals(swimlane.getName().Substring(0, 1))))
-            {
+            if ((!swimlane.getName().Substring(0, 1).ToUpper().Equals(swimlane.getName().Substring(0, 1)))) {
                 ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), swimlane);
             }
+            // проверка на колво дочерних элементов
+            if (swimlane.ChildCount == 0) {
+                ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.EMPTY_SWIMLANE), swimlane);
+            }
         }
-        private void checkActivity(ActivityNode activity, ADNodesList.ADNode node)
-        {
+        private void checkActivity(ActivityNode activity, ADNodesList.ADNode node) {
             // проверка на заглавную букву
-            if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1))))
-            {
+            if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1)))) {
                 ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
             }
             // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
@@ -93,16 +80,14 @@ namespace ActivityDiagramVer.verification.lexical
             if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
                 ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.NOT_NOUN), node);
         }
-        private void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
-        {
+        private void checkDecision(DecisionNode decision, ADNodesList.ADNode node) {
             // добавляем вопрос для перехода
             BaseNode flowIn = diagramElements.get(decision.getInId(0));
             String quest = ((ControlFlow)flowIn).getText();
             decision.setQuestion(quest.Trim());
 
             // добавляем альтернативы -> проходим по всем выходящим переходам и получаем подписи
-            for (int i = 0; i < decision.outSize(); i++)
-            {
+            for (int i = 0; i < decision.outSize(); i++) {
                 BaseNode flow = diagramElements.get(decision.getOutId(i));
                 decision.addAlternative(((ControlFlow)flow).getText());
             }
@@ -120,54 +105,49 @@ namespace ActivityDiagramVer.verification.lexical
                     ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_EMPTY_ALT), node);
 
             // проверка, что альтернативы начинаются с заглавных букв
-            if (checkAlt)
-                for (int i = 0; i < decision.alternativeSize(); i++)
-                {
-                    String alter = decision.getAlternative(i);
-                    if (!alter.Equals(""))
-                        if (!alter.Substring(0, 1).ToUpper().Equals(alter.Substring(0, 1)))
-                            ADMistakeFactory.createMistake(Level.EASY,  " альтернатива \"" + alter + "\"" + MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
-                }
+            //if (checkAlt)
+            //    for (int i = 0; i < decision.alternativeSize(); i++)
+            //    {
+            //        String alter = decision.getAlternative(i);
+            //        if (!alter.Equals(""))
+            //            if (!alter.Substring(0, 1).ToUpper().Equals(alter.Substring(0, 1)))
+            //                ADMistakeFactory.createMistake(Level.EASY,  " альтернатива \"" + alter + "\"" + MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
+            //    }
 
 
             bool checkQuest = true;
             // проверка, что имеется условие
-            if (decision.getQuestion().Equals(""))
-            {
-                ADMistakeFactory.createMistake(Level.HARD,  MistakesAdapter.toString(MISTAKES.HAVE_NOT_QUEST), node);
+            if (decision.getQuestion().Equals("")) {
+                ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.HAVE_NOT_QUEST), node);
                 checkQuest = false; // дальнейшие проверки условия не требуются (его нет)
             }
 
             // проверка на заглавную букву
             if (checkQuest)
-                if ((!decision.getQuestion().Substring(0, 1).ToUpper().Equals(decision.getQuestion().Substring(0, 1))))
-                {
-                    ADMistakeFactory.createMistake(Level.EASY,  MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                if ((!decision.getQuestion().Substring(0, 1).ToUpper().Equals(decision.getQuestion().Substring(0, 1)))) {
+                    ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
                 }
             // заканчивается на знак вопроса
             if (checkQuest)
                 if ((!decision.getQuestion().EndsWith("?")))
-                    ADMistakeFactory.createMistake(Level.EASY,  MistakesAdapter.toString(MISTAKES.END_WITH_QUEST), node);
+                    ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.END_WITH_QUEST), node);
         }
         /**
          * Ошибки, которые могут возникнуть на данном этапе
          */
-        private enum MISTAKES
-        {
+        private enum MISTAKES {
             SMALL_LETTER,
             NOT_NOUN,
             END_WITH_QUEST,
             HAVE_NOT_QUEST,
             REPEATED_ALT,
             HAVE_EMPTY_ALT,
-            HAVE_MARK
+            HAVE_MARK,
+            EMPTY_SWIMLANE
         }
-        private class MistakesAdapter
-        {
-            public static String toString(MISTAKES mistake)
-            {
-                switch (mistake)
-                {
+        private class MistakesAdapter {
+            public static String toString(MISTAKES mistake) {
+                switch (mistake) {
                     case MISTAKES.SMALL_LETTER:
                         return "имя начинается с маленькой буквы";
                     case MISTAKES.NOT_NOUN:
@@ -182,6 +162,8 @@ namespace ActivityDiagramVer.verification.lexical
                         return "неподписанная альтернатива";
                     case MISTAKES.HAVE_MARK:
                         return "имеет подпись, не являясь условием или альтернативой";
+                    case MISTAKES.EMPTY_SWIMLANE:
+                        return "не содержит элементов";
                     default:
                         throw new ArgumentException();
                 }

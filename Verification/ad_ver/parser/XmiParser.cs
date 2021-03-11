@@ -8,11 +8,9 @@ using System.Linq;
 using ActivityDiagramVer.result;
 using Verification.ad_ver.entities;
 
-namespace ActivityDiagramVer.parser
-{
+namespace ActivityDiagramVer.parser {
 
-    class XmiParser
-    {
+    class XmiParser {
         private XmlDocument xmlFile = null;
         private XmlElement root = null;
         private ADNodesList adNodesList;
@@ -21,15 +19,12 @@ namespace ActivityDiagramVer.parser
         private int yMin = int.MaxValue;
 
 
-        public XmiParser(ADNodesList adNodesList)
-        {
+        public XmiParser(ADNodesList adNodesList) {
             this.adNodesList = adNodesList;
         }
 
-        private XmlNode findActivePackageEl(XmlNodeList xPackagedList)
-        {
-            foreach (XmlNode node in xPackagedList)
-            {
+        private XmlNode findActivePackageEl(XmlNodeList xPackagedList) {
+            foreach (XmlNode node in xPackagedList) {
                 var attr = node.Attributes["xsi:type"];
                 if (attr == null) continue;
                 if (attr.Value.Equals("uml:Activity"))
@@ -37,11 +32,9 @@ namespace ActivityDiagramVer.parser
             }
             return null;
         }
-        public bool Parse(string path)
-        {
-            if (!File.Exists(path))
-            {
-                Console.WriteLine("[x] File is not exist");
+        public bool Parse(string path) {
+            if (!File.Exists(path)) {
+                Console.WriteLine($"[x] File '{path}' wasn't found");
                 return false;
             }
             xmlFile = new XmlDocument();
@@ -49,38 +42,31 @@ namespace ActivityDiagramVer.parser
             // получим корневой элемент
             XmlNode xRoot = null;
             XmlNodeList xPackagedList;
-            try
-            {
+            try {
                 xPackagedList = xmlFile.GetElementsByTagName("packagedElement");
-            }
-            catch (NullReferenceException e)
-            {
+            } catch (NullReferenceException e) {
                 Console.WriteLine("[x] Тег packagedElement не найден");
                 return false;
             }
 
 
             xRoot = findActivePackageEl(xPackagedList);
-            if (xRoot == null)
-            {
+            if (xRoot == null) {
                 Console.WriteLine("[x] Вид диаграммы не AD");
                 return false;
             }
 
             var attr = xRoot.Attributes["xsi:type"];
-            if (attr == null)
-            {
+            if (attr == null) {
                 Console.WriteLine("[x] Не удалось распарсить xmi файл");
                 return false;
             }
-            if (!attr.Value.Equals("uml:Activity"))
-            {
+            if (!attr.Value.Equals("uml:Activity")) {
                 Console.WriteLine("[x] Вид диаграммы не AD");
                 return false;
             }
 
-            foreach (XmlNode node in xRoot.ChildNodes)
-            {
+            foreach (XmlNode node in xRoot.ChildNodes) {
                 var elAttr = node.Attributes["xsi:type"];
                 if (elAttr == null) continue;
 
@@ -88,11 +74,9 @@ namespace ActivityDiagramVer.parser
 
                 if (elAttr.Value == "uml:OpaqueAction" || elAttr.Value == "uml:InitialNode" || elAttr.Value == "uml:ActivityFinalNode" ||
                     elAttr.Value == "uml:FlowFinalNode" || elAttr.Value == "uml:DecisionNode" || elAttr.Value == "uml:MergeNode" ||
-                    elAttr.Value == "uml:ForkNode" || elAttr.Value == "uml:JoinNode")
-                {
+                    elAttr.Value == "uml:ForkNode" || elAttr.Value == "uml:JoinNode") {
                     DiagramElement nodeFromXMI = null;
-                    switch (elAttr.Value)
-                    {
+                    switch (elAttr.Value) {
                         // активность
                         case "uml:OpaqueAction":
                             nodeFromXMI = new ActivityNode(node.Attributes["xmi:id"].Value,
@@ -139,8 +123,7 @@ namespace ActivityDiagramVer.parser
                             break;
                     }
                     // добавляем ид входящих и выходящих переходов
-                    if (nodeFromXMI != null)
-                    {
+                    if (nodeFromXMI != null) {
                         String idsIn = node.Attributes["incoming"]?.Value;
                         String idsOut = node.Attributes["outgoing"]?.Value;
                         nodeFromXMI.addIn(idsIn == null ? "" : idsIn);
@@ -148,8 +131,7 @@ namespace ActivityDiagramVer.parser
                     }
                 }
                 // создаем переход
-                else if (node.Attributes["xsi:type"].Value.Equals("uml:ControlFlow"))
-                {
+                else if (node.Attributes["xsi:type"].Value.Equals("uml:ControlFlow")) {
                     // находим подпись перехода
                     var markNode = node.ChildNodes[1];
                     String mark = markNode.Attributes["value"].Value.Trim();        // если подпись является "yes", значит это подпись по умолчанию
@@ -161,17 +143,15 @@ namespace ActivityDiagramVer.parser
                     adNodesList.addLast(temp);
                 }
                 // создаем дорожку
-                else if (node.Attributes["xsi:type"].Value.Equals("uml:ActivityPartition"))
-                {
-
+                else if (node.Attributes["xsi:type"].Value.Equals("uml:ActivityPartition")) {
                     Swimlane temp = new Swimlane(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["name"]));
+                    temp.ChildCount = node.Attributes["node"]==null?0:node.Attributes["node"].Value.Split().Length;
                     temp.setType(ElementType.SWIMLANE);
                     adNodesList.addLast(temp);
 
                 }
                 // неизвестный элемент
-                else
-                {
+                else {
                     var unknownNode = new UnknownNode(node.Attributes["xmi:id"].Value);
                     unknownNode.setType(ElementType.UNKNOWN);
                     unknownNodes.Add(unknownNode);
@@ -179,12 +159,9 @@ namespace ActivityDiagramVer.parser
             }
 
             XmlNode coordRoot = null;
-            try
-            {
+            try {
                 coordRoot = xmlFile.GetElementsByTagName("plane")[0];
-            }
-            catch (NullReferenceException e)
-            {
+            } catch (NullReferenceException e) {
                 Console.WriteLine("[x] Тег packagedElement не найден");
                 return false;
             }
@@ -195,18 +172,15 @@ namespace ActivityDiagramVer.parser
             return true;
         }
 
-        private String attrAdapter(XmlAttribute attr)
-        {
+        private String attrAdapter(XmlAttribute attr) {
             return attr == null ? "" : attr.Value.Trim();
         }
         /**
          * Добавляет координаты к элементам
          * @param packagedElement
          */
-        private void findCoordinates(XmlNode packagedElement)
-        {
-            foreach (XmlNode nodeCh in packagedElement.ChildNodes)
-            {
+        private void findCoordinates(XmlNode packagedElement) {
+            foreach (XmlNode nodeCh in packagedElement.ChildNodes) {
                 var attr = nodeCh.Attributes["xsi:type"];
                 if (attr == null) continue;     // если эл-т не имеет атрибут type, он нас не интересует 
                 String id = nodeCh.Attributes["modelElement"]?.Value;
@@ -216,30 +190,26 @@ namespace ActivityDiagramVer.parser
                 String heightStr = nodeCh.Attributes["height"]?.Value;
                 int x = 0, y = 0, width = 0, height = 0;
                 bool noCoord = true;
-                if (xStr != null)
-                {
+                if (xStr != null) {
                     x = int.Parse(xStr);
                     noCoord = false;
                 }
-                if (yStr != null)
-                {
+                if (yStr != null) {
                     y = int.Parse(yStr);
                     noCoord = false;
                 }
-                if (widthStr != null)
-                {
+                if (widthStr != null) {
                     width = int.Parse(widthStr);
                     noCoord = false;
                 }
-                if (heightStr != null)
-                {
+                if (heightStr != null) {
                     height = int.Parse(heightStr);
                     noCoord = false;
                 }
-                if (noCoord){
+                if (noCoord) {
                     x = y = width = height = -1;
                 }
-                
+
 
                 //if (x != -1)
                 //{
@@ -249,11 +219,10 @@ namespace ActivityDiagramVer.parser
                 // Debug.println("[x] xMin=" + xMin + " yMin=" + yMin);
                 // ищем эл-т по ид
                 BaseNode node = adNodesList.get(id);
-                if (node == default)
-                {
+                if (node == default) {
                     node = unknownNodes.Find(n => n.getId().Equals(id));
                     if (node == default) continue;
-                    ADMistakeFactory.createMistake(verification.Level.FATAL, "Используется недопустимый элемент - " + node.getType());
+                    ADMistakeFactory.createMistake(verification.Level.FATAL, "Используется недопустимый элемент");
                 }
                 node.X = x;
                 node.Y = y;

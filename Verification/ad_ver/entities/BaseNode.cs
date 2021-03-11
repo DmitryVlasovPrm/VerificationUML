@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ActivityDiagramVer.entities
-{
+namespace ActivityDiagramVer.entities {
     /**
  * Элемент, являющийся родительским для других узлов AD
  */
-    public abstract class BaseNode
-    {
+    public abstract class BaseNode {
         protected String id;
         protected ElementType type;
         private int x = -1;
@@ -21,35 +19,29 @@ namespace ActivityDiagramVer.entities
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
 
-        public override bool Equals(object obj)
-        {
+        public override bool Equals(object obj) {
             if (this == obj) return true;
             if (obj == null) return false;
             BaseNode baseNode = (BaseNode)obj;
             return id.Equals(baseNode.id);
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return id.GetHashCode();
         }
-        public BaseNode(String id)
-        {
+        public BaseNode(String id) {
             this.id = id;
         }
 
         //region Getter-Setter
-        public String getId()
-        {
+        public String getId() {
             return id;
         }
-        public ElementType getType()
-        {
+        public ElementType getType() {
             return type;
         }
 
-        public void setType(ElementType type)
-        {
+        public void setType(ElementType type) {
             this.type = type;
         }
         //endregion
