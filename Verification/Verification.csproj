@@ -57,6 +57,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ad_ver\entities\ActivityNode.cs" />
+    <Compile Include="ad_ver\entities\BaseNode.cs" />
+    <Compile Include="ad_ver\entities\ControlFlow.cs" />
+    <Compile Include="ad_ver\entities\DecisionNode.cs" />
+    <Compile Include="ad_ver\entities\DiagramElement.cs" />
+    <Compile Include="ad_ver\entities\ElementType.cs" />
+    <Compile Include="ad_ver\entities\FinalNode.cs" />
+    <Compile Include="ad_ver\entities\ForkNode.cs" />
+    <Compile Include="ad_ver\entities\InitialNode.cs" />
+    <Compile Include="ad_ver\entities\JoinNode.cs" />
+    <Compile Include="ad_ver\entities\MergeNode.cs" />
+    <Compile Include="ad_ver\entities\Swimlane.cs" />
+    <Compile Include="ad_ver\entities\UnknownNode.cs" />
+    <Compile Include="ad_ver\parser\XmiParser.cs" />
+    <Compile Include="ad_ver\result\ADMistakeFactory.cs" />
+    <Compile Include="ad_ver\verification\ADNodesList.cs" />
+    <Compile Include="ad_ver\verification\Level.cs" />
+    <Compile Include="ad_ver\verification\lexical\LexicalAnalizator.cs" />
+    <Compile Include="ad_ver\verification\syntax\PetriNet.cs" />
+    <Compile Include="ad_ver\verification\syntax\SyntaxAnalizator.cs" />
     <Compile Include="Diagram.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
