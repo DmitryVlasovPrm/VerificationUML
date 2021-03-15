@@ -44,6 +44,7 @@ namespace Verification
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.errorsGV = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.btOutput = new System.Windows.Forms.Button();
             this.btDelete = new System.Windows.Forms.Button();
             this.btAdd = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -226,9 +227,10 @@ namespace Verification
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.41975F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.11111F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.08642F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.04938F));
+            this.tableLayoutPanel5.Controls.Add(this.btOutput, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.btDelete, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.btAdd, 2, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -240,14 +242,27 @@ namespace Verification
             this.tableLayoutPanel5.Size = new System.Drawing.Size(405, 51);
             this.tableLayoutPanel5.TabIndex = 2;
             // 
+            // btOutput
+            // 
+            this.btOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btOutput.Enabled = false;
+            this.btOutput.Location = new System.Drawing.Point(7, 8);
+            this.btOutput.Margin = new System.Windows.Forms.Padding(7, 8, 3, 0);
+            this.btOutput.Name = "btOutput";
+            this.btOutput.Size = new System.Drawing.Size(115, 43);
+            this.btOutput.TabIndex = 2;
+            this.btOutput.Text = "Экспорт ошибок";
+            this.btOutput.UseVisualStyleBackColor = true;
+            this.btOutput.Click += new System.EventHandler(this.btOutput_Click);
+            // 
             // btDelete
             // 
             this.btDelete.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btDelete.Enabled = false;
-            this.btDelete.Location = new System.Drawing.Point(114, 8);
+            this.btDelete.Location = new System.Drawing.Point(132, 8);
             this.btDelete.Margin = new System.Windows.Forms.Padding(7, 8, 3, 0);
             this.btDelete.Name = "btDelete";
-            this.btDelete.Size = new System.Drawing.Size(125, 43);
+            this.btDelete.Size = new System.Drawing.Size(123, 43);
             this.btDelete.TabIndex = 0;
             this.btDelete.Text = "Удалить";
             this.btDelete.UseVisualStyleBackColor = true;
@@ -256,10 +271,10 @@ namespace Verification
             // btAdd
             // 
             this.btAdd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btAdd.Location = new System.Drawing.Point(245, 8);
+            this.btAdd.Location = new System.Drawing.Point(261, 8);
             this.btAdd.Margin = new System.Windows.Forms.Padding(3, 8, 6, 0);
             this.btAdd.Name = "btAdd";
-            this.btAdd.Size = new System.Drawing.Size(154, 43);
+            this.btAdd.Size = new System.Drawing.Size(138, 43);
             this.btAdd.TabIndex = 1;
             this.btAdd.Text = "Добавить";
             this.btAdd.UseVisualStyleBackColor = true;
@@ -363,6 +378,7 @@ namespace Verification
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Button btDelete;
         private System.Windows.Forms.Button btAdd;
+        private System.Windows.Forms.Button btOutput;
     }
 }
 

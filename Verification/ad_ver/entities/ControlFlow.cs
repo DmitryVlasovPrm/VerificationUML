@@ -1,35 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ActivityDiagramVer.entities {
-    class ControlFlow : BaseNode {
+namespace ActivityDiagramVer.entities
+{
+    class ControlFlow : BaseNode
+    {
         private String src = "";
         private String targets = "";
         private String text;
         public ControlFlow(String id) : base(id) { }
 
-        public ControlFlow(String id, String text) : base(id) {
+        public ControlFlow(String id, String text) : base(id)
+        {
             this.text = text;
         }
 
-        public String getText() {
+        public String getText()
+        {
             return text;
         }
 
-        public String getSrc() {
+        public String getSrc()
+        {
             return src;
         }
 
-        public void setSrc(String src) {
+        public void setSrc(String src)
+        {
             this.src = src;
         }
 
-        public String getTarget() {
+        public String getTarget()
+        {
             return targets;
         }
 
-        public void setTarget(String targets) {
+        public void setTarget(String targets)
+        {
             this.targets = targets;
         }
     }

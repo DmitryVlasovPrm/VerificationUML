@@ -2,23 +2,28 @@
 using ActivityDiagramVer.result;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace ActivityDiagramVer.verification.syntax {
-    class SyntaxAnalizator {
+namespace ActivityDiagramVer.verification.syntax
+{
+    class SyntaxAnalizator
+    {
         private ADNodesList diagramElements;
         private int initialCount = 0;
         private int finalCount = 0;
         private int activityCount = 0;
 
-        public void setDiagramElements(ADNodesList diagramElements) {
+        public void setDiagramElements(ADNodesList diagramElements)
+        {
             this.diagramElements = diagramElements;
         }
 
-        public void check() {
-            for (int i = 0; i < diagramElements.size(); i++) {
+        public void check()
+        {
+            for (int i = 0; i < diagramElements.size(); i++)
+            {
                 BaseNode currentNode = diagramElements.get(i);
-                switch (diagramElements.get(i).getType()) {
+                switch (diagramElements.get(i).getType())
+                {
                     case ElementType.FLOW:
                         break;
                     case ElementType.INITIAL_NODE:
@@ -69,8 +74,10 @@ namespace ActivityDiagramVer.verification.syntax {
 
             // проверка, что имена активностей уникальны
             List<ActivityNode> activities = diagramElements.getAllActivities();
-            for (int i = 0; i < activities.Count - 1; i++) {
-                for (int j = i + 1; j < activities.Count; j++) {
+            for (int i = 0; i < activities.Count - 1; i++)
+            {
+                for (int j = i + 1; j < activities.Count; j++)
+                {
                     if (activities[i].getName().Equals(activities[j].getName()))
                         ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.REPEATED_ACT), diagramElements.getNode(activities[i].getId()));
                 }
@@ -82,7 +89,8 @@ namespace ActivityDiagramVer.verification.syntax {
          * @param currentNode
          * @param name
          */
-        private void checkIfInPartion(DiagramElement currentNode, String name, ADNodesList.ADNode node) {
+        private void checkIfInPartion(DiagramElement currentNode, String name, ADNodesList.ADNode node)
+        {
             if (currentNode.getInPartition().Equals(""))
                 ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NO_PARTION), node);
         }
@@ -92,7 +100,8 @@ namespace ActivityDiagramVer.verification.syntax {
          * @param currentNode
          * @param name
          */
-        private void checkInOut(DiagramElement currentNode, String name, ADNodesList.ADNode node) {
+        private void checkInOut(DiagramElement currentNode, String name, ADNodesList.ADNode node)
+        {
             if (currentNode is MergeNode)
                 if ((currentNode).inSize() == 1)
                     ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MERGE_HAS_1_IN), node);
@@ -102,48 +111,59 @@ namespace ActivityDiagramVer.verification.syntax {
                 ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), node);
         }
 
-        private void checkFork(ForkNode fork, ADNodesList.ADNode node) {
-            for (int i = 0; i < fork.outSize(); i++) {
+        private void checkFork(ForkNode fork, ADNodesList.ADNode node)
+        {
+            for (int i = 0; i < fork.outSize(); i++)
+            {
                 ElementType elementType = diagramElements.get(((ControlFlow)diagramElements.get(fork.getOutId(i))).getTarget()).getType();
                 if (elementType != ElementType.ACTIVITY && elementType != ElementType.DECISION && elementType != ElementType.FORK)
                     ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.OUT_NOT_IN_ACT), node);
             }
         }
 
-        private void checkInitial() {
+        private void checkInitial()
+        {
             initialCount++;
             if (initialCount > 1) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));
 
         }
-        private void checkFinal() {
+        private void checkFinal()
+        {
             finalCount++;
         }
-        private void checkActivity(ActivityNode activity, ADNodesList.ADNode node) {
+        private void checkActivity(ActivityNode activity, ADNodesList.ADNode node)
+        {
             activityCount++;
             // активность имеет больше одного выходящего перехода
             if (activity.outSize() >= 2)
                 ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
         }
 
-        private void checkDecision(DecisionNode decision, ADNodesList.ADNode node) {
+        private void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
+        {
             bool checkAlt = true;
             // проверка, что альтернативы есть
-            if (decision.alternativeSize() == 0) {
+            if (decision.alternativeSize() == 0)
+            {
                 ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.DO_NOT_HAVE_ALT), node);
                 checkAlt = false;
             }
 
             // проверка, что альтернатив больше одной
             if (checkAlt)
-                if (decision.alternativeSize() == 1) {
+                if (decision.alternativeSize() == 1)
+                {
                     ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.ONLY_ONE_ALT), node);
                 }
 
             // проверка, что альтернативы не ведут в один и тот же элемент
-            if (checkAlt) {
-                for (int i = 0; i < decision.outSize() - 1; i++) {
+            if (checkAlt)
+            {
+                for (int i = 0; i < decision.outSize() - 1; i++)
+                {
                     String targetId = ((ControlFlow)diagramElements.get(decision.getOutId(i))).getTarget();
-                    for (int j = i + 1; j < decision.outSize(); j++) {
+                    for (int j = i + 1; j < decision.outSize(); j++)
+                    {
                         if (targetId.Equals(((ControlFlow)diagramElements.get(decision.getOutId(j))).getTarget()))
                             ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SAME_TARGET), node);
 
@@ -163,7 +183,8 @@ namespace ActivityDiagramVer.verification.syntax {
         /**
          * Ошибки, которые могут возникнуть на данном этапе
          */
-        private enum MISTAKES {
+        private enum MISTAKES
+        {
             MORE_THAN_ONE_INIT,
             NO_FINAL,
             NO_INITIAL,
@@ -180,10 +201,13 @@ namespace ActivityDiagramVer.verification.syntax {
             NEXT_DECISION,
             MERGE_HAS_1_IN
         }
-        private class MistakeAdapter {
+        private class MistakeAdapter
+        {
 
-            public static String toString(MISTAKES mistake) {
-                switch (mistake) {
+            public static String toString(MISTAKES mistake)
+            {
+                switch (mistake)
+                {
                     case MISTAKES.MORE_THAN_ONE_INIT:
                         return "В диаграмме больше одного начального состояния";
                     case MISTAKES.NO_FINAL:

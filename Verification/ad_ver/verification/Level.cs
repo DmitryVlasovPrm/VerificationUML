@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ActivityDiagramVer.verification
+﻿namespace ActivityDiagramVer.verification
 {
     public enum Level
     {

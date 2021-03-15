@@ -1,6 +1,3 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
 ﻿using ActivityDiagramVer;
 using ActivityDiagramVer.parser;
 using ActivityDiagramVer.result;
@@ -9,7 +6,6 @@ using ActivityDiagramVer.verification.syntax;
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Verification.type_definer;
@@ -108,7 +104,8 @@ namespace Verification
             MessageBoxDefaultButton.Button1,
             MessageBoxOptions.DefaultDesktopOnly);
         }
-        private void StartADVer(Diagram diagram) {
+        private void StartADVer(Diagram diagram)
+        {
             //if (!File.Exists(diagram.Name)) {
             //    ShowMsg($"Файл\n{diagram.Name}\n не существует","Сообщение");
             //    return;
@@ -116,7 +113,7 @@ namespace Verification
             ADNodesList adNodesList = new ADNodesList();
             XmiParser parser = new XmiParser(adNodesList);
             ADMistakeFactory.diagram = diagram;
-            
+
             var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Ошибка синхронизатора3.xmi");
             //parser.Parse(diagram.Name);     //TODO: путь до xmi
             if (!isSuccess)
@@ -137,10 +134,12 @@ namespace Verification
             syntaxAnalizator.check();
 
 
-            if (!diagram.Mistakes.Any(x => x.Seriousness == (int)MistakesTypes.FATAL)) {
+            if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL))
+            {
                 PetriNet petriNet = new PetriNet();
                 petriNet.petriCheck(adNodesList);
             }
+            diagram.Verificated = true;
             diagram.Mistakes.ForEach(x => Console.WriteLine(x.Text));
             ShowMsg("Верификация завершена", "Сообщение");
         }
@@ -148,8 +147,12 @@ namespace Verification
         {
             var vetificatorUC = new VerificatorUC(diagram);
             vetificatorUC.Verificate();
+            diagram.Verificated = true;
         }
-        private void StartCDVer(Diagram diagram) { }
+        private void StartCDVer(Diagram diagram)
+        {
+            diagram.Verificated = true;
+        }
 
 
         // Кнопка "добавить" диаграмму
@@ -175,7 +178,10 @@ namespace Verification
             }
 
             if (diagramsGV.Rows.Count == 0)
-                btDelete.Enabled = false;
+            {
+                btDelete.Enabled =
+                btOutput.Enabled = false;
+            }
         }
 
         // Обновление выделенной диаграммы
@@ -189,7 +195,36 @@ namespace Verification
         {
             var dialogResult = MessageBox.Show("Вы уверены, что хотите выйти?", "Верификация диаграмм UML",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            e.Cancel = dialogResult == DialogResult.Yes ? false : true;
+            e.Cancel = dialogResult != DialogResult.Yes;
+        }
+
+        private void btOutput_Click(object sender, EventArgs e)
+        {
+            var selectedKey = diagramsGV.CurrentCell.Value.ToString();
+            var curDiagram = Distribution.AllDiagrams[selectedKey];
+
+            if (curDiagram.Verificated)
+            {
+                var saveDialog = new SaveFileDialog
+                {
+                    Title = "Сохранение списка ошибок",
+                    FileName = "Mistakes.txt",
+                    Filter = "Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*"
+                };
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                    MistakesPrinter.Print(curDiagram.Mistakes, saveDialog.FileName);
+            }
+            else
+            {
+                var result = MessageBox.Show(
+                    "Диаграмма не прошла верификацию.\nВерифицировать?",
+                    "Верификация диаграмм UML",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                    Verificate(curDiagram);
+            }
         }
     }
 }
