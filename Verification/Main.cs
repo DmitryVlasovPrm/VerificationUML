@@ -1,6 +1,3 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
 ﻿using ActivityDiagramVer;
 using ActivityDiagramVer.parser;
 using ActivityDiagramVer.result;
@@ -9,7 +6,6 @@ using ActivityDiagramVer.verification.syntax;
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Verification.type_definer;
@@ -108,7 +104,8 @@ namespace Verification
             MessageBoxDefaultButton.Button1,
             MessageBoxOptions.DefaultDesktopOnly);
         }
-        private void StartADVer(Diagram diagram) {
+        private void StartADVer(Diagram diagram)
+        {
             //if (!File.Exists(diagram.Name)) {
             //    ShowMsg($"Файл\n{diagram.Name}\n не существует","Сообщение");
             //    return;
@@ -116,7 +113,7 @@ namespace Verification
             ADNodesList adNodesList = new ADNodesList();
             XmiParser parser = new XmiParser(adNodesList);
             ADMistakeFactory.diagram = diagram;
-            
+
             var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Ошибка синхронизатора3.xmi");
             //parser.Parse(diagram.Name);     //TODO: путь до xmi
             if (!isSuccess)
@@ -137,7 +134,8 @@ namespace Verification
             syntaxAnalizator.check();
 
 
-            if (!diagram.Mistakes.Any(x => x.Seriousness == (int)MistakesTypes.FATAL)) {
+            if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL))
+            {
                 PetriNet petriNet = new PetriNet();
                 petriNet.petriCheck(adNodesList);
             }
