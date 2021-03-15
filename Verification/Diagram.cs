@@ -11,6 +11,7 @@ namespace Verification
         public XmlElement XmlInfo;
         public Image<Bgra, byte> Image;
         public List<Mistake> Mistakes;
+        public bool Verificated { get; set; }
 
         public Diagram(string name, XmlElement xmlInfo, Image<Bgra, byte> image)
         {
@@ -18,6 +19,7 @@ namespace Verification
             XmlInfo = xmlInfo;
             Image = image;
             Mistakes = new List<Mistake>();
+            Verificated = false;
         }
     }
 }
