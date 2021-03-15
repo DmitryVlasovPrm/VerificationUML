@@ -44,12 +44,12 @@ namespace Verification
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.errorsGV = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.btOutput = new System.Windows.Forms.Button();
             this.btDelete = new System.Windows.Forms.Button();
             this.btAdd = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.btPackage = new System.Windows.Forms.Button();
             this.btVerify = new System.Windows.Forms.Button();
-            this.btOutput = new System.Windows.Forms.Button();
             this.menu.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -242,6 +242,19 @@ namespace Verification
             this.tableLayoutPanel5.Size = new System.Drawing.Size(405, 51);
             this.tableLayoutPanel5.TabIndex = 2;
             // 
+            // btOutput
+            // 
+            this.btOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btOutput.Enabled = false;
+            this.btOutput.Location = new System.Drawing.Point(7, 8);
+            this.btOutput.Margin = new System.Windows.Forms.Padding(7, 8, 3, 0);
+            this.btOutput.Name = "btOutput";
+            this.btOutput.Size = new System.Drawing.Size(115, 43);
+            this.btOutput.TabIndex = 2;
+            this.btOutput.Text = "Экспорт ошибок";
+            this.btOutput.UseVisualStyleBackColor = true;
+            this.btOutput.Click += new System.EventHandler(this.btOutput_Click);
+            // 
             // btDelete
             // 
             this.btDelete.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -311,19 +324,6 @@ namespace Verification
             this.btVerify.Text = "Верифицировать";
             this.btVerify.UseVisualStyleBackColor = true;
             this.btVerify.Click += new System.EventHandler(this.btVerify_Click);
-            // 
-            // btOutput
-            // 
-            this.btOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btOutput.Enabled = false;
-            this.btOutput.Location = new System.Drawing.Point(7, 8);
-            this.btOutput.Margin = new System.Windows.Forms.Padding(7, 8, 3, 0);
-            this.btOutput.Name = "btOutput";
-            this.btOutput.Size = new System.Drawing.Size(115, 43);
-            this.btOutput.TabIndex = 2;
-            this.btOutput.Text = "Экспорт";
-            this.btOutput.UseVisualStyleBackColor = true;
-            this.btOutput.Click += new System.EventHandler(this.btOutput_Click);
             // 
             // Main
             // 
