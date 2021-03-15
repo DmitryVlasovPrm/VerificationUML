@@ -202,8 +202,18 @@ namespace Verification
         {
             var selectedKey = diagramsGV.CurrentCell.Value.ToString();
             var curDiagram = Distribution.AllDiagrams[selectedKey];
+
             if (curDiagram.Verificated)
-                MistakesPrinter.Print(curDiagram.Mistakes);
+            {
+                var saveDialog = new SaveFileDialog
+                {
+                    Title = "Сохранение списка ошибок",
+                    FileName = "Mistakes.txt",
+                    Filter = "Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*"
+                };
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                    MistakesPrinter.Print(curDiagram.Mistakes, saveDialog.FileName);
+            }
             else
             {
                 var result = MessageBox.Show(
@@ -211,6 +221,7 @@ namespace Verification
                     "Верификация диаграмм UML",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
+
                 if (result == DialogResult.Yes)
                     Verificate(curDiagram);
             }
