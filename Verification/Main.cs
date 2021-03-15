@@ -146,6 +146,7 @@ namespace Verification
         {
             var vetificatorUC = new VerificatorUC(diagram);
             vetificatorUC.Verificate();
+            MistakesPrinter.Print(diagram.Mistakes);
         }
         private void StartCDVer(Diagram diagram) { }
 
