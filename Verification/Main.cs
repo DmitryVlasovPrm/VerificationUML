@@ -139,6 +139,7 @@ namespace Verification
                 PetriNet petriNet = new PetriNet();
                 petriNet.petriCheck(adNodesList);
             }
+            diagram.Verificated = true;
             diagram.Mistakes.ForEach(x => Console.WriteLine(x.Text));
             ShowMsg("Верификация завершена", "Сообщение");
         }
@@ -146,9 +147,12 @@ namespace Verification
         {
             var vetificatorUC = new VerificatorUC(diagram);
             vetificatorUC.Verificate();
-            MistakesPrinter.Print(diagram.Mistakes);
+            diagram.Verificated = true;
         }
-        private void StartCDVer(Diagram diagram) { }
+        private void StartCDVer(Diagram diagram)
+        {
+            diagram.Verificated = true;
+        }
 
 
         // Кнопка "добавить" диаграмму
@@ -174,7 +178,10 @@ namespace Verification
             }
 
             if (diagramsGV.Rows.Count == 0)
-                btDelete.Enabled = false;
+            {
+                btDelete.Enabled =
+                btOutput.Enabled = false;
+            }
         }
 
         // Обновление выделенной диаграммы
@@ -188,7 +195,25 @@ namespace Verification
         {
             var dialogResult = MessageBox.Show("Вы уверены, что хотите выйти?", "Верификация диаграмм UML",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            e.Cancel = dialogResult == DialogResult.Yes ? false : true;
+            e.Cancel = dialogResult != DialogResult.Yes;
+        }
+
+        private void btOutput_Click(object sender, EventArgs e)
+        {
+            var selectedKey = diagramsGV.CurrentCell.Value.ToString();
+            var curDiagram = Distribution.AllDiagrams[selectedKey];
+            if (curDiagram.Verificated)
+                MistakesPrinter.Print(curDiagram.Mistakes);
+            else
+            {
+                var result = MessageBox.Show(
+                    "Диаграмма не прошла верификацию.\nВерифицировать?",
+                    "Верификация диаграмм UML",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    Verificate(curDiagram);
+            }
         }
     }
 }

@@ -34,8 +34,9 @@ namespace Verification
             }
 
             diagramsGV.Rows.Add(name);
-            btVerify.Enabled = true;
-            btDelete.Enabled = true;
+            btVerify.Enabled =
+            btDelete.Enabled =
+            btOutput.Enabled = true;
         }
 
         // Обновление картинок и списка ошибок
