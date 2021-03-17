@@ -23,7 +23,8 @@ namespace ActivityDiagramVer.result
             if (diagram == null) return;
             var tmp = (DiagramElement)element.getValue();
             string descr = tmp is DecisionNode ? ((DecisionNode)tmp).getQuestion() : tmp.getDescription();
-            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), ElementTypeAdapter.toString(tmp.getType()) + " '" + descr + "': " + mistake, tmp.X, tmp.Y, tmp.Width, tmp.Height));
+            var bbox = new BoundingBox(tmp.X, tmp.Y, tmp.Width, tmp.Height);
+            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), ElementTypeAdapter.toString(tmp.getType()) + " '" + descr + "': " + mistake, bbox));
 
         }
 
@@ -35,7 +36,8 @@ namespace ActivityDiagramVer.result
         public static void createMistake(Level level, String mistake)
         {
             if (diagram == null) return;
-            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), mistake, noCoordinates, noCoordinates, noCoordinates, noCoordinates));
+            var bbox = new BoundingBox(noCoordinates, noCoordinates, noCoordinates, noCoordinates);
+            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), mistake, bbox));
         }
 
         /**
@@ -51,7 +53,8 @@ namespace ActivityDiagramVer.result
                 mistake = "Дорожка участника '" + ((Swimlane)element).getName() + "': " + mistake;
             if (element is ControlFlow)
                 mistake = "Переход '" + ((ControlFlow)element).getText() + "': " + mistake;
-            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), mistake, element.X, element.Y, element.Width, element.Height));
+            var bbox = new BoundingBox(element.X, element.Y, element.Width, element.Height);
+            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), mistake, bbox));
         }
         private static int levelAdapter(Level level)
         {

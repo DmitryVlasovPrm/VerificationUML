@@ -6,25 +6,18 @@ namespace Verification
     public class Mistake
     {
         private Guid Id { get; set; }
-
         private EDiagramTypes EType { get; set; }
         public int Seriousness { get; set; }
         public string Text { get; set; }
-        private int X { get; set; }
-        private int Y { get; set; }
-        private int W { get; set; }
-        private int H { get; set; }
+        private BoundingBox Bbox { get; set; }
 
-        public Mistake(EDiagramTypes eType, int seriousness, string text, int x, int y, int w, int h)
+        public Mistake(EDiagramTypes eType, int seriousness, string text, BoundingBox bbox)
         {
             Id = new Guid();
             EType = eType;
             Seriousness = seriousness;
             Text = $"{MistakesTypes.Strings[seriousness]}: {text}";
-            X = x;
-            Y = y;
-            W = w;
-            H = h;
+            Bbox = bbox;
         }
     }
 }

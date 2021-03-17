@@ -6,12 +6,14 @@ namespace Verification.uc_ver
     {
         public static Mistake Create(int seriousness, string text, Element element)
         {
-            return new Mistake(EDiagramTypes.UCD, seriousness, text, element.X, element.Y, element.W, element.H);
+            var bbox = new BoundingBox(element.X, element.Y, element.W, element.H);
+            return new Mistake(EDiagramTypes.UCD, seriousness, text, bbox);
         }
 
         public static Mistake Create(int seriousness, string text)
         {
-            return new Mistake(EDiagramTypes.UCD, seriousness, text, -1, -1, -1, -1);
+            var bbox = new BoundingBox(-1, -1, -1, -1);
+            return new Mistake(EDiagramTypes.UCD, seriousness, text, bbox);
         }
     }
 }
