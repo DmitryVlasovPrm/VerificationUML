@@ -88,6 +88,7 @@
     <Compile Include="MainHelpers.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MinCoordinates.cs" />
     <Compile Include="Mistake.cs" />
     <Compile Include="MistakesPrinter.cs" />
     <Compile Include="MistakesTypes.cs" />

@@ -2,7 +2,6 @@
 using ActivityDiagramVer.verification;
 using System;
 using Verification;
-using Verification.type_definer;
 
 namespace ActivityDiagramVer.result
 {
@@ -24,7 +23,7 @@ namespace ActivityDiagramVer.result
             var tmp = (DiagramElement)element.getValue();
             string descr = tmp is DecisionNode ? ((DecisionNode)tmp).getQuestion() : tmp.getDescription();
             var bbox = new BoundingBox(tmp.X, tmp.Y, tmp.Width, tmp.Height);
-            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), ElementTypeAdapter.toString(tmp.getType()) + " '" + descr + "': " + mistake, bbox));
+            diagram.Mistakes.Add(new Mistake(levelAdapter(level), ElementTypeAdapter.toString(tmp.getType()) + " '" + descr + "': " + mistake, bbox));
 
         }
 
@@ -37,7 +36,7 @@ namespace ActivityDiagramVer.result
         {
             if (diagram == null) return;
             var bbox = new BoundingBox(noCoordinates, noCoordinates, noCoordinates, noCoordinates);
-            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), mistake, bbox));
+            diagram.Mistakes.Add(new Mistake(levelAdapter(level), mistake, bbox));
         }
 
         /**
@@ -54,7 +53,7 @@ namespace ActivityDiagramVer.result
             if (element is ControlFlow)
                 mistake = "Переход '" + ((ControlFlow)element).getText() + "': " + mistake;
             var bbox = new BoundingBox(element.X, element.Y, element.Width, element.Height);
-            diagram.Mistakes.Add(new Mistake(EDiagramTypes.AD, levelAdapter(level), mistake, bbox));
+            diagram.Mistakes.Add(new Mistake(levelAdapter(level), mistake, bbox));
         }
         private static int levelAdapter(Level level)
         {

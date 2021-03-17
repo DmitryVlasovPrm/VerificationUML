@@ -23,6 +23,7 @@ namespace Verification
             Distribution = new Distribution();
             Distribution.NewDiagramAdded += AddDiagram;
             Distribution.SomethingChanged += UpdateGUIState;
+            errorsGV.Font = new Font("Microsoft Sans Serif", 10);
             diagramsGV.Font = new Font("Microsoft Sans Serif", 14);
             diagramPicture.SizeMode = PictureBoxSizeMode.Zoom;
         }
@@ -96,13 +97,13 @@ namespace Verification
         }
         private void ShowMsg(string msg, string title)
         {
-            DialogResult result = MessageBox.Show(
-            msg,
-            title,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information,
-            MessageBoxDefaultButton.Button1,
-            MessageBoxOptions.DefaultDesktopOnly);
+            MessageBox.Show(
+                msg,
+                title,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly);
         }
         private void StartADVer(Diagram diagram)
         {
@@ -154,7 +155,6 @@ namespace Verification
             diagram.Verificated = true;
         }
 
-
         // Кнопка "добавить" диаграмму
         private void btAdd_Click(object sender, EventArgs e)
         {
@@ -179,8 +179,7 @@ namespace Verification
 
             if (diagramsGV.Rows.Count == 0)
             {
-                btDelete.Enabled =
-                btOutput.Enabled = false;
+                btDelete.Enabled = btOutput.Enabled = false;
             }
         }
 
