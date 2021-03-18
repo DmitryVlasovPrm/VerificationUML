@@ -15,8 +15,6 @@ namespace ActivityDiagramVer.parser
         private XmlElement root = null;
         private ADNodesList adNodesList;
         private List<BaseNode> unknownNodes = new List<BaseNode>();
-        private int xMin = int.MaxValue;
-        private int yMin = int.MaxValue;
 
 
         public XmiParser(ADNodesList adNodesList)
@@ -35,15 +33,9 @@ namespace ActivityDiagramVer.parser
             }
             return null;
         }
-        public bool Parse(string path)
+        public bool Parse(XmlDocument doc)
         {
-            if (!File.Exists(path))
-            {
-                Console.WriteLine($"[x] File '{path}' wasn't found");
-                return false;
-            }
-            xmlFile = new XmlDocument();
-            xmlFile.Load(path);
+            this.xmlFile = doc;
             // получим корневой элемент
             XmlNode xRoot = null;
             XmlNodeList xPackagedList;
@@ -240,12 +232,6 @@ namespace ActivityDiagramVer.parser
                 }
 
 
-                //if (x != -1)
-                //{
-                //    xMin = Math.Min(x, xMin);
-                //    yMin = Math.Min(y, yMin);
-                //}
-                // Debug.println("[x] xMin=" + xMin + " yMin=" + yMin);
                 // ищем эл-т по ид
                 BaseNode node = adNodesList.get(id);
                 if (node == default)
@@ -259,13 +245,6 @@ namespace ActivityDiagramVer.parser
                 node.Width = width;
                 node.Height = height;
             }
-
-            //for (int i = 0; i < adNodesList.size(); i++)
-            //{
-            //    adNodesList.get(i).x -= (xMin + 150);
-            //    adNodesList.get(i).y -= (yMin - 45);
-
-            //}
         }
     }
 }
