@@ -14,8 +14,9 @@ namespace Verification
         public List<Mistake> Mistakes;
         public bool Verificated;
         public EDiagramTypes EType;
+        public XmlDocument doc;
 
-        public Diagram(string name, XmlElement xmlInfo, Image<Bgra, byte> image, EDiagramTypes eType)
+        public Diagram(string name, XmlElement xmlInfo, Image<Bgra, byte> image, EDiagramTypes eType, XmlDocument doc)
         {
             Name = name;
             XmlInfo = xmlInfo;
@@ -23,6 +24,7 @@ namespace Verification
             Mistakes = new List<Mistake>();
             Verificated = false;
             EType = eType;
+            this.doc = doc;
         }
     }
 }

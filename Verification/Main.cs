@@ -116,13 +116,7 @@ namespace Verification
             XmiParser parser = new XmiParser(adNodesList);
             ADMistakeFactory.diagram = diagram;
 
-            //var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Ошибка синхронизатора3.xmi");
-            parser.Parse(diagram);     //TODO: путь до xmi
-            if (!isSuccess)
-            {
-                ShowMsg("Не удалось получить диаграмму активности из xmi файла: \n" + diagram.Name, "Сообщение");
-                return;
-            }
+            parser.Parse(diagram.doc);     
             adNodesList.connect();
             // adNodesList.print();
 
@@ -141,9 +135,10 @@ namespace Verification
                 PetriNet petriNet = new PetriNet();
                 petriNet.petriCheck(adNodesList);
             }
-            diagram.Verificated = true;
             diagram.Mistakes.ForEach(x => Console.WriteLine(x.Text));
-            ShowMsg("Верификация завершена", "Сообщение");
+
+            diagram.Verificated = true;
+            
         }
         private void StartUCDVer(Diagram diagram)
         {
@@ -236,16 +231,6 @@ namespace Verification
                 helperForm.Show();
             }
 
-
-        }
-        private bool CheckOpened(string name) {
-            FormCollection fc = Application.OpenForms;
-            foreach (Form frm in fc) {
-                if (frm.Text == name) {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }
