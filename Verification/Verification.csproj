@@ -79,6 +79,14 @@
     <Compile Include="ad_ver\verification\syntax\SyntaxAnalizator.cs" />
     <Compile Include="BoundingBox.cs" />
     <Compile Include="Diagram.cs" />
+    <Compile Include="help_form\HelpController.cs" />
+    <Compile Include="help_form\Helper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="help_form\Helper.Designer.cs">
+      <DependentUpon>Helper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="help_form\TreeTags.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +115,9 @@
     <Compile Include="WaitingForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="help_form\Helper.resx">
+      <DependentUpon>Helper.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -118,6 +129,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -133,7 +145,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\HelpGeneral.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ADMistakes.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\EMGU.CV.4.0.1.3373\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.4.0.1.3373\build\EMGU.CV.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

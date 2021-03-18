@@ -16,6 +16,7 @@ namespace Verification
     public partial class Main : Form
     {
         public Distribution Distribution;
+        private Helper helperForm = null;
 
         public Main()
         {
@@ -115,8 +116,8 @@ namespace Verification
             XmiParser parser = new XmiParser(adNodesList);
             ADMistakeFactory.diagram = diagram;
 
-            var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Ошибка синхронизатора3.xmi");
-            //parser.Parse(diagram.Name);     //TODO: путь до xmi
+            //var isSuccess = parser.Parse(@"C:\Users\DocGashe\Documents\Лекции\ДиПломная\Тестирование\С координатами\Ошибка синхронизатора3.xmi");
+            parser.Parse(diagram);     //TODO: путь до xmi
             if (!isSuccess)
             {
                 ShowMsg("Не удалось получить диаграмму активности из xmi файла: \n" + diagram.Name, "Сообщение");
@@ -224,6 +225,27 @@ namespace Verification
                 if (result == DialogResult.Yes)
                     Verificate(curDiagram);
             }
+        }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e) {
+            // create or focus help form 
+            if (helperForm != null && !helperForm.Disposing && helperForm.Text!="") {
+                helperForm.Focus();
+            } else {
+                helperForm = new Helper();
+                helperForm.Show();
+            }
+
+
+        }
+        private bool CheckOpened(string name) {
+            FormCollection fc = Application.OpenForms;
+            foreach (Form frm in fc) {
+                if (frm.Text == name) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
