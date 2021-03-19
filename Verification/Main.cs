@@ -58,7 +58,7 @@ namespace Verification
         private void Verificate(Diagram diagram)
         {
             //ShowMsg("Определяем тип диаграммы", "Сообщение");
-            var type = TypeDefiner.DefineDiagramType(diagram.XmlInfo);
+            var type = diagram.EType;
 
             string waitingFormMsg = "";
             var bw = new BackgroundWorker();
@@ -94,7 +94,13 @@ namespace Verification
             waitingForm.InitializationWaitingForm(this, waitingFormMsg); // инициализация прогресс бара
             waitingForm.show();
             bw.RunWorkerCompleted += waitingForm.bw_RunWorkerCompleted;
+            bw.RunWorkerCompleted += bw_RunWorkerCompleted;
             bw.RunWorkerAsync();
+        }
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            UpdateGUIState();
         }
         private void ShowMsg(string msg, string title)
         {

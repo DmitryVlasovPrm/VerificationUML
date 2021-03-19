@@ -41,7 +41,7 @@ namespace Verification
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.diagramsGV = new System.Windows.Forms.DataGridView();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.errorsGB = new System.Windows.Forms.GroupBox();
             this.errorsGV = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.btOutput = new System.Windows.Forms.Button();
@@ -57,7 +57,7 @@ namespace Verification
             this.tableLayoutPanel4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.diagramsGV)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.errorsGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorsGV)).BeginInit();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -156,7 +156,7 @@ namespace Verification
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.Controls.Add(this.groupBox2, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.groupBox1, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.errorsGB, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 2);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(794, 0);
@@ -203,15 +203,15 @@ namespace Verification
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.errorsGV);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(399, 300);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Ошибки";
+            this.errorsGB.Controls.Add(this.errorsGV);
+            this.errorsGB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.errorsGB.Location = new System.Drawing.Point(3, 0);
+            this.errorsGB.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+            this.errorsGB.Name = "groupBox1";
+            this.errorsGB.Size = new System.Drawing.Size(399, 300);
+            this.errorsGB.TabIndex = 0;
+            this.errorsGB.TabStop = false;
+            this.errorsGB.Text = "Ошибки";
             // 
             // errorsGV
             // 
@@ -356,7 +356,7 @@ namespace Verification
             this.tableLayoutPanel4.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.diagramsGV)).EndInit();
-            this.groupBox1.ResumeLayout(false);
+            this.errorsGB.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorsGV)).EndInit();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
@@ -381,7 +381,7 @@ namespace Verification
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView diagramsGV;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox errorsGB;
         private System.Windows.Forms.DataGridView errorsGV;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Button btDelete;
