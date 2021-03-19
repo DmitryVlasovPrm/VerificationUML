@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Verification.type_definer;
 
 namespace Verification
 {
@@ -56,7 +57,8 @@ namespace Verification
                     Image<Bgra, byte> image = null;
                     if (pathToPng != null)
                         image = new Image<Bgra, byte>(pathToPng);
-                    var diagram = new Diagram(name, root, image, type_definer.EDiagramTypes.UNDEF, doc);
+                    var type = TypeDefiner.DefineDiagramType(root);
+                    var diagram = new Diagram(name, root, image, type, doc);
                     AllDiagrams.Add(name, diagram);
 
                     NewDiagramAdded?.Invoke(name);

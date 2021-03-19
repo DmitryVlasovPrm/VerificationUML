@@ -82,13 +82,13 @@ namespace Verification
                     typeStr = "Неопределен";
                     break;
             }
-            groupBox1.Text = string.Format("Ошибки (Тип диаграммы: {0})", typeStr);
+            errorsGB.Text = string.Format("Ошибки (Тип диаграммы: {0})", typeStr);
 
             if (errorsGV.Columns.Count == 0)
                 errorsGV.Columns.Add("text", "");
 
-            mistakes.Add(new Mistake(2, "Class1", new BoundingBox(0, 0, 0, 0)));
-            mistakes.Add(new Mistake(1, "Class2", new BoundingBox(0, 0, 0, 0)));
+            //mistakes.Add(new Mistake(2, "Class1", new BoundingBox(0, 0, 0, 0)));
+            //mistakes.Add(new Mistake(1, "Class2", new BoundingBox(0, 0, 0, 0)));
             for (int i = 0; i < mistakes.Count; i++)
             {
                 errorsGV.Rows.Add(mistakes[i].Text);
