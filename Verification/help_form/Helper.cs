@@ -87,6 +87,7 @@ namespace Verification {
             dgvMistakes.Visible = !isRBVisible;
         }
         private void fillTable() {
+            dgvMistakes.Rows.Clear();
             var mistakesLst = Properties.Resources.ADMistakes.Split('|');
             // для всех строк
             for (int i = 0; i < mistakesLst.Length; i+=MISTAKE_COL_NUM) {
