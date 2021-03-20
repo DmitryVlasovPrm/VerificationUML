@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Verification
 {
@@ -51,7 +51,10 @@ namespace Verification
             }
 
             if (diagramsGV.SelectedCells.Count == 0)
+            {
                 diagramsGV.SelectedCells[0].Selected = true;
+                errorsGV.SelectedCells[0].Selected = true;
+            }
 
             var selectedName = diagramsGV.SelectedCells[0].Value.ToString();
             Distribution.AllDiagrams.TryGetValue(selectedName, out Diagram selectedDiagram);
@@ -85,13 +88,51 @@ namespace Verification
             errorsGB.Text = string.Format("Ошибки (Тип диаграммы: {0})", typeStr);
 
             if (errorsGV.Columns.Count == 0)
-                errorsGV.Columns.Add("text", "");
+            {
+                var column = new DataGridViewColumn();
+                column.Name = "id";
+                column.HeaderText = "";
+                column.Visible = false;
+                column.CellTemplate = new DataGridViewTextBoxCell();
+                errorsGV.Columns.Add(column);
 
-            //mistakes.Add(new Mistake(2, "Class1", new BoundingBox(0, 0, 0, 0)));
-            //mistakes.Add(new Mistake(1, "Class2", new BoundingBox(0, 0, 0, 0)));
+                column = new DataGridViewColumn();
+                column.Name = "seriousness";
+                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.Width = (int)(errorsGV.Size.Width * 0.2);
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                column.HeaderText = "Серьзность";
+                column.CellTemplate = new DataGridViewTextBoxCell();
+                errorsGV.Columns.Add(column);
+
+                column = new DataGridViewColumn();
+                column.Name = "text";
+                column.Width = (int)(errorsGV.Size.Width * 0.8);
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                column.HeaderText = "Текст";
+                column.CellTemplate = new DataGridViewTextBoxCell();
+                errorsGV.Columns.Add(column);
+            }
+
+            mistakes.Sort((x, y) => y.Seriousness.CompareTo(x.Seriousness));
             for (int i = 0; i < mistakes.Count; i++)
             {
-                errorsGV.Rows.Add(mistakes[i].Text);
+                var curMistake = mistakes[i];
+                errorsGV.Rows.Add(curMistake.Id, curMistake.Seriousness, curMistake.Text);
+                var color = Color.White;
+                switch (curMistake.Seriousness)
+				{
+                    case 0:
+                        color = Color.FromArgb(255, 240, 157);
+                        break;
+                    case 1:
+                        color = Color.FromArgb(255, 157, 157);
+                        break;
+                    case 2:
+                        color = Color.FromArgb(255, 50, 50);
+                        break;
+				}
+                errorsGV.Rows[errorsGV.Rows.Count - 1].DefaultCellStyle.BackColor = color;
             }
         }
     }

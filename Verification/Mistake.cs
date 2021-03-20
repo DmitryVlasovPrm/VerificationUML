@@ -4,7 +4,7 @@ namespace Verification
 {
     public class Mistake
     {
-        private Guid Id { get; set; }
+        public Guid Id { get; set; }
         public int Seriousness { get; set; }
         public string Text { get; set; }
         private BoundingBox Bbox { get; set; }
@@ -13,7 +13,7 @@ namespace Verification
         {
             Id = new Guid();
             Seriousness = seriousness;
-            Text = $"{MistakesTypes.Strings[seriousness]}: {text}";
+            Text = text;
             Bbox = bbox;
         }
     }
