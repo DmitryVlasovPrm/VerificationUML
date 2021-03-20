@@ -2,6 +2,7 @@
 using Emgu.CV.Structure;
 using System.Collections.Generic;
 using System.Xml;
+using Verification.package_ver;
 using Verification.type_definer;
 
 namespace Verification
@@ -15,6 +16,9 @@ namespace Verification
         public bool Verificated;
         public EDiagramTypes EType;
         public XmlDocument doc;
+        private HashSet<IActor> actors;
+
+        internal HashSet<IActor> Actors { get => actors; set => actors = value; }
 
         public Diagram(string name, XmlElement xmlInfo, Image<Bgra, byte> image, EDiagramTypes eType, XmlDocument doc)
         {

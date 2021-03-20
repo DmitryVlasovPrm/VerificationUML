@@ -57,6 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ad_ver\ADVerifier.cs" />
     <Compile Include="ad_ver\entities\ActivityNode.cs" />
     <Compile Include="ad_ver\entities\BaseNode.cs" />
     <Compile Include="ad_ver\entities\ControlFlow.cs" />
@@ -100,6 +101,8 @@
     <Compile Include="Mistake.cs" />
     <Compile Include="MistakesPrinter.cs" />
     <Compile Include="MistakesTypes.cs" />
+    <Compile Include="package_ver\IActor.cs" />
+    <Compile Include="package_ver\PackageVerifier.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Distribution.cs" />

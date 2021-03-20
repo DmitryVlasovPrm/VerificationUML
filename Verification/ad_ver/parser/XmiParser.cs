@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Verification;
 using Verification.ad_ver.entities;
 
 namespace ActivityDiagramVer.parser
@@ -15,7 +16,6 @@ namespace ActivityDiagramVer.parser
         private XmlElement root = null;
         private ADNodesList adNodesList;
         private List<BaseNode> unknownNodes = new List<BaseNode>();
-
 
         public XmiParser(ADNodesList adNodesList)
         {
@@ -33,9 +33,9 @@ namespace ActivityDiagramVer.parser
             }
             return null;
         }
-        public bool Parse(XmlDocument doc)
+        public bool Parse(Diagram diagram)
         {
-            this.xmlFile = doc;
+            this.xmlFile = diagram.doc;
             // получим корневой элемент
             XmlNode xRoot = null;
             XmlNodeList xPackagedList;
@@ -156,6 +156,7 @@ namespace ActivityDiagramVer.parser
                     Swimlane temp = new Swimlane(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["name"]));
                     temp.ChildCount = node.Attributes["node"] == null ? 0 : node.Attributes["node"].Value.Split().Length;
                     temp.setType(ElementType.SWIMLANE);
+                    if(temp.Name!="") diagram.Actors.Add(temp);
                     adNodesList.addLast(temp);
 
                 }

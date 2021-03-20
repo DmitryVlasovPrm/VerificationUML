@@ -1,8 +1,9 @@
 ﻿using System;
+using Verification.package_ver;
 
 namespace ActivityDiagramVer.entities
 {
-    class Swimlane : BaseNode
+    class Swimlane : BaseNode, IActor
     {
         private String name;
         private int childCount = 0;
@@ -12,6 +13,8 @@ namespace ActivityDiagramVer.entities
         }
 
         public int ChildCount { get => childCount; set => childCount = value; }
+
+        public string Name => name;
 
         public String getName()
         {

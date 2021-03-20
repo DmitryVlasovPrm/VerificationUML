@@ -12,9 +12,6 @@ namespace ActivityDiagramVer.result
 
         /**
      * Создание ошибки, содержащей элемент диаграммы
-     * @param level
-     * @param mistake
-     * @param element
      */
 
         public static void createMistake(Level level, String mistake, ADNodesList.ADNode element)
@@ -29,8 +26,6 @@ namespace ActivityDiagramVer.result
 
         /**
          * Созадние ошибки, не содержащей ссылки не на какой элемент
-         * @param level
-         * @param mistake
          */
         public static void createMistake(Level level, String mistake)
         {
@@ -41,9 +36,6 @@ namespace ActivityDiagramVer.result
 
         /**
          * Ошибки для переходов и для дорожек
-         * @param level
-         * @param mistake
-         * @param element
          */
         public static void createMistake(Level level, String mistake, BaseNode element)
         {

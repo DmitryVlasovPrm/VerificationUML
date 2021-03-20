@@ -1,18 +1,15 @@
-﻿using ActivityDiagramVer;
-using ActivityDiagramVer.parser;
-using ActivityDiagramVer.result;
-using ActivityDiagramVer.verification.lexical;
-using ActivityDiagramVer.verification.syntax;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
+using System.Linq;
+using Verification.ad_ver;
+using Verification.package_ver;
 using Verification.type_definer;
 using Verification.uc_ver;
+using System.Collections.Generic;
 
-namespace Verification
-{
+namespace Verification {
     public partial class Main : Form
     {
         public Distribution Distribution;
@@ -41,10 +38,27 @@ namespace Verification
 
         }
 
+        /// <summary>
+        /// Проверка согласованности диаграмм
+        /// </summary>
+        private void checkDiffDiagrams() {
+            // имя файла = тип_диаграммы.xml (тип_диаграммы = uc\ad\cd)
+            if (Distribution.AllDiagrams.Count > 3) {
+                ShowMsg("Загружено более трех диаграмм", "Exception");
+                return;
+            }
+            Diagram uc = null, ad = null, cd = null;
+            Distribution.AllDiagrams.TryGetValue("uc", out uc);
+            Distribution.AllDiagrams.TryGetValue("ad", out ad);
+            Distribution.AllDiagrams.TryGetValue("cd", out cd);
+            var mistakes = new List<Mistake>();         // список ошибок для вывода
+            ConsistencyVerifier.Verify(uc, ad, cd, mistakes);
+        }
+
         // Кнопка "пакетная обработка"
         private void btPackage_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         // Кнопка "верифицировать"
@@ -114,35 +128,7 @@ namespace Verification
         }
         private void StartADVer(Diagram diagram)
         {
-            //if (!File.Exists(diagram.Name)) {
-            //    ShowMsg($"Файл\n{diagram.Name}\n не существует","Сообщение");
-            //    return;
-            //}
-            ADNodesList adNodesList = new ADNodesList();
-            XmiParser parser = new XmiParser(adNodesList);
-            ADMistakeFactory.diagram = diagram;
-
-            parser.Parse(diagram.doc);     
-            adNodesList.connect();
-            // adNodesList.print();
-
-
-            LexicalAnalizator lexicalAnalizator = new LexicalAnalizator();
-            lexicalAnalizator.setDiagramElements(adNodesList);
-            lexicalAnalizator.check();
-
-            SyntaxAnalizator syntaxAnalizator = new SyntaxAnalizator();
-            syntaxAnalizator.setDiagramElements(adNodesList);
-            syntaxAnalizator.check();
-
-
-            if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL))
-            {
-                PetriNet petriNet = new PetriNet();
-                petriNet.petriCheck(adNodesList);
-            }
-            diagram.Mistakes.ForEach(x => Console.WriteLine(x.Text));
-
+            ADVerifier.Verify(diagram);
             diagram.Verificated = true;
             
         }
