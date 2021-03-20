@@ -101,8 +101,8 @@
     <Compile Include="Mistake.cs" />
     <Compile Include="MistakesPrinter.cs" />
     <Compile Include="MistakesTypes.cs" />
-    <Compile Include="package_ver\IActor.cs" />
-    <Compile Include="package_ver\PackageVerifier.cs" />
+    <Compile Include="check_consistency\IActor.cs" />
+    <Compile Include="check_consistency\ConsistencyVerifier.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Distribution.cs" />
