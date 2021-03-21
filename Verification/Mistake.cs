@@ -4,14 +4,14 @@ namespace Verification
 {
     public class Mistake
     {
-        public Guid Id { get; set; }
-        public int Seriousness { get; set; }
-        public string Text { get; set; }
-        private BoundingBox Bbox { get; set; }
+        public Guid Id;
+        public int Seriousness;
+        public string Text;
+        public BoundingBox Bbox;
 
         public Mistake(int seriousness, string text, BoundingBox bbox)
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             Seriousness = seriousness;
             Text = text;
             Bbox = bbox;

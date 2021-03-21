@@ -2,10 +2,10 @@
 {
 	public class BoundingBox
 	{
-		private int X { get; set; }
-		private int Y { get; set; }
-		private int W { get; set; }
-		private int H { get; set; }
+		public int X;
+		public int Y;
+		public int W;
+		public int H;
 
 		public BoundingBox(int x, int y, int w, int h)
 		{

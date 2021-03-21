@@ -2,25 +2,31 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Linq;
 using Verification.ad_ver;
 using Verification.package_ver;
 using Verification.type_definer;
 using Verification.uc_ver;
 using System.Collections.Generic;
 
-namespace Verification {
+namespace Verification
+{
     public partial class Main : Form
     {
         public Distribution Distribution;
-        private Helper helperForm = null;
+        private Helper helperForm;
+        private bool isClearingRows;
+        private Random rnd = new Random();
 
         public Main()
         {
             InitializeComponent();
             Distribution = new Distribution();
             Distribution.NewDiagramAdded += AddDiagram;
-            Distribution.SomethingChanged += UpdateGUIState;
+            Distribution.SomethingChanged += UpdateDiagramOnGUI;
+            
+            helperForm = null;
+            isClearingRows = false;
+
             errorsGV.Font = new Font("Microsoft Sans Serif", 10);
             diagramsGV.Font = new Font("Microsoft Sans Serif", 14);
             diagramPicture.SizeMode = PictureBoxSizeMode.Zoom;
@@ -41,7 +47,8 @@ namespace Verification {
         /// <summary>
         /// Проверка согласованности диаграмм
         /// </summary>
-        private void checkDiffDiagrams() {
+        private void checkDiffDiagrams()
+        {
             // имя файла = тип_диаграммы.xml (тип_диаграммы = uc\ad\cd)
             if (Distribution.AllDiagrams.Count > 3) {
                 ShowMsg("Загружено более трех диаграмм", "Exception");
@@ -55,47 +62,44 @@ namespace Verification {
             ConsistencyVerifier.Verify(uc, ad, cd, mistakes);
         }
 
-        // Кнопка "пакетная обработка"
-        private void btPackage_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         // Кнопка "верифицировать"
         private void btVerify_Click(object sender, EventArgs e)
         {
-            var selectedKey = diagramsGV.CurrentCell.Value.ToString();
-            var curDiagram = Distribution.AllDiagrams[selectedKey];
-            Verificate(curDiagram);
+            var verificatedNames = new List<string>();
+            var keys = new string[Distribution.AllDiagrams.Count];
+            Distribution.AllDiagrams.Keys.CopyTo(keys, 0);
+            foreach (var key in keys)
+			{
+                var curDiagram = Distribution.AllDiagrams[key];
+                if (!curDiagram.Verificated)
+                {
+                    Verificate(curDiagram);
+                    verificatedNames.Add(key);
+                }
+			}
+            UpdateDiagramOnGUI(verificatedNames);
         }
 
         private void Verificate(Diagram diagram)
         {
-            //ShowMsg("Определяем тип диаграммы", "Сообщение");
             var type = diagram.EType;
-
-            string waitingFormMsg = "";
-            var bw = new BackgroundWorker();
             diagram.Mistakes.Clear();
 
             switch (type)
             {
                 case EDiagramTypes.AD:
                     {
-                        waitingFormMsg = "Верификация ДА";
-                        bw.DoWork += (obj, ex) => StartADVer(diagram);
+                        StartADVer(diagram);
                         break;
                     }
                 case EDiagramTypes.UCD:
                     {
-                        waitingFormMsg = "Верификация ДП";
-                        bw.DoWork += (obj, ex) => StartUCDVer(diagram);
+                        StartUCDVer(diagram);
                         break;
                     }
                 case EDiagramTypes.CD:
                     {
-                        waitingFormMsg = "Верификация ДК";
-                        bw.DoWork += (obj, ex) => StartCDVer(diagram);
+                        StartCDVer(diagram);
                         break;
                     }
                 case EDiagramTypes.UNDEF:
@@ -104,18 +108,8 @@ namespace Verification {
                         return;
                     }
             }
-            var waitingForm = new WaitingForm();
-            waitingForm.InitializationWaitingForm(this, waitingFormMsg); // инициализация прогресс бара
-            waitingForm.show();
-            bw.RunWorkerCompleted += waitingForm.bw_RunWorkerCompleted;
-            bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-            bw.RunWorkerAsync();
         }
 
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            UpdateGUIState();
-        }
         private void ShowMsg(string msg, string title)
         {
             MessageBox.Show(
@@ -126,21 +120,35 @@ namespace Verification {
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
         }
+
         private void StartADVer(Diagram diagram)
         {
             ADVerifier.Verify(diagram);
             diagram.Verificated = true;
-            
+            Distribution.AllDiagrams[diagram.Name] = diagram;
         }
+
         private void StartUCDVer(Diagram diagram)
         {
             var vetificatorUC = new VerificatorUC(diagram);
             vetificatorUC.Verificate();
             diagram.Verificated = true;
+            Distribution.AllDiagrams[diagram.Name] = diagram;
         }
+
         private void StartCDVer(Diagram diagram)
         {
+            var cnt = rnd.Next(1, 6);
+            for (var t = 0; t < cnt; t++)
+            {
+                var ser = rnd.Next(0, 3);
+                var x = rnd.Next(10, 50);
+                var y = rnd.Next(10, 50);
+                diagram.Mistakes.Add(new Mistake(ser, $"Ошибка {t + 1}", new BoundingBox(x, y, x + 40, y + 40)));
+            }
+
             diagram.Verificated = true;
+            Distribution.AllDiagrams[diagram.Name] = diagram;
         }
 
         // Кнопка "добавить" диаграмму
@@ -158,12 +166,10 @@ namespace Verification {
                 return;
             }
 
-            foreach (DataGridViewRow row in diagramsGV.SelectedRows)
-            {
-                var selectedName = row.Cells[0].Value.ToString();
-                Distribution.AllDiagrams.Remove(selectedName);
-                diagramsGV.Rows.RemoveAt(row.Index);
-            }
+            var curRow = diagramsGV.CurrentRow;
+			var selectedName = curRow.Cells[0].Value.ToString();
+            Distribution.AllDiagrams.Remove(selectedName);
+            diagramsGV.Rows.RemoveAt(curRow.Index);
 
             if (diagramsGV.Rows.Count == 0)
             {
@@ -174,7 +180,17 @@ namespace Verification {
         // Обновление выделенной диаграммы
         private void diagramsGV_SelectionChanged(object sender, EventArgs e)
         {
-            UpdateGUIState();
+            var name = diagramsGV.Rows.Count == 0 ? null : new List<string>() { diagramsGV.CurrentCell.Value.ToString() };
+            UpdateDiagramOnGUI(name);
+        }
+
+        // Обновление выделенной ошибки
+        private void errorsGV_SelectionChanged(object sender, EventArgs e)
+        {
+            if (isClearingRows)
+                return;
+
+            UpdateMistakesOnGUI();
         }
 
         // При закрытии формы
@@ -224,5 +240,5 @@ namespace Verification {
             }
 
         }
-    }
+	}
 }

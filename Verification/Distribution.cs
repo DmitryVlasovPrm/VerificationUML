@@ -13,18 +13,20 @@ namespace Verification
     {
         public Dictionary<string, Diagram> AllDiagrams;
         public Action<string> NewDiagramAdded;
-        public Action SomethingChanged;
+        public Action<List<string>> SomethingChanged;
+        private List<string> ChangedDiagramNames;
 
         public Distribution()
         {
             AllDiagrams = new Dictionary<string, Diagram>();
+            ChangedDiagramNames = new List<string>();
         }
 
         public void CreateDiagrams(List<string> files)
         {
             try
             {
-                var isSomethingChanged = false;
+                ChangedDiagramNames.Clear();
                 var xmiFiles = files.FindAll(a => Path.GetExtension(a) == ".xmi");
                 files.RemoveAll(a => Path.GetExtension(a) == ".xmi");
 
@@ -32,10 +34,12 @@ namespace Verification
                 var xmiFilesCount = xmiFiles.Count;
                 for (var i = 0; i < xmiFilesCount; i++)
                 {
+                    Image<Bgra, byte> image = null;
                     var pathToXmi = xmiFiles[i];
                     var name = Path.GetFileNameWithoutExtension(pathToXmi);
                     if (AllDiagrams.ContainsKey(name))
-                    {// Если такая диаграмма уже существует
+                    {
+                        // Если такая диаграмма уже существует
                         var dialogResult = MessageBox.Show($"Диаграмма c именем {name} уже существует.\nПерезаписать ее?", "Верификация диаграмм UML",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (dialogResult == DialogResult.No)
@@ -44,25 +48,24 @@ namespace Verification
                         }
                         else
                         {
+                            image = AllDiagrams[name].Image;
                             AllDiagrams.Remove(name);
                         }
                     }
                     var pathToPng = files.Find(a => Path.GetFileNameWithoutExtension(a) == name);
+                    if (pathToPng != null)
+                        image = new Image<Bgra, byte>(pathToPng);
                     files.Remove(pathToPng);
 
                     var doc = new XmlDocument();
                     doc.Load(pathToXmi);
                     var root = doc.DocumentElement;
-
-                    Image<Bgra, byte> image = null;
-                    if (pathToPng != null)
-                        image = new Image<Bgra, byte>(pathToPng);
                     var type = TypeDefiner.DefineDiagramType(root);
                     var diagram = new Diagram(name, root, image, type, doc);
                     AllDiagrams.Add(name, diagram);
 
                     NewDiagramAdded?.Invoke(name);
-                    isSomethingChanged = true;
+                    ChangedDiagramNames.Add(name);
                 }
 
                 // Добавляем к xmi файлам новые рисунки
@@ -93,12 +96,12 @@ namespace Verification
                                 AllDiagrams[name].Image = image;
                             }
                         }
-                        isSomethingChanged = true;
+                        ChangedDiagramNames.Add(name);
                     }
                 }
 
-                if (isSomethingChanged)
-                    SomethingChanged?.Invoke();
+                if (ChangedDiagramNames.Count != 0)
+                    SomethingChanged.Invoke(ChangedDiagramNames);
             }
             catch (Exception ex)
             {
