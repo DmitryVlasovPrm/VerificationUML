@@ -112,16 +112,14 @@ namespace Verification
 				column = new DataGridViewColumn();
 				column.Name = "seriousness";
 				column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-				column.Width = (int)(errorsGV.Size.Width * 0.2);
-				column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+				column.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
 				column.HeaderText = "Серьзность";
 				column.CellTemplate = new DataGridViewTextBoxCell();
 				errorsGV.Columns.Add(column);
 
 				column = new DataGridViewColumn();
 				column.Name = "text";
-				column.Width = (int)(errorsGV.Size.Width * 0.8);
-				column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+				column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 				column.HeaderText = "Текст";
 				column.CellTemplate = new DataGridViewTextBoxCell();
 				errorsGV.Columns.Add(column);
@@ -164,7 +162,7 @@ namespace Verification
 			var mistake = selectedDiagram.Mistakes.Find(x => x.Id.ToString() == selectedMistakeId);
 			var bbox = mistake.Bbox;
 			var curImage = selectedDiagram.Image.Copy();
-			CvInvoke.Rectangle(curImage, new Rectangle(bbox.X, bbox.Y, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 1);
+			CvInvoke.Rectangle(curImage, new Rectangle(bbox.X, bbox.Y, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 2);
 			diagramPicture.Image = curImage.Bitmap;
 		}
 	}

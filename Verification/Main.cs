@@ -150,14 +150,8 @@ namespace Verification
 
 		private void StartCDVer(Diagram diagram)
 		{
-			var cnt = rnd.Next(1, 6);
-			for (var t = 0; t < cnt; t++)
-			{
-				var ser = rnd.Next(0, 3);
-				var x = rnd.Next(10, 50);
-				var y = rnd.Next(10, 50);
-				diagram.Mistakes.Add(new Mistake(ser, $"Ошибка {t + 1}", new BoundingBox(x, y, x + 40, y + 40)));
-			}
+			diagram.Mistakes.Add(new Mistake(1, $"Имя класса начинается с маленькой буквы", new BoundingBox(30, 30, 254, 174)));
+			diagram.Mistakes.Add(new Mistake(1, $"Имя аттрибута начинается с большой буквы", new BoundingBox(30, 30, 254, 174)));
 
 			diagram.Verificated = true;
 			Distribution.AllDiagrams[diagram.Name] = diagram;
