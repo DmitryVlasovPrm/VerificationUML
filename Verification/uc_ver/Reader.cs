@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Verification.package_ver;
 
 namespace Verification.uc_ver
 {
@@ -9,11 +10,13 @@ namespace Verification.uc_ver
     {
         private Dictionary<string, Element> elements;
         private List<Mistake> mistakes;
+        private Diagram diagram;
 
-        public Reader(Dictionary<string, Element> elements, List<Mistake> mistakes)
+        public Reader(Dictionary<string, Element> elements, Diagram diagram)
         {
             this.elements = elements;
-            this.mistakes = mistakes;
+            mistakes = diagram.Mistakes;
+            this.diagram = diagram;
         }
 
         public void ReadData(XmlElement root)
@@ -43,7 +46,11 @@ namespace Verification.uc_ver
                         case ElementTypes.Actor:
                             {
                                 ReadActor(childnode);
-                                elements.Add(id, new Element(id, type, name, parent));
+                                var actor = new Element(id, type, name, parent);
+                                elements.Add(id, actor);
+                                if (!string.IsNullOrWhiteSpace(name))
+                                    diagram.Actors.Add(actor);
+
                                 break;
                             }
                         case ElementTypes.Package:

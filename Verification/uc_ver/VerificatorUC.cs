@@ -11,7 +11,7 @@ namespace Verification.uc_ver
         public VerificatorUC(Diagram diagram)
         {
             elements = new Dictionary<string, Element>();
-            reader = new Reader(elements, diagram.Mistakes);
+            reader = new Reader(elements, diagram);
             checker = new Checker(elements, diagram.Mistakes);
             this.diagram = diagram;
         }

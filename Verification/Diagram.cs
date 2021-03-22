@@ -29,6 +29,7 @@ namespace Verification
             Verificated = false;
             EType = eType;
             this.doc = doc;
+            actors = new HashSet<IActor>();
         }
     }
 }
