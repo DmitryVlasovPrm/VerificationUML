@@ -196,6 +196,7 @@ namespace ActivityDiagramVer.parser
          */
         private void findCoordinates(XmlNode packagedElement)
         {
+            int xMin = int.MaxValue, yMin= int.MaxValue;
             foreach (XmlNode nodeCh in packagedElement.ChildNodes)
             {
                 var attr = nodeCh.Attributes["xsi:type"];
@@ -245,7 +246,22 @@ namespace ActivityDiagramVer.parser
                 node.Y = y;
                 node.Width = width;
                 node.Height = height;
+
+                // ищем минимальный 
+                if (x != -1) {
+                    xMin = Math.Min(x, xMin);
+                    yMin = Math.Min(y, yMin);
+                }
             }
+
+            // нормализация координат
+            if (xMin == int.MaxValue) return;
+            for (int i = 0; i < adNodesList.size(); i++) {
+                adNodesList.get(i).X-=xMin;
+                adNodesList.get(i).Y-=yMin;
+                Console.WriteLine($"[x] xmin={xMin}, yMin={yMin}, x={adNodesList.get(i).X}, y={adNodesList.get(i).Y}");
+            }
+
         }
     }
 }
