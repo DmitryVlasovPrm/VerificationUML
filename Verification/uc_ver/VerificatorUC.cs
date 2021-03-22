@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Verification.uc_ver
 {
@@ -19,6 +21,18 @@ namespace Verification.uc_ver
         public void Verificate()
         {
             reader.ReadData(diagram.XmlInfo);
+            var minX = elements.Min(e => e.Value.X);
+            var minY = elements.Min(e => e.Value.Y);
+            var tuple = MinCoordinates.Compute(diagram.Image);
+            var diffX = Math.Abs(minX - tuple.Item1)/2;
+            var diffY = Math.Abs(minY - tuple.Item2)/2;
+
+            foreach (var element in elements)
+            {
+                element.Value.X += diffX;
+                element.Value.Y += diffY;
+            }
+
             checker.Check();
         }
     }
