@@ -164,8 +164,7 @@ namespace Verification
 			var mistake = selectedDiagram.Mistakes.Find(x => x.Id.ToString() == selectedMistakeId);
 			var bbox = mistake.Bbox;
 			var curImage = selectedDiagram.Image.Copy();
-			var coordMin = MinCoordinates.Compute(curImage);
-			CvInvoke.Rectangle(curImage, new Rectangle(bbox.X + coordMin.Item1, bbox.Y + coordMin.Item2, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 1);
+			CvInvoke.Rectangle(curImage, new Rectangle(bbox.X, bbox.Y, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 1);
 			diagramPicture.Image = curImage.Bitmap;
 		}
 	}

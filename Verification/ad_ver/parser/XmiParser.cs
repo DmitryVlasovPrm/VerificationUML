@@ -16,6 +16,7 @@ namespace ActivityDiagramVer.parser
         private XmlElement root = null;
         private ADNodesList adNodesList;
         private List<BaseNode> unknownNodes = new List<BaseNode>();
+        private (int, int) coordMin;
 
         public XmiParser(ADNodesList adNodesList)
         {
@@ -36,6 +37,7 @@ namespace ActivityDiagramVer.parser
         public bool Parse(Diagram diagram)
         {
             this.xmlFile = diagram.doc;
+
             // получим корневой элемент
             XmlNode xRoot = null;
             XmlNodeList xPackagedList;
@@ -257,8 +259,8 @@ namespace ActivityDiagramVer.parser
             // нормализация координат
             if (xMin == int.MaxValue) return;
             for (int i = 0; i < adNodesList.size(); i++) {
-                adNodesList.get(i).X-=xMin;
-                adNodesList.get(i).Y-=yMin;
+                adNodesList.get(i).X -= xMin;
+                adNodesList.get(i).Y-= yMin;
                 Console.WriteLine($"[x] xmin={xMin}, yMin={yMin}, x={adNodesList.get(i).X}, y={adNodesList.get(i).Y}");
             }
 
