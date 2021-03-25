@@ -161,6 +161,9 @@ namespace Verification
 			var selectedDiagramName = diagramsGV.CurrentCell.Value.ToString();
 			Distribution.AllDiagrams.TryGetValue(selectedDiagramName, out Diagram selectedDiagram);
 			var selectedMistakeId = errorsGV.CurrentRow.Cells[0].Value.ToString();
+			errorsGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+			errorsGV.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
 			var mistake = selectedDiagram.Mistakes.Find(x => x.Id.ToString() == selectedMistakeId);
 			var bbox = mistake.Bbox;
 			var curImage = selectedDiagram.Image.Copy();

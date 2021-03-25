@@ -27,6 +27,7 @@ namespace Verification
 			isClearingRows = false;
 
 			errorsGV.Font = new Font("Microsoft Sans Serif", 10);
+
 			diagramsGV.Font = new Font("Microsoft Sans Serif", 14);
 			diagramPicture.SizeMode = PictureBoxSizeMode.Zoom;
 		}
