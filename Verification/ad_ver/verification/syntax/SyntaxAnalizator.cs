@@ -136,7 +136,7 @@ namespace ActivityDiagramVer.verification.syntax
             activityCount++;
             // активность имеет больше одного выходящего перехода
             if (activity.outSize() >= 2)
-                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
         }
 
         private void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
