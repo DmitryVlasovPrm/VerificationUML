@@ -56,14 +56,26 @@ namespace Verification
 				return;
 			}
 			Diagram uc = null, ad = null, cd = null;
-			Distribution.AllDiagrams.TryGetValue("uc", out uc);
+			Distribution.AllDiagrams.TryGetValue("ucd", out uc);
 			Distribution.AllDiagrams.TryGetValue("ad", out ad);
 			Distribution.AllDiagrams.TryGetValue("cd", out cd);
 			var mistakes = new List<Mistake>();         // список ошибок для вывода
-			ConsistencyVerifier.Verify(uc, ad, cd, mistakes);
-		}
 
-		// Запуск прогресс бара
+			if (uc != null)
+				StartUCDVer(uc);
+			if (ad != null)
+				StartADVer(ad);
+			if (cd != null)
+				StartCDVer(cd);
+
+			ConsistencyVerifier.Verify(uc, ad, cd, mistakes);
+			if (uc != null)
+				uc.Mistakes.AddRange(mistakes);
+			if (ad != null)
+				ad.Mistakes.AddRange(mistakes);
+			if (cd != null)
+				cd.Mistakes.AddRange(mistakes);
+		}
 
 		// Кнопка "верифицировать"
 		private void btVerify_Click(object sender, EventArgs e)

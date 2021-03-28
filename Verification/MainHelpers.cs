@@ -160,6 +160,7 @@ namespace Verification
 
 			var selectedDiagramName = diagramsGV.CurrentCell.Value.ToString();
 			Distribution.AllDiagrams.TryGetValue(selectedDiagramName, out Diagram selectedDiagram);
+			if (selectedDiagram.Image == null) return;
 			var selectedMistakeId = errorsGV.CurrentRow.Cells[0].Value.ToString();
 			errorsGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 			errorsGV.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
