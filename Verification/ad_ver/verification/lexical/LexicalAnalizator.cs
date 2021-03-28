@@ -84,23 +84,27 @@ namespace ActivityDiagramVer.verification.lexical
         }
         private void checkActivity(ActivityNode activity, ADNodesList.ADNode node)
         {
-            // проверка на заглавную букву
-            if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1))))
-            {
-                ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
-            }
-            // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
-            string firstWord = activity.getName().Split(' ')[0];
-            //Console.WriteLine(firstWord);
+            if (activity.getName().Length == 0)
+                ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.NO_NAME), node);
+            else {
 
-            if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
-                ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.NOT_NOUN), node);
+                // проверка на заглавную букву
+                if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1)))) {
+                    ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                }
+                // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
+                String firstWord = activity.getName().Split(' ')[0];
+                //Console.WriteLine(firstWord);
+
+                if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
+                    ADMistakeFactory.createMistake(Level.EASY, MistakesAdapter.toString(MISTAKES.NOT_NOUN), node);
+            }
         }
         private void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
         {
             // добавляем вопрос для перехода
             BaseNode flowIn = diagramElements.get(decision.getInId(0));
-            string quest = ((ControlFlow)flowIn).getText();
+            String quest = ((ControlFlow)flowIn).getText();
             decision.setQuestion(quest.Trim());
 
             // добавляем альтернативы -> проходим по всем выходящим переходам и получаем подписи
@@ -158,6 +162,7 @@ namespace ActivityDiagramVer.verification.lexical
         private enum MISTAKES
         {
             SMALL_LETTER,
+            NO_NAME,
             NOT_NOUN,
             END_WITH_QUEST,
             HAVE_NOT_QUEST,
@@ -168,12 +173,14 @@ namespace ActivityDiagramVer.verification.lexical
         }
         private class MistakesAdapter
         {
-            public static string toString(MISTAKES mistake)
+            public static String toString(MISTAKES mistake)
             {
                 switch (mistake)
                 {
                     case MISTAKES.SMALL_LETTER:
                         return "имя начинается с маленькой буквы";
+                    case MISTAKES.NO_NAME:
+                        return "отсутствует имя";
                     case MISTAKES.NOT_NOUN:
                         return "первое слово возможно не является именем существительным";
                     case MISTAKES.END_WITH_QUEST:
