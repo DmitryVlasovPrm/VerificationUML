@@ -5,6 +5,7 @@ using Verification.ad_ver;
 using Verification.package_ver;
 using Verification.type_definer;
 using Verification.uc_ver;
+using Verification.cd_ver;
 using System.Collections.Generic;
 
 namespace Verification
@@ -14,7 +15,6 @@ namespace Verification
 		public Distribution Distribution;
 		private Helper helperForm;
 		private bool isClearingRows;
-		private Random rnd = new Random();
 
 		public Main()
 		{
@@ -27,7 +27,6 @@ namespace Verification
 			isClearingRows = false;
 
 			errorsGV.Font = new Font("Microsoft Sans Serif", 10);
-
 			diagramsGV.Font = new Font("Microsoft Sans Serif", 14);
 			diagramPicture.SizeMode = PictureBoxSizeMode.Zoom;
 		}
@@ -71,7 +70,6 @@ namespace Verification
 			var progressBar = new ProgressBar();
 			var diagramsCount = Distribution.AllDiagrams.Count;
 			progressBar.SetStep(100 / diagramsCount);
-			progressBar.Show();
 
 			var verificatedNames = new List<string>();
 			var keys = new string[diagramsCount];
@@ -143,17 +141,16 @@ namespace Verification
 
 		private void StartUCDVer(Diagram diagram)
 		{
-			var vetificatorUC = new VerificatorUC(diagram);
-			vetificatorUC.Verificate();
+			var verificatorUC = new VerificatorUC(diagram);
+			verificatorUC.Verificate();
 			diagram.Verificated = true;
 			Distribution.AllDiagrams[diagram.Name] = diagram;
 		}
 
 		private void StartCDVer(Diagram diagram)
 		{
-			diagram.Mistakes.Add(new Mistake(1, $"Имя класса начинается с маленькой буквы", new BoundingBox(30, 30, 254, 174)));
-			diagram.Mistakes.Add(new Mistake(1, $"Имя аттрибута начинается с большой буквы", new BoundingBox(30, 30, 254, 174)));
-
+			var verificatorDC = new CDVerificator(diagram);
+			verificatorDC.Verify();
 			diagram.Verificated = true;
 			Distribution.AllDiagrams[diagram.Name] = diagram;
 		}
