@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ActivityDiagramVer.entities
 {
-    class DecisionNode : DiagramElement
+    internal class DecisionNode : DiagramElement
     {
-        private String question;
-        private List<String> alternatives = new List<string>();     // хранит названия альтернатив
+        private string question;
+        private readonly List<string> alternatives = new List<string>();     // хранит названия альтернатив
 
-        public DecisionNode(String id, String inPartition, String question) : base(id, inPartition, question)
+        public DecisionNode(string id, string inPartition, string question) : base(id, inPartition, question)
         {
             this.question = question;
         }
 
-        public List<String> findEqualAlternatives()
+        public List<string> findEqualAlternatives()
         {
-            List<String> equals = new List<string>();
+            List<string> equals = new List<string>();
             for (int i = 0; i < alternatives.Count - 1; i++)
             {
                 for (int j = i + 1; j < alternatives.Count; j++)
@@ -36,21 +35,21 @@ namespace ActivityDiagramVer.entities
             return false;
         }
 
-        public String getQuestion()
+        public string getQuestion()
         {
             return question;
         }
 
-        public void setQuestion(String question)
+        public void setQuestion(string question)
         {
             this.question = question;
         }
 
-        public void addAlternative(String alternative)
+        public void addAlternative(string alternative)
         {
             alternatives.Add(alternative);
         }
-        public String getAlternative(int index)
+        public string getAlternative(int index)
         {
             return alternatives[index];
         }

@@ -1,19 +1,17 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
     public class ActivityNode : DiagramElement
     {
-        private String name;    // содержит отображаемый на элементе текст
+        private readonly string name;    // содержит отображаемый на элементе текст
 
-        public ActivityNode(String id, String inPartition, String name) : base(id, inPartition, name)
+        public ActivityNode(string id, string inPartition, string name) : base(id, inPartition, name)
         {
             this.name = name;
         }
         /**
          * name содержит отображаемый на элементе текст
          */
-        public String getName()
+        public string getName()
         {
             return name;
         }

@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace Verification.uc_ver
 {
-    class Checker
+    internal class Checker
     {
-        private Dictionary<string, Element> elements;
-        private List<Mistake> mistakes;
+        private readonly Dictionary<string, Element> elements;
+        private readonly List<Mistake> mistakes;
         public Checker(Dictionary<string, Element> elements, List<Mistake> mistakes)
         {
             this.elements = elements;
@@ -21,7 +21,7 @@ namespace Verification.uc_ver
         }
 
         #region Checks
-        void CheckActors()
+        private void CheckActors()
         {
             var actors = elements.Where(element => element.Value.Type == ElementTypes.Actor);
             foreach (var actorName in actors.GroupBy(a => a.Value.Name))
@@ -65,7 +65,8 @@ namespace Verification.uc_ver
                 }
             }
         }
-        void CheckComments()
+
+        private void CheckComments()
         {
             var comments = elements.Where(element => element.Value.Type == ElementTypes.Comment);
             foreach (var comment in comments)
@@ -77,7 +78,8 @@ namespace Verification.uc_ver
                             comment.Value));
                 }
         }
-        void СheckPackages()
+
+        private void СheckPackages()
         {
             var packages = elements.Where(element => element.Value.Type == ElementTypes.Package);
             foreach (var package in packages)
@@ -89,7 +91,8 @@ namespace Verification.uc_ver
                             package.Value));
                 }
         }
-        void CheckPrecedents()
+
+        private void CheckPrecedents()
         {
             var extensionPoints = elements.Where(element => element.Value.Type == ElementTypes.ExtensionPoint);
             foreach (var point in extensionPoints)
@@ -198,7 +201,7 @@ namespace Verification.uc_ver
         #endregion
 
         #region Support Functions
-        bool HaveConnection(string id, string type)
+        private bool HaveConnection(string id, string type)
         {
             var assosiations = elements.Where(element => element.Value.Type == type);
             return assosiations.Where(a =>

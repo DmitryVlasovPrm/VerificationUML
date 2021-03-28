@@ -6,7 +6,7 @@ namespace Verification.type_definer
     /**
     * Быстрое пределение типа диаграммы
     */
-    static class TypeDefiner
+    internal static class TypeDefiner
     {
         /**
          * Проверка, что в списке переданных элементов есть хотя бы один с атрибутом равным значению type

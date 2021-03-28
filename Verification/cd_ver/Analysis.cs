@@ -1,13 +1,13 @@
 using System;
-using System.Windows.Forms;
 using System.Linq;
+using System.Windows.Forms;
 using Verification.cd_ver.Entities;
 
 namespace Verification.cd_ver
 {
     public static class Analysis
     {
-        private static string[] AllTypes =
+        private static readonly string[] AllTypes =
         {
             "int", "string", "float", "double", "bool", "List<T>", "List<string>",
             "List<Variable>", "List<Domain>", "List<Box>"
@@ -26,7 +26,7 @@ namespace Verification.cd_ver
                     var curItem = curElements[i];
                     var elementType = curItem.IsInterface ? "интерфейс" : "класс";
                     var curItemName = curItem.Name;
-                    
+
                     if (!char.IsUpper(curItemName[0]))
                         diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а начинается с маленькой буквы: \"{curItemName}\"", curItem.Box));
                     if (curItemName.Contains(" "))
@@ -42,7 +42,7 @@ namespace Verification.cd_ver
                             diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута начинается с большой буквы ({elementType} \"{curItemName}\"): \"{curAttributeName}\"", curItem.Box));
                         if (curAttributeName.Contains(" "))
                             diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута содержит пробелы ({elementType} \"{curItemName}\"): \"{curAttributeName}\"", curItem.Box));
-                    
+
                         var curType = allElements.Types.Find(a => a.Id == curAttribute.TypeId);
                         if (curType != null && !AllTypes.Contains(curType.Name) && allElements.Classes.FindIndex(a => a.Id == curAttribute.TypeId) == -1)
                             diagram.Mistakes.Add(new Mistake(1, $"Неверное имя типа ({elementType} \"{curItemName}\"): \"{curType.Name}\"", curItem.Box));
@@ -66,7 +66,7 @@ namespace Verification.cd_ver
                 // Комментарии в скобках {}
                 var commentsCount = allElements.Comments.Count;
                 for (var i = 0; i < commentsCount; i++)
-				{
+                {
                     var curComment = allElements.Comments[i];
                     var body = curComment.Body;
                     if (body != "" && (body[0] != '{' || body[body.Length - 1] != '}'))
@@ -115,7 +115,7 @@ namespace Verification.cd_ver
 
         // Проверка композиции или агрегации в главном элементе
         private static void CheckSyntacticMistake1(Elements allElements, Class mainClass, Class subordinateClass, ref Diagram diagram)
-		{
+        {
             var mainAttributes = mainClass.Attributes;
             var mainAttributesCount = mainAttributes.Count;
 
@@ -148,15 +148,15 @@ namespace Verification.cd_ver
             {
                 var connectionsCount = allElements.Connections.Count;
                 for (var i = 0; i < connectionsCount; i++)
-				{
+                {
                     var curConnection = allElements.Connections[i];
                     for (var j = 0; j < 2; j++)
                     {
                         var multiplicity = j == 0 ? curConnection.Multiplicity1 : curConnection.Multiplicity2;
                         var bbox = j == 0 ? curConnection.Box1 : curConnection.Box2;
                         var numbers = multiplicity.Split(new string[] { ".." }, StringSplitOptions.None);
-                        var num1 = numbers[0] == "*" ? Int32.MaxValue : int.Parse(numbers[0]);
-                        var num2 = numbers[1] == "*" ? Int32.MaxValue : int.Parse(numbers[1]);
+                        var num1 = numbers[0] == "*" ? int.MaxValue : int.Parse(numbers[0]);
+                        var num2 = numbers[1] == "*" ? int.MaxValue : int.Parse(numbers[1]);
 
                         if (num1 < 0 || num2 < 0)
                             diagram.Mistakes.Add(new Mistake(1, "Значение кратности меньше нуля", bbox));

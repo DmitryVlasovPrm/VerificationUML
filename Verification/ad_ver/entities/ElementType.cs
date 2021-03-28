@@ -18,7 +18,7 @@ namespace ActivityDiagramVer.entities
 
     public class ElementTypeAdapter
     {
-        public static String toString(ElementType type)
+        public static string toString(ElementType type)
         {
             switch (type)
             {

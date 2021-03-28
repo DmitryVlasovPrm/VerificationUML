@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
-    class MergeNode : DiagramElement
+    internal class MergeNode : DiagramElement
     {
-        public MergeNode(String id, String inPartition) : base(id, inPartition, "")
+        public MergeNode(string id, string inPartition) : base(id, inPartition, "")
         {
         }
     }

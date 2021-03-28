@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Verification
 {
-    static class MistakesPrinter
+    internal static class MistakesPrinter
     {
         public static void Print(List<Mistake> mistakes)
         {

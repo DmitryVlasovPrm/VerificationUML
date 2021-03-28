@@ -14,7 +14,7 @@ namespace Verification
         public Dictionary<string, Diagram> AllDiagrams;
         public Action<string> NewDiagramAdded;
         public Action<List<string>> SomethingChanged;
-        private List<string> ChangedDiagramNames;
+        private readonly List<string> ChangedDiagramNames;
 
         public Distribution()
         {

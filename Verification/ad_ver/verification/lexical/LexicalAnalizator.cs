@@ -7,7 +7,7 @@ namespace ActivityDiagramVer.verification.lexical
     /**
  * Этап лексического анализа
  */
-    class LexicalAnalizator
+    internal class LexicalAnalizator
     {
         private ADNodesList diagramElements;
         public void setDiagramElements(ADNodesList diagramElements)
@@ -90,7 +90,7 @@ namespace ActivityDiagramVer.verification.lexical
                 ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
             }
             // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
-            String firstWord = activity.getName().Split(' ')[0];
+            string firstWord = activity.getName().Split(' ')[0];
             //Console.WriteLine(firstWord);
 
             if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
@@ -100,7 +100,7 @@ namespace ActivityDiagramVer.verification.lexical
         {
             // добавляем вопрос для перехода
             BaseNode flowIn = diagramElements.get(decision.getInId(0));
-            String quest = ((ControlFlow)flowIn).getText();
+            string quest = ((ControlFlow)flowIn).getText();
             decision.setQuestion(quest.Trim());
 
             // добавляем альтернативы -> проходим по всем выходящим переходам и получаем подписи
@@ -168,7 +168,7 @@ namespace ActivityDiagramVer.verification.lexical
         }
         private class MistakesAdapter
         {
-            public static String toString(MISTAKES mistake)
+            public static string toString(MISTAKES mistake)
             {
                 switch (mistake)
                 {

@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
     /**
  * Элемент, являющийся родительским для других узлов AD
  */
     public abstract class BaseNode
     {
-        protected String id;
+        protected string id;
         protected ElementType type;
         private int x = -1;
         private int y = -1;
@@ -31,13 +29,13 @@ namespace ActivityDiagramVer.entities
         {
             return id.GetHashCode();
         }
-        public BaseNode(String id)
+        public BaseNode(string id)
         {
             this.id = id;
         }
 
         //region Getter-Setter
-        public String getId()
+        public string getId()
         {
             return id;
         }

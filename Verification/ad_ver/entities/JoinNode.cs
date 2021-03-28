@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
-    class JoinNode : DiagramElement
+    internal class JoinNode : DiagramElement
     {
-        public JoinNode(String id, String inPartition) : base(id, inPartition, "")
+        public JoinNode(string id, string inPartition) : base(id, inPartition, "")
         {
         }
     }

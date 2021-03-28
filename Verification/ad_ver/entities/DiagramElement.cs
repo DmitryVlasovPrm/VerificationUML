@@ -1,56 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ActivityDiagramVer.entities
 {
     public class DiagramElement : BaseNode
     {
-        protected String inPartition = "";
+        protected string inPartition = "";
         protected List<string> idsOut = new List<string>();       // массив ид входящих переходов
         protected List<string> idsIn = new List<string>();        // массив ид выходящих переходов
-        protected String description = "";
+        protected string description = "";
 
         public int petriId;
 
 
-        public DiagramElement(String id, String inPartition, String description) : base(id)
+        public DiagramElement(string id, string inPartition, string description) : base(id)
         {
             this.inPartition = inPartition;
             this.description = description;
         }
 
-        public String getInPartition()
+        public string getInPartition()
         {
             return inPartition;
         }
-        public String getDescription()
+        public string getDescription()
         {
             return description;
         }
 
-        public void addIn(String allId)
+        public void addIn(string allId)
         {
-            String[] ids = allId.Split(' ');
-            foreach (String id in ids)
+            string[] ids = allId.Split(' ');
+            foreach (string id in ids)
             {
                 if (!id.Equals("")) idsIn.Add(id);
             }
         }
-        public void addOut(String allId)
+        public void addOut(string allId)
         {
-            String[] ids = allId.Split(' ');
-            foreach (String id in ids)
+            string[] ids = allId.Split(' ');
+            foreach (string id in ids)
             {
                 if (!id.Equals("")) idsOut.Add(id);
             }
         }
 
-        public String getInId(int index)
+        public string getInId(int index)
         {
             return idsIn[index];
         }
 
-        public String getOutId(int index)
+        public string getOutId(int index)
         {
             return idsOut[index];
         }

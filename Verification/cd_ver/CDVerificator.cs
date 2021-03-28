@@ -2,19 +2,19 @@
 
 namespace Verification.cd_ver
 {
-    class CDVerificator
+    internal class CDVerificator
     {
         public static Elements AllElements;
         public static Diagram Diagram;
 
         public CDVerificator(Diagram diagram)
-		{
+        {
             AllElements = new Elements();
             Diagram = diagram;
         }
 
         public void Verify()
-		{
+        {
             ExtractElements.Extract(Diagram.XmlInfo, ref AllElements, ref Diagram);
             // Лексический анализ
             Analysis.LexicalAnalysis(AllElements, ref Diagram);

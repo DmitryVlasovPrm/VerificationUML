@@ -1,13 +1,12 @@
-﻿using System;
-using Verification.package_ver;
+﻿using Verification.package_ver;
 
 namespace ActivityDiagramVer.entities
 {
-    class Swimlane : BaseNode, IActor
+    internal class Swimlane : BaseNode, IActor
     {
-        private String name;
+        private readonly string name;
         private int childCount = 0;
-        public Swimlane(String id, String name) : base(id)
+        public Swimlane(string id, string name) : base(id)
         {
             this.name = name;
         }
@@ -16,7 +15,7 @@ namespace ActivityDiagramVer.entities
 
         public string Name => name;
 
-        public String getName()
+        public string getName()
         {
             return name;
         }
