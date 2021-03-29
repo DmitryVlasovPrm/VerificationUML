@@ -207,7 +207,7 @@ namespace ActivityDiagramVer.verification.syntax
                 if (stepResultMasks.Count == 0 && leaves.Count != 0)
                 {
                     //                writeMistake("При активации элементов " + activateIndexes+" возник" + MISTAKES.DEAD_ROAD);
-                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.DEAD_ROAD));
+                    ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.DEAD_ROAD));
                 }
                 //Debug.print("");
                 // проверяем, что новой маски нет во множестве обработанных и добавляем в необработанные в таком случае
@@ -231,7 +231,7 @@ namespace ActivityDiagramVer.verification.syntax
                             canReachFinal = true;
                             if (resultMask[indexOfFinalNode].peekLastColor() != NO_COLOR)
                             {
-                                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.FINAL_COLOR_TOKEN));
+                                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.FINAL_COLOR_TOKEN));
                                 return;
                             }
                             //region Проверка, что не осталось токенов
@@ -247,7 +247,7 @@ namespace ActivityDiagramVer.verification.syntax
                             }
                             if (tokenCount > 1)
                             {
-                                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END));
+                                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END));
                                 return;
                             }
                             //endregion
@@ -264,7 +264,7 @@ namespace ActivityDiagramVer.verification.syntax
             // проверяем, что конечное состояние было достигнуто
             if (!canReachFinal)
             {
-                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.COULD_NOT_REACH_FINAL));
+                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.COULD_NOT_REACH_FINAL));
 
             }
             else
@@ -332,9 +332,9 @@ namespace ActivityDiagramVer.verification.syntax
                 {
                     //writeMistake("", type.toString(), type==ElementType.ACTIVITY? ((ActivityNode) curNode.getValue()).getName():"", MISTAKES.TWO_TOKENS.toString());
                     if (curNode.getValue().getType() != ElementType.FINAL_NODE)
-                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode);
+                        ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode);
                     else
-                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode);
+                        ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode);
                     return true;
                 }
             }

@@ -92,6 +92,12 @@ namespace ActivityDiagramVer.verification.lexical
                 if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1)))) {
                     ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.SMALL_LETTER), node);
                 }
+                // проверка на спец символ
+                char firstLetter = activity.getName().Substring(0, 1).ToCharArray()[0];
+                char lastLetter = activity.getName().Substring(activity.getName().Length-1, 1).ToCharArray()[0];
+                if (firstLetter<'a'||firstLetter>'я'|| lastLetter < 'a' || lastLetter > 'я') {
+                    ADMistakeFactory.createMistake(Level.HARD, MistakesAdapter.toString(MISTAKES.STRANGE_SYMBOL), node);
+                }
                 // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
                 String firstWord = activity.getName().Split(' ')[0];
                 //Console.WriteLine(firstWord);
@@ -169,6 +175,7 @@ namespace ActivityDiagramVer.verification.lexical
             REPEATED_ALT,
             HAVE_EMPTY_ALT,
             HAVE_MARK,
+            STRANGE_SYMBOL,
             EMPTY_SWIMLANE
         }
         private class MistakesAdapter
@@ -193,6 +200,8 @@ namespace ActivityDiagramVer.verification.lexical
                         return "неподписанная альтернатива";
                     case MISTAKES.HAVE_MARK:
                         return "имеет подпись, не являясь условием или альтернативой";
+                    case MISTAKES.STRANGE_SYMBOL:
+                        return "название имеет специальный символ";
                     case MISTAKES.EMPTY_SWIMLANE:
                         return "не содержит элементов";
                     default:
