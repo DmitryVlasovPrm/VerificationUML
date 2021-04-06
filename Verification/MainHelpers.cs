@@ -173,6 +173,10 @@ namespace Verification
 					CvInvoke.Rectangle(curImage, new Rectangle(bbox.X, bbox.Y, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 2);
 					diagramPicture.Image = curImage.Bitmap;
 				}
+				else
+				{
+					diagramPicture.Image = selectedDiagram.Image.Bitmap;
+				}
 			}
 		}
 	}

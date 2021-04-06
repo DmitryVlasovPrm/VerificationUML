@@ -10,7 +10,8 @@ namespace Verification.cd_ver
         private static string[] AllTypes =
         {
             "int", "string", "float", "double", "bool", "List<T>", "List<string>",
-            "List<Variable>", "List<Domain>", "List<Box>"
+            "List<Variable>", "List<Domain>", "List<Box>", "char", "Variant*", "queue<unique_ptr<Token>>",
+            "vector<unique_ptr<Error>>"
         };
 
         // Лексический анализ
@@ -84,6 +85,10 @@ namespace Verification.cd_ver
         {
             try
             {
+                // Наличие элемента Package
+                if (allElements.Packages.Count == 0)
+                    diagram.Mistakes.Add(new Mistake(0, "Отсутствует элемент Package", null));
+
                 var connectionsCount = allElements.Connections.Count;
                 for (var i = 0; i < connectionsCount; i++)
                 {

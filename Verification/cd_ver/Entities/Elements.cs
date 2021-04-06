@@ -4,23 +4,23 @@ namespace Verification.cd_ver.Entities
 {
     public class Elements
     {
-        public List<Entities.Class> Classes;
-        public List<Entities.Connection> Connections;
-        public List<Entities.DataType> Types;
-        public List<Entities.Dependence> Dependences;
-        public List<Entities.Comment> Comments; // Могут быть в роли ограничений
-        public List<Entities.Enumeration> Enumerations;
-        public List<Entities.Package> Packages;
+        public List<Class> Classes;
+        public List<Connection> Connections;
+        public List<DataType> Types;
+        public List<Dependence> Dependences;
+        public List<Comment> Comments; // Могут быть в роли ограничений
+        public List<Enumeration> Enumerations;
+        public List<Package> Packages;
 
         public Elements()
         {
-            Classes = new List<Entities.Class>();
-            Connections = new List<Entities.Connection>();
-            Types = new List<Entities.DataType>();
-            Dependences = new List<Entities.Dependence>();
-            Comments = new List<Entities.Comment>();
-            Enumerations = new List<Entities.Enumeration>();
-            Packages = new List<Entities.Package>();
+            Classes = new List<Class>();
+            Connections = new List<Connection>();
+            Types = new List<DataType>();
+            Dependences = new List<Dependence>();
+            Comments = new List<Comment>();
+            Enumerations = new List<Enumeration>();
+            Packages = new List<Package>();
         }
     }
 }
