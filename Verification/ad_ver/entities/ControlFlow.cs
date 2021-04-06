@@ -1,40 +1,38 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
-    class ControlFlow : BaseNode
+    internal class ControlFlow : BaseNode
     {
-        private String src = "";
-        private String targets = "";
-        private String text;
-        public ControlFlow(String id) : base(id) { }
+        private string src = "";
+        private string targets = "";
+        private readonly string text;
+        public ControlFlow(string id) : base(id) { }
 
-        public ControlFlow(String id, String text) : base(id)
+        public ControlFlow(string id, string text) : base(id)
         {
             this.text = text;
         }
 
-        public String getText()
+        public string getText()
         {
             return text;
         }
 
-        public String getSrc()
+        public string getSrc()
         {
             return src;
         }
 
-        public void setSrc(String src)
+        public void setSrc(string src)
         {
             this.src = src;
         }
 
-        public String getTarget()
+        public string getTarget()
         {
             return targets;
         }
 
-        public void setTarget(String targets)
+        public void setTarget(string targets)
         {
             this.targets = targets;
         }

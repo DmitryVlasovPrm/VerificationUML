@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Verification.uc_ver
 {
-    class VerificatorUC
+    internal class VerificatorUC
     {
-        private Dictionary<string, Element> elements;
-        private Reader reader;
-        private Checker checker;
-        private Diagram diagram;
+        private readonly Dictionary<string, Element> elements;
+        private readonly Reader reader;
+        private readonly Checker checker;
+        private readonly Diagram diagram;
         public VerificatorUC(Diagram diagram)
         {
             elements = new Dictionary<string, Element>();
@@ -21,19 +21,26 @@ namespace Verification.uc_ver
         public void Verificate()
         {
             reader.ReadData(diagram.XmlInfo);
+
+            if (diagram.Image != null)
+                FixCoordinates();
+
+            checker.Check();
+        }
+
+        private void FixCoordinates()
+        {
             var minX = elements.Min(e => e.Value.X);
             var minY = elements.Min(e => e.Value.Y);
             var tuple = MinCoordinates.Compute(diagram.Image);
-            var diffX = Math.Abs(minX - tuple.Item1)/2;
-            var diffY = Math.Abs(minY - tuple.Item2)/2;
+            var diffX = Math.Abs(minX - tuple.Item1) / 2;
+            var diffY = Math.Abs(minY - tuple.Item2) / 2;
 
             foreach (var element in elements)
             {
                 element.Value.X += diffX;
                 element.Value.Y += diffY;
             }
-
-            checker.Check();
         }
     }
 }

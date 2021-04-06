@@ -1,9 +1,9 @@
 using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
-using Verification.cd_ver.Entities;
+using System.Windows.Forms;
 using System.Xml;
+using Verification.cd_ver.Entities;
 using Attribute = Verification.cd_ver.Entities.Attribute;
 
 namespace Verification.cd_ver
@@ -97,7 +97,7 @@ namespace Verification.cd_ver
                     {
                         case "uml:Package":
                             var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:PackageWidget");
-                            var box = elementGraphicInfo != null ? elementGraphicInfo.Item3 : null;
+                            var box = elementGraphicInfo?.Item3;
                             allElements.Packages.Add(new Package(elementId, elementName, box));
                             break;
 
@@ -107,12 +107,12 @@ namespace Verification.cd_ver
                             var russianName = "Класс";
                             var isInterface = false;
                             if (elementType == "uml:Interface")
-							{
+                            {
                                 xsiType = "com.genmymodel.graphic.uml:InterfaceWidget";
                                 russianName = "Интерфейс";
                                 isInterface = true;
                             }
-                            
+
                             var attributes = new List<Attribute>();
                             var operations = new List<Operation>();
 
@@ -193,17 +193,17 @@ namespace Verification.cd_ver
                             }
 
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == xsiType);
-                            box = elementGraphicInfo != null ? elementGraphicInfo.Item3 : null;
+                            box = elementGraphicInfo?.Item3;
                             var newClass = new Class(elementId, elementName, box, attributes, operations, generalClassesIdxs, isInterface, interfaceSuppliersIdxs);
-                            
+
                             // Проверим на дублирование
                             var isExist = allElements.Classes.Exists(a => a.Name == elementName);
                             if (isExist)
-							{
+                            {
                                 diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box));
                                 break;
-							}
-                            
+                            }
+
                             allElements.Classes.Add(newClass);
                             break;
 
@@ -251,7 +251,7 @@ namespace Verification.cd_ver
                                 var curMult = curLowerValue + ".." + curUpperValue;
 
                                 elementGraphicInfo = graphicInfo.Find(a => a.Item1 == curOwnedEndId && a.Item2 == "com.genmymodel.graphic.uml:MemberEndMultiplicityWidget");
-                                var curBox = elementGraphicInfo != null ? elementGraphicInfo.Item3 : null;
+                                var curBox = elementGraphicInfo?.Item3;
 
                                 if (j == 0)
                                 {
@@ -307,7 +307,7 @@ namespace Verification.cd_ver
                             }
 
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:EnumerationWidget");
-                            box = elementGraphicInfo != null ? elementGraphicInfo.Item3 : null;
+                            box = elementGraphicInfo?.Item3;
 
                             // Проверим на дублирование
                             isExist = allElements.Enumerations.Exists(a => a.Name == elementName);
@@ -322,7 +322,7 @@ namespace Verification.cd_ver
 
                         default:
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId);
-                            box = elementGraphicInfo != null ? elementGraphicInfo.Item3 : null;
+                            box = elementGraphicInfo?.Item3;
                             diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box));
                             break;
                     }
@@ -351,7 +351,7 @@ namespace Verification.cd_ver
                         body = curComment.Attributes["body"].Value.TrimStart().TrimEnd();
 
                     var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == commentId);
-                    var box = elementGraphicInfo != null ? elementGraphicInfo.Item3 : null;
+                    var box = elementGraphicInfo?.Item3;
                     allElements.Comments.Add(new Comment(commentId, body, box, annotatedElementId));
                 }
                 catch (Exception ex)

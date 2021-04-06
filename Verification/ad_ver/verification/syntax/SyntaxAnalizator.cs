@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ActivityDiagramVer.verification.syntax
 {
-    class SyntaxAnalizator
+    internal class SyntaxAnalizator
     {
         private ADNodesList diagramElements;
         private int initialCount = 0;
@@ -89,7 +89,7 @@ namespace ActivityDiagramVer.verification.syntax
          * @param currentNode
          * @param name
          */
-        private void checkIfInPartion(DiagramElement currentNode, String name, ADNodesList.ADNode node)
+        private void checkIfInPartion(DiagramElement currentNode, string name, ADNodesList.ADNode node)
         {
             if (currentNode.getInPartition().Equals(""))
                 ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NO_PARTION), node);
@@ -100,7 +100,7 @@ namespace ActivityDiagramVer.verification.syntax
          * @param currentNode
          * @param name
          */
-        private void checkInOut(DiagramElement currentNode, String name, ADNodesList.ADNode node)
+        private void checkInOut(DiagramElement currentNode, string name, ADNodesList.ADNode node)
         {
             if (currentNode is MergeNode)
                 if ((currentNode).inSize() == 1)
@@ -161,7 +161,7 @@ namespace ActivityDiagramVer.verification.syntax
             {
                 for (int i = 0; i < decision.outSize() - 1; i++)
                 {
-                    String targetId = ((ControlFlow)diagramElements.get(decision.getOutId(i))).getTarget();
+                    string targetId = ((ControlFlow)diagramElements.get(decision.getOutId(i))).getTarget();
                     for (int j = i + 1; j < decision.outSize(); j++)
                     {
                         if (targetId.Equals(((ControlFlow)diagramElements.get(decision.getOutId(j))).getTarget()))
@@ -172,7 +172,7 @@ namespace ActivityDiagramVer.verification.syntax
                         ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
                 }
                 // проверка на последовательность условных операторов
-                String targetId2 = ((ControlFlow)diagramElements.get(decision.getOutId(decision.outSize() - 1))).getTarget();
+                string targetId2 = ((ControlFlow)diagramElements.get(decision.getOutId(decision.outSize() - 1))).getTarget();
                 if (diagramElements.get(targetId2).getType() == ElementType.DECISION)
                     ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
 
@@ -204,7 +204,7 @@ namespace ActivityDiagramVer.verification.syntax
         private class MistakeAdapter
         {
 
-            public static String toString(MISTAKES mistake)
+            public static string toString(MISTAKES mistake)
             {
                 switch (mistake)
                 {

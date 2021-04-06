@@ -2,7 +2,7 @@
 
 namespace Verification
 {
-    static class MistakesTypes
+    internal static class MistakesTypes
     {
         public const int
             WARNING = 0,

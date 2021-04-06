@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
-    class InitialNode : DiagramElement
+    internal class InitialNode : DiagramElement
     {
-        public InitialNode(String id, String inPartition) : base(id, inPartition, "")
+        public InitialNode(string id, string inPartition) : base(id, inPartition, "")
         {
 
         }

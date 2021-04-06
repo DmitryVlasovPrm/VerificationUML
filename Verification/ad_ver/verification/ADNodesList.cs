@@ -7,7 +7,7 @@ namespace ActivityDiagramVer
 {
     public class ADNodesList
     {
-        private List<ADNode> nodes;
+        private readonly List<ADNode> nodes;
         private int diagramElementId = 0;       // Петри ид, присваиваемый элементу
 
         public ADNodesList()
@@ -91,8 +91,8 @@ namespace ActivityDiagramVer
             // для всех выходный переходов находим таргеты и добавляем ссылки в текущий элемент на таргеты
             for (int i = 0; i < cur.outSize(); i++)
             {
-                ControlFlow flow = (ControlFlow)this.get(cur.getOutId(i));
-                ADNode target = this.getNode(flow.getTarget());
+                ControlFlow flow = (ControlFlow)get(cur.getOutId(i));
+                ADNode target = getNode(flow.getTarget());
                 curNode.next.Add(target);       // прямая связь
                 target.prev.Add(curNode);        // обратная связь
             }
@@ -143,7 +143,7 @@ namespace ActivityDiagramVer
         /**
          * @return значение узла или null если такой не найден
          */
-        public BaseNode get(String id)
+        public BaseNode get(string id)
         {
 
             ADNode node = nodes.Where(x => x.getValue().getId().Equals(id)).FirstOrDefault();
@@ -151,7 +151,7 @@ namespace ActivityDiagramVer
             return node.getValue() != null ? node.getValue() : null;
         }
 
-        public ADNode getNode(String id)
+        public ADNode getNode(string id)
         {
             var node = nodes.Where(x => x.getValue().getId().Equals(id)).FirstOrDefault();
             return node == default ? null : node;
@@ -189,9 +189,9 @@ namespace ActivityDiagramVer
 
             public ADNode(ADNode old)
             {
-                this.value = old.value;
-                this.next = old.next;
-                this.prev = old.prev;
+                value = old.value;
+                next = old.next;
+                prev = old.prev;
             }
 
             //region Getter-Setter

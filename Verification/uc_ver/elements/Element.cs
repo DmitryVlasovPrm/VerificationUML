@@ -2,7 +2,7 @@
 
 namespace Verification.uc_ver
 {
-    public class Element: IActor
+    public class Element : IActor
     {
         public string Id { get; set; }
         public string Type { get; set; }

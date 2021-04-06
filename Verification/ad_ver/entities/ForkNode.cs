@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace ActivityDiagramVer.entities
+﻿namespace ActivityDiagramVer.entities
 {
-    class ForkNode : DiagramElement
+    internal class ForkNode : DiagramElement
     {
-        public ForkNode(String id, String inPartition) : base(id, inPartition, "")
+        public ForkNode(string id, string inPartition) : base(id, inPartition, "")
         {
         }
     }

@@ -18,7 +18,7 @@ namespace Verification.cd_ver.Entities
         public BoundingBox Box1;
         public bool Navigalable1;
         public ConnectionType ConnectionType1;
-        
+
         public string OwnedElementId2;
         public string Role2;
         public string Multiplicity2;
@@ -31,14 +31,14 @@ namespace Verification.cd_ver.Entities
         {
             Id = id;
             Name = name;
-            
+
             OwnedElementId1 = ownedElementId1;
             Role1 = role1;
             Multiplicity1 = multiplicity1;
             Box1 = box1;
             Navigalable1 = navigalable1;
             ConnectionType1 = connectionType1;
-            
+
             OwnedElementId2 = ownedElementId2;
             Role2 = role2;
             Multiplicity2 = multiplicity2;

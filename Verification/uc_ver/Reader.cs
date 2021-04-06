@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Verification.package_ver;
 
 namespace Verification.uc_ver
 {
-    class Reader
+    internal class Reader
     {
-        private Dictionary<string, Element> elements;
-        private List<Mistake> mistakes;
-        private Diagram diagram;
+        private readonly Dictionary<string, Element> elements;
+        private readonly List<Mistake> mistakes;
+        private readonly Diagram diagram;
 
         public Reader(Dictionary<string, Element> elements, Diagram diagram)
         {
@@ -126,7 +125,7 @@ namespace Verification.uc_ver
             return true;
         }
 
-        int ConvertCoordinates(string str)
+        private int ConvertCoordinates(string str)
         {
             try
             {

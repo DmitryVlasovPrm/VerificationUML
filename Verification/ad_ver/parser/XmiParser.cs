@@ -2,28 +2,24 @@
 using ActivityDiagramVer.result;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Xml;
 using Verification;
 using Verification.ad_ver.entities;
 
 namespace ActivityDiagramVer.parser
 {
-
-    class XmiParser
+    internal class XmiParser
     {
         private XmlDocument xmlFile = null;
-        private XmlElement root = null;
-        private ADNodesList adNodesList;
-        private List<BaseNode> unknownNodes = new List<BaseNode>();
-        private (int, int) coordMin;
+        private readonly ADNodesList adNodesList;
+        private readonly List<BaseNode> unknownNodes = new List<BaseNode>();
 
         public XmiParser(ADNodesList adNodesList)
         {
             this.adNodesList = adNodesList;
         }
 
-        private XmlNode findActivePackageEl(XmlNodeList xPackagedList)
+        private XmlNode FindActivePackageEl(XmlNodeList xPackagedList)
         {
             foreach (XmlNode node in xPackagedList)
             {
@@ -36,23 +32,21 @@ namespace ActivityDiagramVer.parser
         }
         public bool Parse(Diagram diagram)
         {
-            this.xmlFile = diagram.doc;
-
-            // получим корневой элемент
-            XmlNode xRoot = null;
+            xmlFile = diagram.doc;
             XmlNodeList xPackagedList;
             try
             {
                 xPackagedList = xmlFile.GetElementsByTagName("packagedElement");
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 Console.WriteLine("[x] Тег packagedElement не найден");
                 return false;
             }
 
 
-            xRoot = findActivePackageEl(xPackagedList);
+            // получим корневой элемент
+            XmlNode xRoot = FindActivePackageEl(xPackagedList);
             if (xRoot == null)
             {
                 Console.WriteLine("[x] Вид диаграммы не AD");
@@ -88,44 +82,44 @@ namespace ActivityDiagramVer.parser
                         // активность
                         case "uml:OpaqueAction":
                             nodeFromXMI = new ActivityNode(node.Attributes["xmi:id"].Value,
-                                    attrAdapter(node.Attributes["inPartition"]), attrAdapter(node.Attributes["name"]));
+                                    AttrAdapter(node.Attributes["inPartition"]), AttrAdapter(node.Attributes["name"]));
                             nodeFromXMI.setType(ElementType.ACTIVITY);
                             adNodesList.addLast(nodeFromXMI);
                             break;
                         // узел инициализации
                         case "uml:InitialNode":
-                            nodeFromXMI = new InitialNode(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["inPartition"]));
+                            nodeFromXMI = new InitialNode(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["inPartition"]));
                             nodeFromXMI.setType(ElementType.INITIAL_NODE);
                             adNodesList.addLast(nodeFromXMI);
                             break;
                         // конечное состояние
                         case "uml:ActivityFinalNode":
                         case "uml:FlowFinalNode":
-                            nodeFromXMI = new FinalNode(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["inPartition"]));
+                            nodeFromXMI = new FinalNode(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["inPartition"]));
                             nodeFromXMI.setType(ElementType.FINAL_NODE);
                             adNodesList.addLast(nodeFromXMI);
                             break;
                         // условный переход
                         case "uml:DecisionNode":
-                            nodeFromXMI = new DecisionNode(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["inPartition"]), attrAdapter(node.Attributes["question"]));
+                            nodeFromXMI = new DecisionNode(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["inPartition"]), AttrAdapter(node.Attributes["question"]));
                             nodeFromXMI.setType(ElementType.DECISION);
                             adNodesList.addLast(nodeFromXMI);
                             break;
                         // узел слияния
                         case "uml:MergeNode":
-                            nodeFromXMI = new MergeNode(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["inPartition"]));
+                            nodeFromXMI = new MergeNode(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["inPartition"]));
                             nodeFromXMI.setType(ElementType.MERGE);
                             adNodesList.addLast(nodeFromXMI);
                             break;
                         // разветвитель
                         case "uml:ForkNode":
-                            nodeFromXMI = new ForkNode(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["inPartition"]));
+                            nodeFromXMI = new ForkNode(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["inPartition"]));
                             nodeFromXMI.setType(ElementType.FORK);
                             adNodesList.addLast(nodeFromXMI);
                             break;
                         // синхронизатор
                         case "uml:JoinNode":
-                            nodeFromXMI = new JoinNode(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["inPartition"]));
+                            nodeFromXMI = new JoinNode(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["inPartition"]));
                             nodeFromXMI.setType(ElementType.JOIN);
                             adNodesList.addLast(nodeFromXMI);
                             break;
@@ -133,10 +127,10 @@ namespace ActivityDiagramVer.parser
                     // добавляем ид входящих и выходящих переходов
                     if (nodeFromXMI != null)
                     {
-                        String idsIn = node.Attributes["incoming"]?.Value;
-                        String idsOut = node.Attributes["outgoing"]?.Value;
-                        nodeFromXMI.addIn(idsIn == null ? "" : idsIn);
-                        nodeFromXMI.addOut(idsOut == null ? "" : idsOut);
+                        string idsIn = node.Attributes["incoming"]?.Value;
+                        string idsOut = node.Attributes["outgoing"]?.Value;
+                        nodeFromXMI.addIn(idsIn ?? "");
+                        nodeFromXMI.addOut(idsOut ?? "");
                     }
                 }
                 // создаем переход
@@ -144,21 +138,23 @@ namespace ActivityDiagramVer.parser
                 {
                     // находим подпись перехода
                     var markNode = node.ChildNodes[1];
-                    String mark = markNode.Attributes["value"].Value.Trim();        // если подпись является "yes", значит это подпись по умолчанию
+                    string mark = markNode.Attributes["value"].Value.Trim();        // если подпись является "yes", значит это подпись по умолчанию
 
                     ControlFlow temp = new ControlFlow(node.Attributes["xmi:id"].Value, mark.Equals("true") ? "" : mark);
                     temp.setType(ElementType.FLOW);
-                    temp.setSrc(attrAdapter(node.Attributes["source"]));
-                    temp.setTarget(attrAdapter(node.Attributes["target"]));
+                    temp.setSrc(AttrAdapter(node.Attributes["source"]));
+                    temp.setTarget(AttrAdapter(node.Attributes["target"]));
                     adNodesList.addLast(temp);
                 }
                 // создаем дорожку
                 else if (node.Attributes["xsi:type"].Value.Equals("uml:ActivityPartition"))
                 {
-                    Swimlane temp = new Swimlane(node.Attributes["xmi:id"].Value, attrAdapter(node.Attributes["name"]));
-                    temp.ChildCount = node.Attributes["node"] == null ? 0 : node.Attributes["node"].Value.Split().Length;
+                    Swimlane temp = new Swimlane(node.Attributes["xmi:id"].Value, AttrAdapter(node.Attributes["name"]))
+                    {
+                        ChildCount = node.Attributes["node"] == null ? 0 : node.Attributes["node"].Value.Split().Length
+                    };
                     temp.setType(ElementType.SWIMLANE);
-                    if(temp.Name!="") diagram.Actors.Add(temp);
+                    if (temp.Name != "") diagram.Actors.Add(temp);
                     adNodesList.addLast(temp);
 
                 }
@@ -171,24 +167,24 @@ namespace ActivityDiagramVer.parser
                 }
             }
 
-            XmlNode coordRoot = null;
+            XmlNode coordRoot;
             try
             {
                 coordRoot = xmlFile.GetElementsByTagName("plane")[0];
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 Console.WriteLine("[x] Тег packagedElement не найден");
                 return false;
             }
 
             if (coordRoot == null) return true;
-            findCoordinates(coordRoot);
+            FindCoordinates(coordRoot);
 
             return true;
         }
 
-        private String attrAdapter(XmlAttribute attr)
+        private string AttrAdapter(XmlAttribute attr)
         {
             return attr == null ? "" : attr.Value.Trim();
         }
@@ -196,18 +192,18 @@ namespace ActivityDiagramVer.parser
          * Добавляет координаты к элементам
          * @param packagedElement
          */
-        private void findCoordinates(XmlNode packagedElement)
+        private void FindCoordinates(XmlNode packagedElement)
         {
-            int xMin = int.MaxValue, yMin= int.MaxValue;
+            int xMin = int.MaxValue, yMin = int.MaxValue;
             foreach (XmlNode nodeCh in packagedElement.ChildNodes)
             {
                 var attr = nodeCh.Attributes["xsi:type"];
                 if (attr == null) continue;     // если эл-т не имеет атрибут type, он нас не интересует 
-                String id = nodeCh.Attributes["modelElement"]?.Value;
-                String xStr = nodeCh.Attributes["x"]?.Value;
-                String yStr = nodeCh.Attributes["y"]?.Value;
-                String widthStr = nodeCh.Attributes["width"]?.Value;
-                String heightStr = nodeCh.Attributes["height"]?.Value;
+                string id = nodeCh.Attributes["modelElement"]?.Value;
+                string xStr = nodeCh.Attributes["x"]?.Value;
+                string yStr = nodeCh.Attributes["y"]?.Value;
+                string widthStr = nodeCh.Attributes["width"]?.Value;
+                string heightStr = nodeCh.Attributes["height"]?.Value;
                 int x = 0, y = 0, width = 0, height = 0;
                 bool noCoord = true;
                 if (xStr != null)
@@ -250,7 +246,8 @@ namespace ActivityDiagramVer.parser
                 node.Height = height;
 
                 // ищем минимальный 
-                if (x != -1) {
+                if (x != -1)
+                {
                     xMin = Math.Min(x, xMin);
                     yMin = Math.Min(y, yMin);
                 }
@@ -258,9 +255,10 @@ namespace ActivityDiagramVer.parser
 
             // нормализация координат
             if (xMin == int.MaxValue) return;
-            for (int i = 0; i < adNodesList.size(); i++) {
+            for (int i = 0; i < adNodesList.size(); i++)
+            {
                 adNodesList.get(i).X -= xMin;
-                adNodesList.get(i).Y-= yMin;
+                adNodesList.get(i).Y -= yMin;
                 Console.WriteLine($"[x] xmin={xMin}, yMin={yMin}, x={adNodesList.get(i).X}, y={adNodesList.get(i).Y}");
             }
 

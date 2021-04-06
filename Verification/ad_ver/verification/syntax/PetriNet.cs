@@ -7,13 +7,13 @@ using System.Text;
 
 namespace ActivityDiagramVer.verification.syntax
 {
-    class PetriNet
+    internal class PetriNet
     {
-        const char NO_TOKEN = '0';
-        const char TOKEN = '1';
-        const char NEW_TOKEN = '2';
-        const int NO_COLOR = 0;
-        Random random = new Random();
+        private const char NO_TOKEN = '0';
+        private const char TOKEN = '1';
+        private const char NEW_TOKEN = '2';
+        private const int NO_COLOR = 0;
+        private readonly Random random = new Random();
 
         /**
          * Создает маску, в которой все эл-ты неактивны
@@ -42,7 +42,7 @@ namespace ActivityDiagramVer.verification.syntax
         public void petriCheck(ADNodesList adList)
         {
             Queue<List<Token>> leaves = new Queue<List<Token>>();       // необработанные маски
-            HashSet<String> masksInUsed = new HashSet<String>(adList.getPetriElementsCount());   // использованные маски
+            HashSet<string> masksInUsed = new HashSet<string>(adList.getPetriElementsCount());   // использованные маски
 
             // ищем начальное состояние
             ADNodesList.ADNode initNode = adList.findInitial();
@@ -306,13 +306,13 @@ namespace ActivityDiagramVer.verification.syntax
         }
 
 
-        private String maskToString(List<Token> mask)
+        private string maskToString(List<Token> mask)
         {
-            String maskStr = "";
+            string maskStr = "";
             mask.ForEach(x => maskStr += x.type);
             return maskStr;
         }
-        private bool findInMasksInUsed(HashSet<String> inUsed, List<Token> mask)
+        private bool findInMasksInUsed(HashSet<string> inUsed, List<Token> mask)
         {
             return inUsed.Contains(maskToString(mask));
         }
@@ -407,8 +407,8 @@ namespace ActivityDiagramVer.verification.syntax
             }
             public Token(Token old)
             {
-                this.type = old.type;
-                this.colors = new List<int>(old.colors);
+                type = old.type;
+                colors = new List<int>(old.colors);
             }
             public int peekLastColor()
             {
@@ -435,7 +435,7 @@ namespace ActivityDiagramVer.verification.syntax
         }
         private class MistakeAdapter
         {
-            public static String toString(MISTAKES mistake)
+            public static string toString(MISTAKES mistake)
             {
                 switch (mistake)
                 {

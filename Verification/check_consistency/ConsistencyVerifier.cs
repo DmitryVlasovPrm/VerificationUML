@@ -4,9 +4,19 @@ using System.Linq;
 namespace Verification.package_ver {
     class ConsistencyVerifier {
         public static void Verify(Diagram uc, Diagram ad, Diagram cd, List<Mistake> mistakes) {
+            var ucNames = new HashSet<string>();
+            var adNames = new HashSet<string>();
+            var cdNames = new HashSet<string>();
+
+            if (uc!=null)
+                ucNames = uc.Actors.Select(x => x.Name).ToHashSet();
+            if (ad!=null)
+                adNames = ad.Actors.Select(x => x.Name).ToHashSet();
+            if (cd!=null)
+                cdNames = cd.Actors.Select(x => x.Name).ToHashSet();
             if (uc!=null && ad != null) {
-                var ucAd = uc.Actors.Except(ad.Actors).ToList();
-                var adUc = ad.Actors.Except(uc.Actors).ToList();
+                var ucAd = ucNames.Except(adNames).ToList();
+                var adUc = adNames.Except(ucNames).ToList();
                 ucAd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДП и АД - в ДП имеется актор {x}, которого нет в АД", 
@@ -17,8 +27,8 @@ namespace Verification.package_ver {
                     new BoundingBox(-1, -1, -1, -1))));
             }
             if(uc!=null && cd != null) {
-                var ucCd = uc.Actors.Except(cd.Actors).ToList();
-                var cdUc = cd.Actors.Except(uc.Actors).ToList();
+                var ucCd = ucNames.Except(cdNames).ToList();
+                var cdUc = cdNames.Except(ucNames).ToList();
                 ucCd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДП и ДК - в ДП имеется актор {x}, которого нет в ДК",
@@ -29,8 +39,8 @@ namespace Verification.package_ver {
                     new BoundingBox(-1, -1, -1, -1))));
             }
             if(ad!=null && cd != null) {
-                var adCd = ad.Actors.Except(cd.Actors).ToList();
-                var cdAd = cd.Actors.Except(ad.Actors).ToList();
+                var adCd = adNames.Except(cdNames).ToList();
+                var cdAd = cdNames.Except(adNames).ToList();
                 adCd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между АД и ДК - в АД имеется актор {x}, которого нет в ДК",
