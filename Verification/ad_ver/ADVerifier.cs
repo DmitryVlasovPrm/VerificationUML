@@ -30,7 +30,7 @@ namespace Verification.ad_ver
             if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL))
             {
                 GraphVerifier petriNet = new GraphVerifier();
-                petriNet.petriCheck(adNodesList);
+                petriNet.check(adNodesList);
             }
         }
     }

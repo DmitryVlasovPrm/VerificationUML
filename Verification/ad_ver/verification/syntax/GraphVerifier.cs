@@ -40,7 +40,7 @@ namespace ActivityDiagramVer.verification.syntax
             return random.Next(int.MaxValue);
         }
 
-        public void petriCheck(ADNodesList adList)
+        public void check(ADNodesList adList)
         {
             Queue<List<Token>> leaves = new Queue<List<Token>>();       // необработанные маски
             HashSet<string> masksInUsed = new HashSet<string>(adList.getPetriElementsCount());   // использованные маски
