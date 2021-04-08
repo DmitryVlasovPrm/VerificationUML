@@ -73,11 +73,12 @@
     <Compile Include="ad_ver\entities\UnknownNode.cs" />
     <Compile Include="ad_ver\parser\XmiParser.cs" />
     <Compile Include="ad_ver\result\ADMistakeFactory.cs" />
+    <Compile Include="ad_ver\verification\ADMistakes.cs" />
     <Compile Include="ad_ver\verification\ADNodesList.cs" />
     <Compile Include="ad_ver\verification\Level.cs" />
     <Compile Include="ad_ver\verification\lexical\LexicalAnalizator.cs" />
-    <Compile Include="ad_ver\verification\syntax\PetriNet.cs" />
-    <Compile Include="ad_ver\verification\syntax\SyntaxAnalizator.cs" />
+    <Compile Include="ad_ver\verification\syntax\GraphVerifier.cs" />
+    <Compile Include="ad_ver\verification\syntax\ADModelVerifier.cs" />
     <Compile Include="BoundingBox.cs" />
     <Compile Include="cd_ver\Analysis.cs" />
     <Compile Include="cd_ver\Entities\Attribute.cs" />

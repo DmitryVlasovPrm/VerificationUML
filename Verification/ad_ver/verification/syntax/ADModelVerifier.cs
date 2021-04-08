@@ -1,16 +1,26 @@
 ﻿using ActivityDiagramVer.entities;
 using ActivityDiagramVer.result;
+using ActivityDiagramVer.verification.lexical;
 using System;
 using System.Collections.Generic;
+using Verification.ad_ver.verification;
 
 namespace ActivityDiagramVer.verification.syntax
 {
-    internal class SyntaxAnalizator
+    /// <summary>
+    /// Класс, отвечающий за проверку диаграммы без графа
+    /// </summary>
+    internal class ADModelVerifier
     {
         private ADNodesList diagramElements;
         private int initialCount = 0;
         private int finalCount = 0;
         private int activityCount = 0;
+        private LexicalAnalizator lexicalAnalizator;
+
+        public ADModelVerifier(LexicalAnalizator lexicalAnalizator) {
+            this.lexicalAnalizator = lexicalAnalizator ?? throw new ArgumentNullException(nameof(lexicalAnalizator));
+        }
 
         public void setDiagramElements(ADNodesList diagramElements)
         {
@@ -19,12 +29,15 @@ namespace ActivityDiagramVer.verification.syntax
 
         public void check()
         {
+            lexicalAnalizator.setDiagramElements(diagramElements);
+
             for (int i = 0; i < diagramElements.size(); i++)
             {
                 BaseNode currentNode = diagramElements.get(i);
                 switch (diagramElements.get(i).getType())
                 {
                     case ElementType.FLOW:
+                        lexicalAnalizator.checkFlow((ControlFlow)diagramElements.get(i));
                         break;
                     case ElementType.INITIAL_NODE:
                         checkIfInPartion((DiagramElement)currentNode, "", diagramElements.getNode(i));
@@ -52,14 +65,21 @@ namespace ActivityDiagramVer.verification.syntax
                         checkInOut((DiagramElement)currentNode, "", diagramElements.getNode(i));
                         break;
                     case ElementType.ACTIVITY:
+                        lexicalAnalizator.checkActivity((ActivityNode)diagramElements.get(i), diagramElements.getNode(i));
+
                         checkIfInPartion((DiagramElement)currentNode, ((ActivityNode)currentNode).getName(), diagramElements.getNode(i));
                         checkInOut((DiagramElement)currentNode, ((ActivityNode)currentNode).getName(), diagramElements.getNode(i));
                         checkActivity((ActivityNode)diagramElements.get(i), diagramElements.getNode(i));
                         break;
                     case ElementType.DECISION:
+                        lexicalAnalizator.checkDecision((DecisionNode)diagramElements.get(i), diagramElements.getNode(i));
+
                         checkIfInPartion((DiagramElement)currentNode, ((DecisionNode)currentNode).getQuestion(), diagramElements.getNode(i));
                         checkInOut((DiagramElement)currentNode, ((DecisionNode)currentNode).getQuestion(), diagramElements.getNode(i));
                         checkDecision((DecisionNode)diagramElements.get(i), diagramElements.getNode(i));
+                        break;
+                    case ElementType.SWIMLANE:
+                        lexicalAnalizator.checkSwimlane((Swimlane)diagramElements.get(i));
                         break;
                     case ElementType.UNKNOWN:
                         break;
@@ -178,70 +198,6 @@ namespace ActivityDiagramVer.verification.syntax
 
             }
 
-        }
-
-        /**
-         * Ошибки, которые могут возникнуть на данном этапе
-         */
-        private enum MISTAKES
-        {
-            MORE_THAN_ONE_INIT,
-            NO_FINAL,
-            NO_INITIAL,
-            NO_ACTIVITIES,
-            MORE_THAN_ONE_OUT,
-            DO_NOT_HAVE_ALT,
-            ONLY_ONE_ALT,
-            NO_OUT,
-            NO_IN,
-            NO_PARTION,
-            REPEATED_ACT,
-            SAME_TARGET,
-            OUT_NOT_IN_ACT,
-            NEXT_DECISION,
-            MERGE_HAS_1_IN
-        }
-        private class MistakeAdapter
-        {
-
-            public static string toString(MISTAKES mistake)
-            {
-                switch (mistake)
-                {
-                    case MISTAKES.MORE_THAN_ONE_INIT:
-                        return "В диаграмме больше одного начального состояния";
-                    case MISTAKES.NO_FINAL:
-                        return "В диаграмме отсутствует финальное состояние";
-                    case MISTAKES.NO_INITIAL:
-                        return "В диаграмме отсутствует начальное состояние";
-                    case MISTAKES.NO_ACTIVITIES:
-                        return "В диаграмме отсутствуют активности";
-                    case MISTAKES.MORE_THAN_ONE_OUT:
-                        return "больше одного выходящего перехода";
-                    case MISTAKES.DO_NOT_HAVE_ALT:
-                        return "не имеет альтернатив";
-                    case MISTAKES.ONLY_ONE_ALT:
-                        return "всего одна альтернатива";
-                    case MISTAKES.MERGE_HAS_1_IN:
-                        return "всего один входной переход";
-                    case MISTAKES.NO_IN:
-                        return "отсутствует входящий переход";
-                    case MISTAKES.NO_OUT:
-                        return "отсутствует выходящий переход";
-                    case MISTAKES.NO_PARTION:
-                        return "не принадлежит никакому участнику";
-                    case MISTAKES.REPEATED_ACT:
-                        return "имя не уникально";
-                    case MISTAKES.SAME_TARGET:
-                        return "альтернативы ведут в один и тот же элемент";
-                    case MISTAKES.OUT_NOT_IN_ACT:
-                        return "переход ведет не в активность, разветвитель или в условный переход";
-                    case MISTAKES.NEXT_DECISION:
-                        return "альтернатива ведет в условный переход";
-                    default:
-                        throw new ArgumentException();
-                }
-            }
         }
     }
 }

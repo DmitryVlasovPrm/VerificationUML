@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace Verification.ad_ver
 {
+    /// <summary>
+    /// Точка входа для модуля верификации AD
+    /// </summary>
     internal class ADVerifier
     {
         public static void Verify(Diagram diagram)
@@ -19,19 +22,14 @@ namespace Verification.ad_ver
             adNodesList.connect();
             // adNodesList.print();
 
-
-            LexicalAnalizator lexicalAnalizator = new LexicalAnalizator();
-            lexicalAnalizator.setDiagramElements(adNodesList);
-            lexicalAnalizator.check();
-
-            SyntaxAnalizator syntaxAnalizator = new SyntaxAnalizator();
+            ADModelVerifier syntaxAnalizator = new ADModelVerifier(new LexicalAnalizator());
             syntaxAnalizator.setDiagramElements(adNodesList);
             syntaxAnalizator.check();
 
 
             if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL))
             {
-                PetriNet petriNet = new PetriNet();
+                GraphVerifier petriNet = new GraphVerifier();
                 petriNet.petriCheck(adNodesList);
             }
         }

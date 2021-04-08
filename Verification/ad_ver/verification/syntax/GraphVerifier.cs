@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Verification.ad_ver.verification;
 
 namespace ActivityDiagramVer.verification.syntax
 {
-    internal class PetriNet
+    internal class GraphVerifier
     {
         private const char NO_TOKEN = '0';
         private const char TOKEN = '1';
@@ -275,7 +276,7 @@ namespace ActivityDiagramVer.verification.syntax
 
         private void setNewPaleToken(List<Token> mask, int index)
         {
-            mask[index] = new Token(PetriNet.TOKEN, new List<int>() { NO_COLOR });
+            mask[index] = new Token(GraphVerifier.TOKEN, new List<int>() { NO_COLOR });
         }
 
         private void setNewEmptyToken(List<Token> mask, int index)
@@ -319,10 +320,6 @@ namespace ActivityDiagramVer.verification.syntax
 
         /**
          * Проверка был ли данный элемент раннее активирован. Если да, то проверка завершается
-         * @param tokenIndex
-         * @param stepResultMasks
-         * @param curNode
-         * @return
          */
         private bool wasAlreadyActive(int tokenIndex, List<List<Token>> stepResultMasks, ADNodesList.ADNode curNode)
         {
@@ -344,9 +341,6 @@ namespace ActivityDiagramVer.verification.syntax
         /**
          * Обновляет маски списка, создавая новые токены по указанному индексу в списке масок, копирует список цветов,
          * удаляет токен по индексу в каждой маске из списка
-         * @param removedIndex
-         * @param newIndex
-         * @param stepMasks
          */
         private void updateStepMasks(int removedIndex, int newIndex, List<List<Token>> stepMasks, List<int> colors)
         {
@@ -419,38 +413,6 @@ namespace ActivityDiagramVer.verification.syntax
                 int color = peekLastColor();
                 colors.RemoveAt(colors.Count - 1);
                 return color;
-            }
-        }
-
-        /**
-         * Ошибки, которые могут возникнуть на данном этапе
-         */
-        private enum MISTAKES
-        {
-            TWO_TOKENS,
-            DEAD_ROAD,
-            MANY_TOKENS_IN_END,
-            COULD_NOT_REACH_FINAL,
-            FINAL_COLOR_TOKEN
-        }
-        private class MistakeAdapter
-        {
-            public static string toString(MISTAKES mistake)
-            {
-                switch (mistake)
-                {
-                    // просто пересечение двух токенов
-                    case MISTAKES.TWO_TOKENS: return "Возможно отсутствие синхронизатора";// "в элементе пересеклись токены. Возможно отсутствие синхронизатора";
-                    case MISTAKES.DEAD_ROAD: return "Тупик";        // на определенном шаге не был передвинут ни один токен
-                    // возможно пересечение двух токенов в конечном состоянии из-за отсутствия синхронизатора
-                    case MISTAKES.MANY_TOKENS_IN_END: return "Возможно отсутствие синхронизатора";//"при достижении конечного состояния остались токены";
-                    case MISTAKES.COULD_NOT_REACH_FINAL:
-                        return "недостижимое конечное состояние. Возможно имеется синхронизатор, " +
-    "который невозможно активировать";       // проверьте, что все переходы, ведущие в синхронизаторы могут быть активны одновременно 
-                    case MISTAKES.FINAL_COLOR_TOKEN: return "Отсутствует парный синхронизатор";//"достигли конечное состояние с цветным токеном. Отсутствует парный синхронизатор";
-                    default:
-                        throw new ArgumentException();
-                }
             }
         }
     }
