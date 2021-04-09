@@ -126,7 +126,7 @@ namespace Verification
                     }
                 case EDiagramTypes.UNDEF:
                     {
-                        ShowMsg("Тип диаграммы не определен", "Сообщение");
+                        ShowMsg("Тип диаграммы \""+diagram.Name+ "\" не определен", "Сообщение");
                         return;
                     }
             }
