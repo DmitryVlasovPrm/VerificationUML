@@ -25,6 +25,7 @@ namespace Verification.ad_ver.verification {
         NEXT_DECISION,
         MERGE_HAS_1_IN,
         // лексические
+        FORBIDDEN_ELEMENT,
         SMALL_LETTER,
         NO_NAME,
         NOT_NOUN,
@@ -78,6 +79,8 @@ namespace Verification.ad_ver.verification {
                     return "альтернатива ведет в условный переход";
 
                 // лексические
+                case MISTAKES.FORBIDDEN_ELEMENT:
+                    return "Использовался недопустимый элемент";
                 case MISTAKES.SMALL_LETTER:
                     return "имя начинается с маленькой буквы";
                 case MISTAKES.NO_NAME:

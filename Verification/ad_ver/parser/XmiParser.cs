@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Verification;
 using Verification.ad_ver.entities;
+using Verification.ad_ver.verification;
 
 namespace ActivityDiagramVer.parser
 {
@@ -167,7 +168,7 @@ namespace ActivityDiagramVer.parser
                 }
             }
 
-            XmlNode coordRoot;
+            XmlNode coordRoot = null;
             try
             {
                 coordRoot = xmlFile.GetElementsByTagName("plane")[0];
@@ -175,11 +176,40 @@ namespace ActivityDiagramVer.parser
             catch (NullReferenceException)
             {
                 Console.WriteLine("[x] Тег packagedElement не найден");
-                return false;
             }
 
-            if (coordRoot == null) return true;
-            FindCoordinates(coordRoot);
+            if (coordRoot != null)
+                FindCoordinates(coordRoot);
+            for (int i = 0; i < adNodesList.size(); i++) {
+                var node = adNodesList.get(i);
+                if (node is DiagramElement) {
+                    var nodeFromXMI = (DiagramElement)node;
+                    switch (nodeFromXMI.getType()) {
+                        case ElementType.FINAL_NODE:
+                            if (nodeFromXMI.inSize() == 0) {
+                                // ошибка
+                                ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI));
+                            }
+                            break;
+                        case ElementType.INITIAL_NODE:
+                            if (nodeFromXMI.outSize() == 0) {
+                                // ошибка
+                                ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI));
+                            }
+                            break;
+                        default:
+                            if (nodeFromXMI.inSize() == 0 || nodeFromXMI.outSize() == 0) {
+                                // ошибка
+                                if (nodeFromXMI.inSize() == 0) ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI));
+                                if (nodeFromXMI.outSize() == 0) ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI));
+                            }
+                            break;
+                    }
+                }
+            }
+            foreach (var node in unknownNodes) {
+                ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.FORBIDDEN_ELEMENT), node);
+            }
 
             return true;
         }
@@ -238,7 +268,6 @@ namespace ActivityDiagramVer.parser
                 {
                     node = unknownNodes.Find(n => n.getId().Equals(id));
                     if (node == default) continue;
-                    ADMistakeFactory.createMistake(verification.Level.FATAL, "Используется недопустимый элемент");
                 }
                 node.X = x;
                 node.Y = y;
