@@ -9,7 +9,7 @@ namespace Verification
     {
         private DataGridView dgvMistakes;
 
-        private const int MISTAKE_COL_NUM = 6;
+        private const int MISTAKE_COL_NUM = 5;
         private const int Panel1MaxWidth = 200;
 
         public Helper()
@@ -42,8 +42,7 @@ namespace Verification
             dgvMistakes.Columns[1].Name = "Серьезность";
             dgvMistakes.Columns[2].Name = "Ошибка";
             dgvMistakes.Columns[3].Name = "Описание";
-            dgvMistakes.Columns[4].Name = "Причины";
-            dgvMistakes.Columns[5].Name = "Этап";
+            dgvMistakes.Columns[4].Name = "Этап";
 
             dgvMistakes.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
@@ -54,7 +53,7 @@ namespace Verification
             dgvMistakes.Columns[0].Width = 40;
             dgvMistakes.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgvMistakes.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgvMistakes.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvMistakes.Columns[MISTAKE_COL_NUM-1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
 
         }
@@ -68,17 +67,25 @@ namespace Verification
             treevHelp.Nodes.Add("Работа с программой");
             treevHelp.Nodes[treevHelp.Nodes.Count - 1].Tag = TreeTags.PROGRAM;
 
-            treevHelp.Nodes[1].Nodes.Add("Верификация одной диаграммы");
-            treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[0].Tag = TreeTags.VER1;
+            //treevHelp.Nodes[1].Nodes.Add("Верификация одной диаграммы");
+            //treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[0].Tag = TreeTags.VER1;
 
-            treevHelp.Nodes[1].Nodes.Add("Верификация нескольких диаграммы");
-            treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[1].Tag = TreeTags.VER2;
+            //treevHelp.Nodes[1].Nodes.Add("Верификация нескольких диаграммы");
+            //treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[1].Tag = TreeTags.VER2;
 
-            treevHelp.Nodes[1].Nodes.Add("Верификация пакета");
-            treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[2].Tag = TreeTags.VER_PACK;
+            //treevHelp.Nodes[1].Nodes.Add("Верификация пакета");
+            //treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[2].Tag = TreeTags.VER_PACK;
 
             treevHelp.Nodes.Add("Выводимые ошибки");
             treevHelp.Nodes[treevHelp.Nodes.Count - 1].Tag = TreeTags.MISTAKES;
+            treevHelp.Nodes[2].Nodes.Add("Ошибки UCD");
+            treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[0].Tag = TreeTags.UCD_MISTAKES;
+
+            treevHelp.Nodes[2].Nodes.Add("Ошибки AD");
+            treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[1].Tag = TreeTags.AD_MISTAKES;
+
+            treevHelp.Nodes[2].Nodes.Add("Ошибки CD");
+            treevHelp.Nodes[treevHelp.Nodes.Count - 1].Nodes[2].Tag = TreeTags.CD_MISTAKES;
             treevHelp.EndUpdate();
         }
 
@@ -87,15 +94,15 @@ namespace Verification
             rbHelp.Visible = isRBVisible;
             dgvMistakes.Visible = !isRBVisible;
         }
-        private void fillTable()
+        private void fillTable(string mistakes)
         {
             dgvMistakes.Rows.Clear();
-            var mistakesLst = Properties.Resources.ADMistakes.Split('|');
+            var mistakesLst = mistakes.Split('|');
             // для всех строк
             for (int i = 0; i < mistakesLst.Length; i += MISTAKE_COL_NUM)
             {
                 dgvMistakes.Rows.Add(new object[] { mistakesLst[i], mistakesLst[i+1],
-                    mistakesLst[i+2], mistakesLst[i+3], mistakesLst[i+4], mistakesLst[i+5] });
+                    mistakesLst[i+2], mistakesLst[i+3], mistakesLst[i+4] });
             }
         }
 
@@ -112,26 +119,34 @@ namespace Verification
                 case TreeTags.PROGRAM:
                     changeVisible(true);
                     rbHelp.Clear();
-                    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
+                    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpProgram + "}";
                     break;
-                case TreeTags.VER1:
-                    changeVisible(true);
-                    rbHelp.Clear();
-                    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
-                    break;
-                case TreeTags.VER2:
-                    changeVisible(true);
-                    rbHelp.Clear();
-                    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
-                    break;
-                case TreeTags.VER_PACK:
-                    changeVisible(true);
-                    rbHelp.Clear();
-                    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
-                    break;
-                case TreeTags.MISTAKES:
+                //case TreeTags.VER1:
+                //    changeVisible(true);
+                //    rbHelp.Clear();
+                //    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
+                //    break;
+                //case TreeTags.VER2:
+                //    changeVisible(true);
+                //    rbHelp.Clear();
+                //    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
+                //    break;
+                //case TreeTags.VER_PACK:
+                //    changeVisible(true);
+                //    rbHelp.Clear();
+                //    rbHelp.Rtf = @"{\rtf1\utf-8" + Properties.Resources.HelpGeneral + "}";
+                //    break;
+                case TreeTags.AD_MISTAKES:
                     changeVisible(false);
-                    fillTable();
+                    fillTable(Properties.Resources.ADMistakes);
+                    break;
+                case TreeTags.CD_MISTAKES:
+                    changeVisible(false);
+                    fillTable(Properties.Resources.ADMistakes);
+                    break;
+                case TreeTags.UCD_MISTAKES:
+                    changeVisible(false);
+                    fillTable(Properties.Resources.ADMistakes);
                     break;
                 default:
                     break;
