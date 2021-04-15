@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using Verification.ad_ver;
 using Verification.cd_ver;
@@ -96,12 +97,33 @@ namespace Verification
                 progressBar.PerformProgress();
             }
             UpdateDiagramOnGUI(verificatedNames);
+            WriteLog();
 
             progressBar.SetValue(100);
             progressBar.Close();
             progressBar.Dispose();
         }
 
+        private void WriteLog() {
+            string filename = @"\verificationResults.txt";
+            // Get the current directory.
+            string path = Directory.GetCurrentDirectory();
+            string target = path + @"\results";
+
+            if (!Directory.Exists(target)) {
+                Directory.CreateDirectory(target);
+            }
+            foreach (DataGridViewRow row in diagramsGV.Rows) {
+                var selectedKey = row.Cells[0].Value.ToString();
+                var curDiagram = Distribution.AllDiagrams[selectedKey];
+                if (curDiagram.Verificated) {
+                    MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name);
+                }
+            }
+            Console.WriteLine(File.Exists(target + filename));
+            
+            
+        }
         private void Verificate(Diagram diagram)
         {
             var type = diagram.EType;
