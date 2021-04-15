@@ -5,230 +5,277 @@ using Verification.cd_ver.Entities;
 
 namespace Verification.cd_ver
 {
-    public static class Analysis
-    {
-        private static readonly string[] AllTypes =
-        {
-            "int", "string", "float", "double", "bool", "char"
-        };
+	public static class Analysis
+	{
+		private static readonly string[] AllTypes =
+		{
+			"int", "string", "float", "double", "bool", "char"
+		};
 
-        // Лексический анализ
-        public static void LexicalAnalysis(Elements allElements, ref Diagram diagram)
-        {
-            try
-            {
-                // Для классов и интерфейсов
-                var curElements = allElements.Classes;
-                var elementsCount = curElements.Count;
-                for (var i = 0; i < elementsCount; i++)
-                {
-                    var curItem = curElements[i];
-                    var elementType = curItem.IsInterface ? "интерфейс" : "класс";
-                    var curItemName = curItem.Name;
+		// Лексический анализ с элементами семантики (для простоты кода)
+		public static void LexicalAnalysis(Elements allElements, ref Diagram diagram)
+		{
+			try
+			{
+				// Для классов и интерфейсов
+				var curElements = allElements.Classes;
+				var elementsCount = curElements.Count;
+				for (var i = 0; i < elementsCount; i++)
+				{
+					var curItem = curElements[i];
+					var curItemId = curItem.Id;
+					var elementType = curItem.IsInterface ? "интерфейс" : "класс";
+					var upperElementType = elementType.Substring(0, 1).ToUpper() + elementType.Substring(1);
+					var curItemName = curItem.Name;
 
-                    if (!char.IsUpper(curItemName[0]))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
-                    if (curItemName.Contains(" "))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" содержит пробелы", curItem.Box));
-
-                    // Проверка наличия атрибутов и операторов
-                    var attributes = curItem.Attributes;
-                    var attributesCount = attributes.Count;
-                    var operations = curItem.Operations;
-                    var operationsCount = operations.Count;
-                    if (attributesCount == 0 && operationsCount == 0)
-                        diagram.Mistakes.Add(new Mistake(2, $"Элемент {elementType} \"{curItemName}\" должен иметь хотя бы один параметр или операцию", curItem.Box));
-
-                    // Рассматриваем атрибуты
-                    for (var j = 0; j < attributesCount; j++)
-                    {
-                        var curAttribute = attributes[j];
-                        var curAttributeName = curAttribute.Name;
-                        if (char.IsUpper(curAttributeName[0]))
-                            diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
-                        if (curAttributeName.Contains(" "))
-                            diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
-
-                        // Проверяем типы
-                        if (curAttribute.TypeId == "primitive")
-                            continue;
-                    }
-
-                    // Рассматриваем операции
-                    for (var j = 0; j < operationsCount; j++)
-                    {
-                        var curOperation = operations[j];
-                        var curOperationName = curOperation.Name;
-                        var constrDestr = false;
-                        // Конструктор
-                        if (curItemName.ToLower() == curOperationName.ToLower())
-                        {
-                            if (char.IsLower(curOperationName[0]))
-                                diagram.Mistakes.Add(new Mistake(1, $"Имя конструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
-                            constrDestr = true;
-                        }
-                        // Деструктор
-                        else if (curOperationName[0] == '~')
+					// Проверка наличия связей (семантика)
+					if (curItem.GeneralClassesIdxs.Count == 0)
+					{
+						var connection = allElements.Connections.Find(a => a.OwnedElementId1 == curItemId || a.OwnedElementId2 == curItemId);
+						if (connection == null)
 						{
-                            if (char.IsLower(curOperationName.Substring(1).TrimStart()[0]))
-                                diagram.Mistakes.Add(new Mistake(1, $"Имя деструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
-                            constrDestr = true;
-                        }
-						// Остальные типы
-                        else
-						{
-                            if (char.IsUpper(curOperationName[0]))
-                                diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
-                            if (curOperationName.Contains(" "))
-                                diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
-                        }
+							var dependency = allElements.Dependences.Find(a => a.ClientElementId == curItemId || a.SupplierElementId == curItemId);
+							if (dependency == null)
+							{
+								var parent = allElements.Classes.Find(a => a.GeneralClassesIdxs.Contains(curItemId));
+								if (parent == null)
+									diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" не имеет связей", curItem.Box));
+							}
+						}
+					}
 
-                        // Проверяем типы параметров
-                        var paramsCount = curOperation.Parameters.Count;
-                        for (var k = 0; k < paramsCount; k++)
+					// Если есть protected, смотрим, есть ли потомки
+					if (curItem.Attributes.Find(a => a.Visibility == Visibility.@protected) != null ||
+						curItem.Operations.Find(a => a.Visibility == Visibility.@protected) != null)
+					{
+						if (allElements.Classes.Find(a => a.GeneralClassesIdxs.Contains(curItemId)) == null)
+							diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" с элементами \"protected\" не имеет потомков", curItem.Box));
+					}
+
+					// Проверка названий
+					if (!char.IsUpper(curItemName[0]))
+						diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
+					if (curItemName.Contains(" "))
+						diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" содержит пробелы", curItem.Box));
+
+					// Проверка наличия атрибутов и операторов
+					var attributes = curItem.Attributes;
+					var attributesCount = attributes.Count;
+					var operations = curItem.Operations;
+					var operationsCount = operations.Count;
+					if (attributesCount == 0 && operationsCount == 0)
+					{
+						diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" должен иметь хотя бы один параметр или операцию", curItem.Box));
+						continue;
+					}
+
+					// Рассматриваем атрибуты
+					for (var j = 0; j < attributesCount; j++)
+					{
+						var curAttribute = attributes[j];
+						var curAttributeName = curAttribute.Name;
+
+						if (curAttributeName != "")
 						{
-                            var curParam = curOperation.Parameters[k];
-                            if (curParam.DataTypeId == "primitive")
-                                continue;
+							if (char.IsUpper(curAttributeName[0]))
+								diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+							if (curAttributeName.Contains(" "))
+								diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
+						}
+						// Проверяем типы
+						if (curAttribute.TypeId == "primitive")
+							continue;
+					}
+
+					// Рассматриваем операции
+					for (var j = 0; j < operationsCount; j++)
+					{
+						var curOperation = operations[j];
+						var curOperationName = curOperation.Name;
+						var constr = false;
+						var destr = false;
+
+						if (curOperationName != "")
+						{
+							// Конструктор
+							if (curItemName.ToLower() == curOperationName.ToLower())
+							{
+								if (char.IsLower(curOperationName[0]))
+									diagram.Mistakes.Add(new Mistake(1, $"Имя конструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+								constr = true;
+							}
+							// Деструктор
+							else if (curOperationName[0] == '~')
+							{
+								if (char.IsLower(curOperationName.Substring(1).TrimStart()[0]))
+									diagram.Mistakes.Add(new Mistake(1, $"Имя деструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+								destr = true;
+							}
+							// Остальные типы
+							else
+							{
+								if (char.IsUpper(curOperationName[0]))
+									diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+								if (curOperationName.Contains(" "))
+									diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
+							}
 						}
 
-                        // Синтаксическая часть
-                        // Возвращаемое значение
-                        if (constrDestr && curOperation.ReturnDataTypeId != "")
-                            diagram.Mistakes.Add(new Mistake(1, $"Конструктор/деструктор \"{curOperationName}\" имеет возвращаемый тип ({elementType} \"{curItemName}\")", curItem.Box));
-                        if (!constrDestr && curOperation.ReturnDataTypeId == "")
-                            diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{curOperationName}\" ({elementType} \"{curItemName}\")", curItem.Box));
-                    }
-                }
+						// Проверяем типы параметров
+						var paramsCount = curOperation.Parameters.Count;
+						for (var k = 0; k < paramsCount; k++)
+						{
+							var curParam = curOperation.Parameters[k];
+							if (curParam.DataTypeId == "primitive")
+								continue;
+						}
 
-                // Для перечислений
-                var enumElements = allElements.Enumerations;
-                elementsCount = enumElements.Count;
-                for (var i = 0; i < elementsCount; i++)
-                {
-                    var curItem = allElements.Enumerations[i];
-                    var curItemName = curItem.Name;
+						// Синтаксическая часть
+						// Возвращаемое значение
+						if ((constr || destr) && curOperation.ReturnDataTypeId != "")
+						{
+							var typeStr = constr ? "Конструктор" : "Деструктор";
+							diagram.Mistakes.Add(new Mistake(2, $"{typeStr} \"{curOperationName}\" имеет возвращаемый тип ({elementType} \"{curItemName}\")", curItem.Box));
+						}
+						if (!constr && !destr && curOperation.ReturnDataTypeId == "")
+							diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{curOperationName}\" ({elementType} \"{curItemName}\")", curItem.Box));
+					}
+				}
 
-                    if (!char.IsUpper(curItemName[0]))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
-                    if (curItemName.Contains(" "))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" содержит пробелы", curItem.Box));
-                }
+				// Для перечислений
+				var enumElements = allElements.Enumerations;
+				elementsCount = enumElements.Count;
+				for (var i = 0; i < elementsCount; i++)
+				{
+					var curItem = allElements.Enumerations[i];
+					var curItemId = curItem.Id;
+					var curItemName = curItem.Name;
 
-                // Комментарии в скобках {}
-                var commentsCount = allElements.Comments.Count;
-                for (var i = 0; i < commentsCount; i++)
-                {
-                    var curComment = allElements.Comments[i];
-                    var body = curComment.Body;
-                    if (body != "" && (body[0] != '{' || body[body.Length - 1] != '}'))
-                        diagram.Mistakes.Add(new Mistake(0, "Ограничение должно записываться в скобках {}", curComment.Box));
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in LexicalAnalysis: " + ex.Message);
-            }
-        }
+					// Проверка наличия связей (семантика)
+					var dependency = allElements.Dependences.Find(a => a.ClientElementId == curItemId || a.SupplierElementId == curItemId);
+					if (dependency == null)
+						diagram.Mistakes.Add(new Mistake(2, $"Перечисление \"{curItemName}\" не имеет допустимых связей", curItem.Box));
 
-        // Синтаксический анализ
-        public static void SyntacticAnalysis(Elements allElements, ref Diagram diagram)
-        {
-            try
-            {
-                // Наличие элемента Package
-                if (allElements.Packages.Count == 0)
-                    diagram.Mistakes.Add(new Mistake(0, "Отсутствует элемент Package", null));
+					if (!char.IsUpper(curItemName[0]))
+						diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
+					if (curItemName.Contains(" "))
+						diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" содержит пробелы", curItem.Box));
+				}
 
-                var connectionsCount = allElements.Connections.Count;
-                for (var i = 0; i < connectionsCount; i++)
-                {
-                    var curConnection = allElements.Connections[i];
+				// Комментарии в скобках {}
+				var commentsCount = allElements.Comments.Count;
+				for (var i = 0; i < commentsCount; i++)
+				{
+					var curComment = allElements.Comments[i];
+					var body = curComment.Body;
+					if (body != "" && (body[0] != '{' || body[body.Length - 1] != '}'))
+						diagram.Mistakes.Add(new Mistake(0, "Ограничение должно записываться в скобках {}", curComment.Box));
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Error in LexicalAnalysis: " + ex.Message);
+			}
+		}
 
-                    // Проверка композиции или агрегации в главном элементе
-                    if (curConnection.ConnectionType1 == ConnectionType.CompositeAggregation ||
-                        curConnection.ConnectionType1 == ConnectionType.SharedAggregation)
-                    {
-                        var mainClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId2);
-                        var subordinateClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId1);
-                        if (mainClass == null || subordinateClass == null)
-                            continue;
-                        CheckSyntacticMistake1(allElements, mainClass, subordinateClass, ref diagram);
-                    }
+		// Синтаксический анализ
+		public static void SyntacticAnalysis(Elements allElements, ref Diagram diagram)
+		{
+			try
+			{
+				// Наличие элемента Package
+				if (allElements.Packages.Count == 0)
+					diagram.Mistakes.Add(new Mistake(0, "Отсутствует элемент Package", null));
 
-                    if (curConnection.ConnectionType2 == ConnectionType.CompositeAggregation ||
-                        curConnection.ConnectionType2 == ConnectionType.SharedAggregation)
-                    {
-                        var mainClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId1);
-                        var subordinateClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId2);
-                        if (mainClass == null || subordinateClass == null)
-                            continue;
-                        CheckSyntacticMistake1(allElements, mainClass, subordinateClass, ref diagram);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in SyntacticAnalysis: " + ex.Message);
-            }
-        }
+				var connectionsCount = allElements.Connections.Count;
+				for (var i = 0; i < connectionsCount; i++)
+				{
+					var curConnection = allElements.Connections[i];
 
-        // Проверка композиции или агрегации в главном элементе
-        private static void CheckSyntacticMistake1(Elements allElements, Class mainClass, Class subordinateClass, ref Diagram diagram)
-        {
-            var mainAttributes = mainClass.Attributes;
-            var mainAttributesCount = mainAttributes.Count;
+					// Проверка композиции или агрегации в главном элементе
+					if (curConnection.ConnectionType1 == ConnectionType.CompositeAggregation ||
+						curConnection.ConnectionType1 == ConnectionType.SharedAggregation)
+					{
+						var mainClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId2);
+						var subordinateClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId1);
+						if (mainClass == null || subordinateClass == null)
+							continue;
+						CheckSyntacticMistake1(allElements, mainClass, subordinateClass, ref diagram);
+					}
 
-            var isExist = false;
-            for (var i = 0; i < mainAttributesCount; i++)
-            {
-                var curAttribute = mainAttributes[i];
-                var curTypeId = curAttribute.TypeId;
-                var curType = allElements.Types.Find(a => a.Id == curTypeId);
+					if (curConnection.ConnectionType2 == ConnectionType.CompositeAggregation ||
+						curConnection.ConnectionType2 == ConnectionType.SharedAggregation)
+					{
+						var mainClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId1);
+						var subordinateClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId2);
+						if (mainClass == null || subordinateClass == null)
+							continue;
+						CheckSyntacticMistake1(allElements, mainClass, subordinateClass, ref diagram);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Error in SyntacticAnalysis: " + ex.Message);
+			}
+		}
 
-                if (curType != null && curType.IsContainer && curType.Name.Contains(subordinateClass.Name))
-                {
-                    isExist = true;
-                    break;
-                }
-            }
+		// Проверка композиции или агрегации в главном элементе
+		private static void CheckSyntacticMistake1(Elements allElements, Class mainClass, Class subordinateClass, ref Diagram diagram)
+		{
+			var mainAttributes = mainClass.Attributes;
+			var mainAttributesCount = mainAttributes.Count;
 
-            if (!isExist)
-            {
-                var mainElementType = mainClass.IsInterface ? "Интерфейс" : "Класс";
-                var subordinateElementType = subordinateClass.IsInterface ? "интерфейс" : "класс";
-                diagram.Mistakes.Add(new Mistake(0, $"{mainElementType} \"{mainClass.Name}\" не имеет контейнера для объектов {subordinateElementType}а \"{subordinateClass.Name}\"", mainClass.Box));
-            }
-        }
+			var isExist = false;
+			for (var i = 0; i < mainAttributesCount; i++)
+			{
+				var curAttribute = mainAttributes[i];
+				var curTypeId = curAttribute.TypeId;
+				var curType = allElements.Types.Find(a => a.Id == curTypeId);
 
-        // Семантический анализ
-        public static void SemanticAnalysis(Elements allElements, ref Diagram diagram)
-        {
-            try
-            {
-                var connectionsCount = allElements.Connections.Count;
-                for (var i = 0; i < connectionsCount; i++)
-                {
-                    var curConnection = allElements.Connections[i];
-                    for (var j = 0; j < 2; j++)
-                    {
-                        var multiplicity = j == 0 ? curConnection.Multiplicity1 : curConnection.Multiplicity2;
-                        var bbox = j == 0 ? curConnection.Box1 : curConnection.Box2;
-                        var numbers = multiplicity.Split(new string[] { ".." }, StringSplitOptions.None);
-                        var num1 = numbers[0] == "*" ? int.MaxValue : int.Parse(numbers[0]);
-                        var num2 = numbers[1] == "*" ? int.MaxValue : int.Parse(numbers[1]);
+				if (curType != null && curType.IsContainer && curType.Name.Contains(subordinateClass.Name))
+				{
+					isExist = true;
+					break;
+				}
+			}
 
-                        if (num1 < 0 || num2 < 0)
-                            diagram.Mistakes.Add(new Mistake(1, "Значение кратности меньше нуля", bbox));
-                        if (num1 > num2)
-                            diagram.Mistakes.Add(new Mistake(1, "Диапазон записан неверно", bbox));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in SemanticAnalysis: " + ex.Message);
-            }
-        }
-    }
+			if (!isExist)
+			{
+				var mainElementType = mainClass.IsInterface ? "Интерфейс" : "Класс";
+				var subordinateElementType = subordinateClass.IsInterface ? "интерфейс" : "класс";
+				diagram.Mistakes.Add(new Mistake(0, $"{mainElementType} \"{mainClass.Name}\" не имеет контейнера для объектов {subordinateElementType}а \"{subordinateClass.Name}\"", mainClass.Box));
+			}
+		}
+
+		// Семантический анализ
+		public static void SemanticAnalysis(Elements allElements, ref Diagram diagram)
+		{
+			try
+			{
+				var connectionsCount = allElements.Connections.Count;
+				for (var i = 0; i < connectionsCount; i++)
+				{
+					var curConnection = allElements.Connections[i];
+					for (var j = 0; j < 2; j++)
+					{
+						var multiplicity = j == 0 ? curConnection.Multiplicity1 : curConnection.Multiplicity2;
+						var bbox = j == 0 ? curConnection.Box1 : curConnection.Box2;
+						var numbers = multiplicity.Split(new string[] { ".." }, StringSplitOptions.None);
+						var num1 = numbers[0] == "*" ? int.MaxValue : int.Parse(numbers[0]);
+						var num2 = numbers[1] == "*" ? int.MaxValue : int.Parse(numbers[1]);
+
+						if (num1 < 0 || num2 < 0)
+							diagram.Mistakes.Add(new Mistake(1, "Значение кратности меньше нуля", bbox));
+						if (num1 > num2)
+							diagram.Mistakes.Add(new Mistake(1, "Диапазон записан неверно", bbox));
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Error in SemanticAnalysis: " + ex.Message);
+			}
+		}
+	}
 }

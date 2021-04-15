@@ -133,7 +133,7 @@ namespace Verification
                 errorsGV.Columns.Add(column);
             }
 
-            mistakes.Sort((x, y) => y.Seriousness.CompareTo(x.Seriousness));
+            mistakes = mistakes.OrderByDescending(a => a.Seriousness).ThenBy(a => a.Text).ToList();
             var mistakesCount = mistakes.Count;
             for (var i = 0; i < mistakesCount; i++)
             {
