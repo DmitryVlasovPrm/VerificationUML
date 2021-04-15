@@ -9,9 +9,7 @@ namespace Verification.cd_ver
     {
         private static readonly string[] AllTypes =
         {
-            "int", "string", "float", "double", "bool", "List<T>", "List<string>",
-            "List<Variable>", "List<Domain>", "List<Box>", "char", "Variant*", "queue<unique_ptr<Token>>",
-            "vector<unique_ptr<Error>>"
+            "int", "string", "float", "double", "bool", "char"
         };
 
         // Лексический анализ
@@ -29,24 +27,77 @@ namespace Verification.cd_ver
                     var curItemName = curItem.Name;
 
                     if (!char.IsUpper(curItemName[0]))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а начинается с маленькой буквы: \"{curItemName}\"", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
                     if (curItemName.Contains(" "))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а содержит пробелы: \"{curItemName}\"", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" содержит пробелы", curItem.Box));
 
+                    // Проверка наличия атрибутов и операторов
                     var attributes = curItem.Attributes;
                     var attributesCount = attributes.Count;
+                    var operations = curItem.Operations;
+                    var operationsCount = operations.Count;
+                    if (attributesCount == 0 && operationsCount == 0)
+                        diagram.Mistakes.Add(new Mistake(2, $"Элемент {elementType} \"{curItemName}\" должен иметь хотя бы один параметр или операцию", curItem.Box));
+
+                    // Рассматриваем атрибуты
                     for (var j = 0; j < attributesCount; j++)
                     {
                         var curAttribute = attributes[j];
                         var curAttributeName = curAttribute.Name;
                         if (char.IsUpper(curAttributeName[0]))
-                            diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута начинается с большой буквы ({elementType} \"{curItemName}\"): \"{curAttributeName}\"", curItem.Box));
+                            diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
                         if (curAttributeName.Contains(" "))
-                            diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута содержит пробелы ({elementType} \"{curItemName}\"): \"{curAttributeName}\"", curItem.Box));
+                            diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
 
-                        var curType = allElements.Types.Find(a => a.Id == curAttribute.TypeId);
-                        if (curType != null && !AllTypes.Contains(curType.Name) && allElements.Classes.FindIndex(a => a.Id == curAttribute.TypeId) == -1)
-                            diagram.Mistakes.Add(new Mistake(1, $"Неверное имя типа ({elementType} \"{curItemName}\"): \"{curType.Name}\"", curItem.Box));
+                        // Проверяем типы
+                        if (curAttribute.TypeId == "primitive")
+                            continue;
+                    }
+
+                    // Рассматриваем операции
+                    for (var j = 0; j < operationsCount; j++)
+                    {
+                        var curOperation = operations[j];
+                        var curOperationName = curOperation.Name;
+                        var constrDestr = false;
+                        // Конструктор
+                        if (curItemName.ToLower() == curOperationName.ToLower())
+                        {
+                            if (char.IsLower(curOperationName[0]))
+                                diagram.Mistakes.Add(new Mistake(1, $"Имя конструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                            constrDestr = true;
+                        }
+                        // Деструктор
+                        else if (curOperationName[0] == '~')
+						{
+                            if (char.IsLower(curOperationName.Substring(1).TrimStart()[0]))
+                                diagram.Mistakes.Add(new Mistake(1, $"Имя деструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                            constrDestr = true;
+                        }
+						// Остальные типы
+                        else
+						{
+                            if (char.IsUpper(curOperationName[0]))
+                                diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                            if (curOperationName.Contains(" "))
+                                diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
+                        }
+
+                        // Проверяем типы параметров
+                        var paramsCount = curOperation.Parameters.Count;
+                        for (var k = 0; k < paramsCount; k++)
+						{
+                            var curParam = curOperation.Parameters[k];
+                            if (curParam.DataTypeId == "primitive")
+                                continue;
+						}
+
+                        // Синтаксическая часть
+                        // Возвращаемое значение
+                        if (constrDestr && curOperation.ReturnDataTypeId != "")
+                            diagram.Mistakes.Add(new Mistake(1, $"Конструктор/деструктор \"{curOperationName}\" имеет возвращаемый тип ({elementType} \"{curItemName}\")", curItem.Box));
+                        if (!constrDestr && curOperation.ReturnDataTypeId == "")
+                            diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{curOperationName}\" ({elementType} \"{curItemName}\")", curItem.Box));
                     }
                 }
 
@@ -59,9 +110,9 @@ namespace Verification.cd_ver
                     var curItemName = curItem.Name;
 
                     if (!char.IsUpper(curItemName[0]))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления начинается с маленькой буквы: \"{curItemName}\"", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
                     if (curItemName.Contains(" "))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления содержит пробелы: \"{curItemName}\"", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" содержит пробелы", curItem.Box));
                 }
 
                 // Комментарии в скобках {}
@@ -100,6 +151,8 @@ namespace Verification.cd_ver
                     {
                         var mainClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId2);
                         var subordinateClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId1);
+                        if (mainClass == null || subordinateClass == null)
+                            continue;
                         CheckSyntacticMistake1(allElements, mainClass, subordinateClass, ref diagram);
                     }
 
@@ -108,6 +161,8 @@ namespace Verification.cd_ver
                     {
                         var mainClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId1);
                         var subordinateClass = allElements.Classes.Find(a => a.Id == curConnection.OwnedElementId2);
+                        if (mainClass == null || subordinateClass == null)
+                            continue;
                         CheckSyntacticMistake1(allElements, mainClass, subordinateClass, ref diagram);
                     }
                 }

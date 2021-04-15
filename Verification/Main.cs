@@ -126,7 +126,7 @@ namespace Verification
                     }
                 case EDiagramTypes.UNDEF:
                     {
-                        ShowMsg("Тип диаграммы \""+diagram.Name+ "\" не определен", "Сообщение");
+                        MessageBox.Show("Тип диаграммы \"" + diagram.Name + "\" не определен", "Верификация диаграмм UML", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
             }

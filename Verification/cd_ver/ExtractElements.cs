@@ -31,15 +31,27 @@ namespace Verification.cd_ver
                     try
                     {
                         var curContent = graphics[i];
+                        var parentNode = curContent.ParentNode;
+                        if (parentNode.Attributes["xsi:type"].Value != "com.genmymodel.graphic.uml:ClassDiagram")
+                            continue;
+
                         var graphicElements = curContent.SelectNodes("ownedDiagramElements");
                         var graphicElementsCount = graphicElements.Count;
                         for (var j = 0; j < graphicElementsCount; j++)
                         {
                             var curElement = graphicElements[j];
                             var elementType = curElement.Attributes["xsi:type"].Value;
-                            var elementId = curElement.Attributes["modelElement"].Value;
-                            var x = int.Parse(curElement.Attributes["x"].Value);
-                            var y = int.Parse(curElement.Attributes["y"].Value);
+
+                            var elementId = "";
+                            if (curElement.Attributes["modelElement"] != null)
+                                elementId = curElement.Attributes["modelElement"].Value;
+
+                            var x = 0;
+                            if (curElement.Attributes["x"] != null)
+                                x = int.Parse(curElement.Attributes["x"].Value);
+                            var y = 0;
+                            if (curElement.Attributes["y"] != null)
+                                y = int.Parse(curElement.Attributes["y"].Value);
 
                             // Для нормировки
                             if (x < curMinX)
@@ -80,8 +92,8 @@ namespace Verification.cd_ver
 
             // Сами элементы диаграммы
             var xmlElements = root.GetElementsByTagName("packagedElement");
-
             var elementsCount = xmlElements.Count;
+
             for (var i = 0; i < elementsCount; i++)
             {
                 try
@@ -97,6 +109,8 @@ namespace Verification.cd_ver
                     {
                         case "uml:Package":
                             var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:PackageWidget");
+                            if (elementGraphicInfo == null)
+                                break;
                             var box = elementGraphicInfo?.Item3;
                             allElements.Packages.Add(new Package(elementId, elementName, box));
                             break;
@@ -113,6 +127,11 @@ namespace Verification.cd_ver
                                 isInterface = true;
                             }
 
+                            elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == xsiType);
+                            if (elementGraphicInfo == null)
+                                break;
+                            box = elementGraphicInfo?.Item3;
+
                             var attributes = new List<Attribute>();
                             var operations = new List<Operation>();
 
@@ -124,8 +143,12 @@ namespace Verification.cd_ver
                                 var curAttrib = attributeElements[k];
                                 var attribId = curAttrib.Attributes["xmi:id"].Value;
                                 var attribName = curAttrib.Attributes["name"].Value;
-                                var attribVisibility = (Visibility)Enum.Parse(typeof(Visibility), curAttrib.Attributes["visibility"].Value, true);
-                                var attribDataTypeId = GetDataType(curAttrib);
+
+                                var attribVisibility = Visibility.none;
+                                if (curAttrib.Attributes["visibility"] != null)
+                                    attribVisibility = (Visibility)Enum.Parse(typeof(Visibility), curAttrib.Attributes["visibility"].Value, true);
+                                
+                                var attribDataTypeId = GetDataType(curAttrib, box, ref diagram);
 
                                 attributes.Add(new Attribute(attribId, attribName, attribVisibility, attribDataTypeId));
                             }
@@ -153,12 +176,12 @@ namespace Verification.cd_ver
                                     if (curParameter.Attributes["direction"] != null &&
                                         curParameter.Attributes["direction"].Value == "return")
                                     {
-                                        returnDataTypeId = GetDataType(curParameter);
+                                        returnDataTypeId = GetDataType(curParameter, box, ref diagram);
                                     }
                                     else
                                     {
                                         // Обычный параметр
-                                        var paramDataType = GetDataType(curParameter);
+                                        var paramDataType = GetDataType(curParameter, box, ref diagram);
                                         parameters.Add(new Parameter(paramId, paramName, paramDataType));
                                     }
                                 }
@@ -192,10 +215,8 @@ namespace Verification.cd_ver
                                 interfaceSuppliersIdxs.Add(curRealization.Attributes["supplier"].Value);
                             }
 
-                            elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == xsiType);
-                            box = elementGraphicInfo?.Item3;
                             var newClass = new Class(elementId, elementName, box, attributes, operations, generalClassesIdxs, isInterface, interfaceSuppliersIdxs);
-
+                            
                             // Проверим на дублирование
                             var isExist = allElements.Classes.Exists(a => a.Name == elementName);
                             if (isExist)
@@ -279,7 +300,7 @@ namespace Verification.cd_ver
                             break;
 
                         case "uml:DataType":
-                            allElements.Types.Add(new DataType(elementId, elementName, true));
+                            allElements.Types.Add(new DataType(elementId, elementName, false));
                             break;
 
                         case "uml:Usage":
@@ -295,6 +316,11 @@ namespace Verification.cd_ver
                             break;
 
                         case "uml:Enumeration":
+                            elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:EnumerationWidget");
+                            if (elementGraphicInfo == null)
+                                break;
+                            box = elementGraphicInfo?.Item3;
+
                             var literals = new List<Literal>();
                             var literalElements = curElement.SelectNodes("ownedLiteral");
                             var literalElementsCount = literalElements.Count;
@@ -305,9 +331,6 @@ namespace Verification.cd_ver
                                 var literalName = curLiteral.Attributes["name"].Value;
                                 literals.Add(new Literal(literalId, literalName));
                             }
-
-                            elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:EnumerationWidget");
-                            box = elementGraphicInfo?.Item3;
 
                             // Проверим на дублирование
                             isExist = allElements.Enumerations.Exists(a => a.Name == elementName);
@@ -322,7 +345,9 @@ namespace Verification.cd_ver
 
                         default:
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId);
-                            box = elementGraphicInfo?.Item3;
+                            if (elementGraphicInfo == null)
+                                break;
+                            box = elementGraphicInfo.Item3;
                             diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box));
                             break;
                     }
@@ -343,6 +368,11 @@ namespace Verification.cd_ver
                 {
                     var curComment = xmlComments[i];
                     var commentId = curComment.Attributes["xmi:id"].Value;
+                    var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == commentId);
+                    if (elementGraphicInfo == null)
+                        break;
+                    var box = elementGraphicInfo?.Item3;
+
                     var annotatedElementId = "";
                     if (curComment.Attributes["annotatedElement"] != null)
                         annotatedElementId = curComment.Attributes["annotatedElement"].Value;
@@ -350,8 +380,6 @@ namespace Verification.cd_ver
                     if (curComment.Attributes["body"] != null)
                         body = curComment.Attributes["body"].Value.TrimStart().TrimEnd();
 
-                    var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == commentId);
-                    var box = elementGraphicInfo?.Item3;
                     allElements.Comments.Add(new Comment(commentId, body, box, annotatedElementId));
                 }
                 catch (Exception ex)
@@ -361,7 +389,7 @@ namespace Verification.cd_ver
             }
         }
 
-        private static string GetDataType(XmlNode node)
+        private static string GetDataType(XmlNode node, BoundingBox box, ref Diagram diagram)
         {
             var dataTypeId = "";
             if (node.Attributes["type"] != null)
@@ -372,7 +400,12 @@ namespace Verification.cd_ver
             {
                 var typeNode = node.SelectSingleNode("type");
                 if (typeNode != null)
+                {
+                    var nameInfo = typeNode.Attributes["href"].Value;
+                    var name = nameInfo.Substring(nameInfo.LastIndexOf("//") + 2);
+                    diagram.Mistakes.Add(new Mistake(1, $"Имя типа \"{name}\" не соответствует целевому языку программирования", box));
                     dataTypeId = "primitiveType";
+                }
             }
             return dataTypeId;
         }
