@@ -82,6 +82,15 @@ namespace Verification.uc_ver
         private void СheckPackages()
         {
             var packages = elements.Where(element => element.Value.Type == ElementTypes.Package);
+
+            if (packages.Count() == 0)
+            {
+                mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Отсутствует граница системы"));
+            }
+
+
             foreach (var package in packages)
                 if (string.IsNullOrEmpty(package.Value.Name.Trim()))
                 {
