@@ -72,19 +72,19 @@ namespace Verification
             if (selectedDiagram != null)
             {
                 diagramPicture.Image = selectedDiagram.Image != null ? selectedDiagram.Image.Bitmap : diagramPicture.Image = null;
-                ShowDiagramMistakes(selectedDiagram.Mistakes, selectedDiagram.EType);
+                ShowDiagramMistakes(selectedDiagram);
             }
         }
 
         // Показ всех ошибок в таблице
-        private void ShowDiagramMistakes(List<Mistake> mistakes, type_definer.EDiagramTypes type)
+        private void ShowDiagramMistakes(Diagram diagram)
         {
             isClearingRows = true;
             errorsGV.Rows.Clear();
             isClearingRows = false;
 
             var typeStr = "";
-            switch (type)
+            switch (diagram.EType)
             {
                 case type_definer.EDiagramTypes.AD:
                     typeStr = "Диаграмма активностей";
@@ -100,6 +100,9 @@ namespace Verification
                     break;
             }
             errorsGB.Text = string.Format($"Ошибки (Тип диаграммы: {typeStr})");
+
+            if (!diagram.Verificated)
+                return;
 
             // Если таблица ошибок строится впервые
             if (errorsGV.Columns.Count == 0)
@@ -133,7 +136,7 @@ namespace Verification
                 errorsGV.Columns.Add(column);
             }
 
-            mistakes = mistakes.OrderByDescending(a => a.Seriousness).ThenBy(a => a.Text).ToList();
+            var mistakes = diagram.Mistakes.OrderByDescending(a => a.Seriousness).ThenBy(a => a.Text).ToList();
             var mistakesCount = mistakes.Count;
             for (var i = 0; i < mistakesCount; i++)
             {
@@ -166,6 +169,12 @@ namespace Verification
 
             var selectedDiagramName = diagramsGV.CurrentCell.Value.ToString();
             Distribution.AllDiagrams.TryGetValue(selectedDiagramName, out Diagram selectedDiagram);
+
+            if (!selectedDiagram.Verificated)
+            {
+                diagramPicture.Image = selectedDiagram.Image.Bitmap;
+                return;
+            }
 
             if (selectedDiagram.Image != null)
             {

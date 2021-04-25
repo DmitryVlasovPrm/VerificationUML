@@ -11,6 +11,7 @@ namespace Verification.cd_ver
     public static class ExtractElements
     {
         private static readonly string[] connectionTypes = { "association", "composite", "shared" };
+        private static bool isThereImage = true;
 
         public static void Extract(XmlElement root, ref Elements allElements, ref Diagram diagram)
         {
@@ -19,8 +20,8 @@ namespace Verification.cd_ver
             if (diagram.Image != null)
             {
                 var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
-                var curMinX = 10000;
-                var curMinY = 10000;
+                var minX = 10000;
+                var minY = 10000;
 
                 // Для отрисовки на png
                 var graphics = root.GetElementsByTagName("plane");
@@ -46,30 +47,44 @@ namespace Verification.cd_ver
                             if (curElement.Attributes["modelElement"] != null)
                                 elementId = curElement.Attributes["modelElement"].Value;
 
-                            var x = 0;
+                            var curX = minX;
                             if (curElement.Attributes["x"] != null)
-                                x = int.Parse(curElement.Attributes["x"].Value);
-                            var y = 0;
+                            {
+                                curX = int.Parse(curElement.Attributes["x"].Value);
+                                if (curX == 0)
+                                    continue;
+                                // Для нормировки
+                                if (curX < minX)
+                                    minX = curX;
+                            }
+                            else
+							{
+                                continue;
+							}
+                            var curY = minY;
                             if (curElement.Attributes["y"] != null)
-                                y = int.Parse(curElement.Attributes["y"].Value);
+                            {
+                                curY = int.Parse(curElement.Attributes["y"].Value);
+                                if (curY == 0)
+                                    continue;
+                                // Для нормировки
+                                if (curY < minY)
+                                    minY = curY;
+                            }
+                            else
+							{
+                                continue;
+							}
 
-                            // Для нормировки
-                            if (x < curMinX)
-                                curMinX = x;
-                            if (y < curMinY)
-                                curMinY = y;
-
-                            if (curElement.Attributes["width"] == null)
+                            if (curElement.Attributes["width"] == null || curElement.Attributes["height"] == null)
                                 continue;
 
-                            var w = 0;
-                            if (curElement.Attributes["width"] != null)
-                                w = int.Parse(curElement.Attributes["width"].Value);
-                            var h = 0;
-                            if (curElement.Attributes["height"] != null)
-                                h = int.Parse(curElement.Attributes["height"].Value);
+                            var curW = int.Parse(curElement.Attributes["width"].Value);
+                            var curH = int.Parse(curElement.Attributes["height"].Value);
+                            if (curW == 0 || curH == 0)
+                                continue;
 
-                            var bbox = new BoundingBox(x, y, w, h);
+                            var bbox = new BoundingBox(curX, curY, curW, curH);
                             var item = new Tuple<string, string, BoundingBox>(elementId, elementType, bbox);
                             graphicInfo.Add(item);
                         }
@@ -83,12 +98,16 @@ namespace Verification.cd_ver
                 // Нормировка
                 for (var i = 0; i < graphicInfo.Count; i++)
                 {
-                    var offsetX = realMinX - curMinX;
-                    var offsetY = realMinY - curMinY;
+                    var offsetX = realMinX - minX;
+                    var offsetY = realMinY - minY;
                     graphicInfo[i].Item3.X += offsetX;
                     graphicInfo[i].Item3.Y += offsetY;
                 }
             }
+            else
+			{
+                isThereImage = false;
+			}
 
             // Сами элементы диаграммы
             var xmlElements = root.GetElementsByTagName("packagedElement");
@@ -109,7 +128,7 @@ namespace Verification.cd_ver
                     {
                         case "uml:Package":
                             var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:PackageWidget");
-                            if (elementGraphicInfo == null)
+                            if (elementGraphicInfo == null && isThereImage)
                                 break;
                             var box = elementGraphicInfo?.Item3;
                             allElements.Packages.Add(new Package(elementId, elementName, box));
@@ -128,7 +147,7 @@ namespace Verification.cd_ver
                             }
 
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == xsiType);
-                            if (elementGraphicInfo == null)
+                            if (elementGraphicInfo == null && isThereImage)
                                 break;
                             box = elementGraphicInfo?.Item3;
 
@@ -147,9 +166,8 @@ namespace Verification.cd_ver
                                 var attribVisibility = Visibility.none;
                                 if (curAttrib.Attributes["visibility"] != null)
                                     attribVisibility = (Visibility)Enum.Parse(typeof(Visibility), curAttrib.Attributes["visibility"].Value, true);
-                                
-                                var attribDataTypeId = GetDataType(curAttrib, box, ref diagram);
 
+                                var attribDataTypeId = GetDataType(curAttrib, box, ref diagram);
                                 attributes.Add(new Attribute(attribId, attribName, attribVisibility, attribDataTypeId));
                             }
 
@@ -317,7 +335,7 @@ namespace Verification.cd_ver
 
                         case "uml:Enumeration":
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId && a.Item2 == "com.genmymodel.graphic.uml:EnumerationWidget");
-                            if (elementGraphicInfo == null)
+                            if (elementGraphicInfo == null && isThereImage)
                                 break;
                             box = elementGraphicInfo?.Item3;
 
@@ -345,7 +363,7 @@ namespace Verification.cd_ver
 
                         default:
                             elementGraphicInfo = graphicInfo.Find(a => a.Item1 == elementId);
-                            if (elementGraphicInfo == null)
+                            if (elementGraphicInfo == null && isThereImage)
                                 break;
                             box = elementGraphicInfo.Item3;
                             diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box));
@@ -369,7 +387,7 @@ namespace Verification.cd_ver
                     var curComment = xmlComments[i];
                     var commentId = curComment.Attributes["xmi:id"].Value;
                     var elementGraphicInfo = graphicInfo.Find(a => a.Item1 == commentId);
-                    if (elementGraphicInfo == null)
+                    if (elementGraphicInfo == null && isThereImage)
                         break;
                     var box = elementGraphicInfo?.Item3;
 

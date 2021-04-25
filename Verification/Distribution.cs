@@ -81,6 +81,7 @@ namespace Verification
                         {
                             Image<Bgra, byte> image = new Image<Bgra, byte>(pathToFile);
                             AllDiagrams[name].Image = image;
+                            AllDiagrams[name].Verificated = false;
                         }
                         else
                         {
@@ -94,6 +95,7 @@ namespace Verification
                             {
                                 Image<Bgra, byte> image = new Image<Bgra, byte>(pathToFile);
                                 AllDiagrams[name].Image = image;
+                                AllDiagrams[name].Verificated = false;
                             }
                         }
                         ChangedDiagramNames.Add(name);

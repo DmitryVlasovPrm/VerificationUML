@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Windows.Forms;
 using Verification.cd_ver.Entities;
 
@@ -266,9 +265,9 @@ namespace Verification.cd_ver
 						var num2 = numbers[1] == "*" ? int.MaxValue : int.Parse(numbers[1]);
 
 						if (num1 < 0 || num2 < 0)
-							diagram.Mistakes.Add(new Mistake(1, "Значение кратности меньше нуля", bbox));
+							diagram.Mistakes.Add(new Mistake(1, $"Значение кратности {multiplicity} меньше нуля", bbox));
 						if (num1 > num2)
-							diagram.Mistakes.Add(new Mistake(1, "Диапазон записан неверно", bbox));
+							diagram.Mistakes.Add(new Mistake(1, $"Диапазон {multiplicity} записан неверно", bbox));
 					}
 				}
 			}
