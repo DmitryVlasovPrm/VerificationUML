@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Verification.ad_ver.verification {
+namespace Verification.ad_ver.verification
+{
     /// <summary>
     /// Перечисление возможных ошибок
     /// </summary>
-    internal enum MISTAKES {
+    internal enum MISTAKES
+    {
         MORE_THAN_ONE_INIT,
         NO_FINAL,
         NO_INITIAL,
@@ -43,10 +41,13 @@ namespace Verification.ad_ver.verification {
         COULD_NOT_REACH_FINAL,
         FINAL_COLOR_TOKEN
     }
-    internal class MistakeAdapter {
+    internal class MistakeAdapter
+    {
 
-        public static string toString(MISTAKES mistake) {
-            switch (mistake) {
+        public static string toString(MISTAKES mistake)
+        {
+            switch (mistake)
+            {
                 case MISTAKES.MORE_THAN_ONE_INIT:
                     return "В диаграмме больше одного начального состояния";
                 case MISTAKES.NO_FINAL:

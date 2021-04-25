@@ -174,18 +174,18 @@ namespace Verification
                 errorsGV.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
                 var mistake = selectedDiagram.Mistakes.Find(x => x.Id.ToString() == selectedMistakeId);
 
-				if (mistake.Bbox != null)
-				{
-					var bbox = mistake.Bbox;
-					var curImage = selectedDiagram.Image.Copy();
-					CvInvoke.Rectangle(curImage, new Rectangle(bbox.X, bbox.Y, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 2);
-					diagramPicture.Image = curImage.Bitmap;
-				}
-				else
-				{
-					diagramPicture.Image = selectedDiagram.Image.Bitmap;
-				}
-			}
-		}
-	}
+                if (mistake.Bbox != null)
+                {
+                    var bbox = mistake.Bbox;
+                    var curImage = selectedDiagram.Image.Copy();
+                    CvInvoke.Rectangle(curImage, new Rectangle(bbox.X, bbox.Y, bbox.W, bbox.H), new MCvScalar(0, 0, 255, 255), 2);
+                    diagramPicture.Image = curImage.Bitmap;
+                }
+                else
+                {
+                    diagramPicture.Image = selectedDiagram.Image.Bitmap;
+                }
+            }
+        }
+    }
 }

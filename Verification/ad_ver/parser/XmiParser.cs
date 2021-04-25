@@ -180,25 +180,31 @@ namespace ActivityDiagramVer.parser
 
             if (coordRoot != null)
                 FindCoordinates(coordRoot);
-            for (int i = 0; i < adNodesList.size(); i++) {
+            for (int i = 0; i < adNodesList.size(); i++)
+            {
                 var node = adNodesList.get(i);
-                if (node is DiagramElement) {
+                if (node is DiagramElement)
+                {
                     var nodeFromXMI = (DiagramElement)node;
-                    switch (nodeFromXMI.getType()) {
+                    switch (nodeFromXMI.getType())
+                    {
                         case ElementType.FINAL_NODE:
-                            if (nodeFromXMI.inSize() == 0) {
+                            if (nodeFromXMI.inSize() == 0)
+                            {
                                 // ошибка
                                 ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI));
                             }
                             break;
                         case ElementType.INITIAL_NODE:
-                            if (nodeFromXMI.outSize() == 0) {
+                            if (nodeFromXMI.outSize() == 0)
+                            {
                                 // ошибка
                                 ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI));
                             }
                             break;
                         default:
-                            if (nodeFromXMI.inSize() == 0 || nodeFromXMI.outSize() == 0) {
+                            if (nodeFromXMI.inSize() == 0 || nodeFromXMI.outSize() == 0)
+                            {
                                 // ошибка
                                 if (nodeFromXMI.inSize() == 0) ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI));
                                 if (nodeFromXMI.outSize() == 0) ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI));
@@ -207,7 +213,8 @@ namespace ActivityDiagramVer.parser
                     }
                 }
             }
-            foreach (var node in unknownNodes) {
+            foreach (var node in unknownNodes)
+            {
                 ADMistakeFactory.createMistake(verification.Level.FATAL, MistakeAdapter.toString(MISTAKES.FORBIDDEN_ELEMENT), node);
             }
 

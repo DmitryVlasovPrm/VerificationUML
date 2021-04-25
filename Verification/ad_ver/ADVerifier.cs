@@ -19,9 +19,11 @@ namespace Verification.ad_ver
             ADMistakeFactory.diagram = diagram;
 
             parser.Parse(diagram);
-            if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL)) {
+            if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL))
+            {
                 adNodesList.connect();
-            } else return;
+            }
+            else return;
             // adNodesList.print();
 
             ADModelVerifier syntaxAnalizator = new ADModelVerifier(new LexicalAnalizator());

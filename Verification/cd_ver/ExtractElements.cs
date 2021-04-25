@@ -147,7 +147,7 @@ namespace Verification.cd_ver
                                 var attribVisibility = Visibility.none;
                                 if (curAttrib.Attributes["visibility"] != null)
                                     attribVisibility = (Visibility)Enum.Parse(typeof(Visibility), curAttrib.Attributes["visibility"].Value, true);
-                                
+
                                 var attribDataTypeId = GetDataType(curAttrib, box, ref diagram);
 
                                 attributes.Add(new Attribute(attribId, attribName, attribVisibility, attribDataTypeId));
@@ -216,7 +216,7 @@ namespace Verification.cd_ver
                             }
 
                             var newClass = new Class(elementId, elementName, box, attributes, operations, generalClassesIdxs, isInterface, interfaceSuppliersIdxs);
-                            
+
                             // Проверим на дублирование
                             var isExist = allElements.Classes.Exists(a => a.Name == elementName);
                             if (isExist)
