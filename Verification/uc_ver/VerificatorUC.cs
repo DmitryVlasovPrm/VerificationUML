@@ -22,26 +22,23 @@ namespace Verification.uc_ver
         {
             reader.ReadData(diagram.XmlInfo);
 
-            if (diagram.Image != null)
-                FixCoordinates();
-
             checker.Check();
         }
 
-        private void FixCoordinates()
-        {
-            var minX = elements.Min(e => e.Value.X);
-            var minY = elements.Min(e => e.Value.Y);
-            var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
+        //private void FixCoordinates()
+        //{
+        //    var minX = elements.Min(e => e.Value.X);
+        //    var minY = elements.Min(e => e.Value.Y);
+        //    var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
 
-            var diffX = realMinX - minX;
-            var diffY = realMinY - minY;
+        //    var diffX = realMinX - minX;
+        //    var diffY = realMinY - minY;
 
-            foreach (var element in elements)
-            {
-                element.Value.X += diffX;
-                element.Value.Y += diffY;
-            }
-        }
+        //    foreach (var element in elements)
+        //    {
+        //        element.Value.X += diffX;
+        //        element.Value.Y += diffY;
+        //    }
+        //}
     }
 }

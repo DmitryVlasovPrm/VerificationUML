@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeepMorphy;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -13,6 +14,7 @@ namespace Verification
 {
     public partial class Main : Form
     {
+        public static MorphAnalyzer morph = new MorphAnalyzer();
         public Distribution Distribution;
         private Helper helperForm;
         private bool isClearingRows;

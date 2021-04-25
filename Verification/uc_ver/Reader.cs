@@ -11,6 +11,7 @@ namespace Verification.uc_ver
         private readonly List<Mistake> mistakes;
         private readonly Diagram diagram;
 
+
         public Reader(Dictionary<string, Element> elements, Diagram diagram)
         {
             this.elements = elements;
@@ -87,8 +88,9 @@ namespace Verification.uc_ver
                         $"Недопустимый элемент: {type} - {name}"));
             }
 
-            if (!ReadCoordinates(root))
-                mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
+            if (diagram.Image != null)
+                if (!ReadCoordinates(root))
+                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
         }
 
         private bool ReadCoordinates(XmlElement root)
@@ -103,9 +105,11 @@ namespace Verification.uc_ver
                 return false;
             }
 
+            int minX = int.MaxValue, minY = int.MaxValue;
+
             foreach (XmlNode node in coordRoot.ChildNodes)
             {
-                if (node.Attributes["xsi:type"] == null) continue;
+                //if (node.Attributes["xsi:type"] == null) continue;
 
                 string id = node.Attributes["modelElement"]?.Value,
                 x = node.Attributes["x"]?.Value,
@@ -113,13 +117,27 @@ namespace Verification.uc_ver
                 w = node.Attributes["width"]?.Value,
                 h = node.Attributes["height"]?.Value;
 
-                if (!elements.ContainsKey(id)) continue;
+                int intX = ConvertCoordinates(x);
+                int intY = ConvertCoordinates(y);
+                minX = minX > intX ? intX : minX;
+                minY = minY > intY ? intY : minY;
+
+                if (id == null || !elements.ContainsKey(id)) continue;
 
                 var element = elements[id];
-                element.X = ConvertCoordinates(x);
-                element.Y = ConvertCoordinates(y);
+                element.X = intX;
+                element.Y = intY;
                 element.W = ConvertCoordinates(w);
                 element.H = ConvertCoordinates(h);
+            }
+
+            var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
+            var diffX = minX >= 0 ? realMinX - minX - 10 : Math.Abs(minX - realMinX) / 2;
+            var diffY = realMinY - minY;
+            foreach (var element in elements)
+            {
+                element.Value.X += diffX;
+                element.Value.Y += diffY;
             }
 
             return true;
@@ -133,7 +151,7 @@ namespace Verification.uc_ver
             }
             catch (Exception)
             {
-                return -1;
+                return int.MaxValue;
             }
         }
 

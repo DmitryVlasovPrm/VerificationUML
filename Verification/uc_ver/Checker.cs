@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeepMorphy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,7 +41,8 @@ namespace Verification.uc_ver
                             element.Value));
                     }
                 }
-                if (string.IsNullOrEmpty(actorName.Key.Trim()) || !char.IsUpper(actorName.Key[0]))
+                var firstWord = actorName.Key.Split(' ')[0];
+                if (string.IsNullOrEmpty(actorName.Key.Trim()) || !char.IsUpper(actorName.Key[0]) || !IsNoun(firstWord))
                 {
                     var errorElements = elements
                        .Where(element => element.Value.Type == ElementTypes.Actor && element.Value.Name == actorName.Key);
@@ -130,8 +132,8 @@ namespace Verification.uc_ver
                             element.Value));
                     }
                 }
-                var words = precedentName.Key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]) || !IsVerb(words[0]))
+                var firstWord = precedentName.Key.Split(' ')[0];
+                if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]) || !IsVerb(firstWord))
                 {
                     var errorElements = elements
                         .Where(element => element.Value.Type == ElementTypes.Precedent && element.Value.Name == precedentName.Key);
@@ -224,12 +226,18 @@ namespace Verification.uc_ver
             }).Count() > 0;
         }
 
+        private bool IsNoun(string name)
+        {
+            var results = Main.morph.Parse(new string[] { name }).ToArray();
+            var morphInfo = results[0];
+            return morphInfo.BestTag["чр"] == "сущ";
+        }
+
         private bool IsVerb(string name)
         {
-            var isVerv = false;
-            var ends = new List<string>() { "ть", "ся", "сь", "ти" };
-            ends.ForEach(end => isVerv = isVerv || name.EndsWith(end));
-            return isVerv;
+            var results = Main.morph.Parse(new string[] { name }).ToArray();
+            var morphInfo = results[0];
+            return morphInfo.BestTag["чр"].Contains("гл");
         }
         #endregion
     }
