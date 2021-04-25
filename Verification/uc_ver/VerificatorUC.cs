@@ -32,9 +32,10 @@ namespace Verification.uc_ver
         {
             var minX = elements.Min(e => e.Value.X);
             var minY = elements.Min(e => e.Value.Y);
-            var tuple = MinCoordinates.Compute(diagram.Image);
-            var diffX = Math.Abs(minX - tuple.Item1) / 2;
-            var diffY = Math.Abs(minY - tuple.Item2) / 2;
+            var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
+
+            var diffX = realMinX - minX;
+            var diffY = realMinY - minY;
 
             foreach (var element in elements)
             {
