@@ -110,13 +110,14 @@ namespace Verification.uc_ver
 
             foreach (XmlNode node in coordRoot.ChildNodes)
             {
-                //if (node.Attributes["xsi:type"] == null) continue;
-
                 string id = node.Attributes["modelElement"]?.Value,
                 x = node.Attributes["x"]?.Value,
                 y = node.Attributes["y"]?.Value,
                 w = node.Attributes["width"]?.Value,
-                h = node.Attributes["height"]?.Value;
+                h = node.Attributes["height"]?.Value,
+                type = node.Attributes["xsi:type"]?.Value;
+
+                if (type == null || type.Contains("Association")) continue;
 
                 int intX = ConvertCoordinates(x);
                 int intY = ConvertCoordinates(y);
@@ -127,19 +128,29 @@ namespace Verification.uc_ver
                 minY = minY > intY ? intY : minY;
 
                 if (id == null || !elements.ContainsKey(id)) continue;
-
+                
                 var element = elements[id];
-                element.X = intX;
-                element.Y = intY;
 
-                if (intW != int.MaxValue)
+                if(element.Type == ElementTypes.Actor && minX == intX)
+                {
+                    var words = element.Name.Split(' ').ToList();
+                    words.Sort();
+                    words.Reverse();
+                    if (words[0].Count() > 5)
+                        minX += (int) ((words[0].Count() - 5) * 1.5);
+                }
+
+                element.X = element.X == int.MaxValue ? intX : element.X;
+                element.Y = element.Y == int.MaxValue ? intY : element.Y;
+
+                if (intW != int.MaxValue && element.W == -1)
                     element.W = intW;
-                if (intH != int.MaxValue)
+                if (intH != int.MaxValue && element.H == -1)
                     element.H = intH;
             }
 
             var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
-            var diffX = minX >= 0 ? realMinX - minX - 10 : Math.Abs(minX - realMinX) / 2;
+            var diffX = realMinX - minX;
             var diffY = realMinY - minY;
             foreach (var element in elements)
             {
