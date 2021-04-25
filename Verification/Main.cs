@@ -214,7 +214,7 @@ namespace Verification
 
             if (diagramsGV.Rows.Count == 0)
             {
-                btDelete.Enabled = btOutput.Enabled = false;
+                btVerify.Enabled = btDelete.Enabled = btOutput.Enabled = false;
             }
         }
 
