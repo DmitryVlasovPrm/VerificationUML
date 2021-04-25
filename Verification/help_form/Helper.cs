@@ -53,7 +53,7 @@ namespace Verification
             dgvMistakes.Columns[0].Width = 40;
             dgvMistakes.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgvMistakes.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgvMistakes.Columns[MISTAKE_COL_NUM-1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvMistakes.Columns[MISTAKE_COL_NUM - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
 
         }

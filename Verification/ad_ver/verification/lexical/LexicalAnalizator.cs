@@ -1,13 +1,12 @@
 ﻿using ActivityDiagramVer.entities;
 using ActivityDiagramVer.result;
-using System;
 using Verification.ad_ver.verification;
 
 namespace ActivityDiagramVer.verification.lexical
 {
-   /// <summary>
-   /// Класс, содержащий методы проверки лексических ошибок
-   /// </summary>
+    /// <summary>
+    /// Класс, содержащий методы проверки лексических ошибок
+    /// </summary>
     internal class LexicalAnalizator
     {
         private ADNodesList diagramElements;
@@ -56,11 +55,13 @@ namespace ActivityDiagramVer.verification.lexical
             if (hasSpecialSymbol(swimlane.getName()))
                 ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.STRANGE_SYMBOL), swimlane);
         }
-        private bool hasSpecialSymbol(string str) {
+        private bool hasSpecialSymbol(string str)
+        {
             // проверка на спец символ
             char firstLetter = str.Substring(0, 1).ToCharArray()[0];
             char lastLetter = str.Substring(str.Length - 1, 1).ToCharArray()[0];
-            if ((firstLetter > 'a' && firstLetter < 'я'  || firstLetter < 'a' || firstLetter > 'z')&&(lastLetter > 'a' && lastLetter < 'я' || lastLetter < 'a' || lastLetter > 'z')) {
+            if ((firstLetter > 'a' && firstLetter < 'я' || firstLetter < 'a' || firstLetter > 'z') && (lastLetter > 'a' && lastLetter < 'я' || lastLetter < 'a' || lastLetter > 'z'))
+            {
                 return false;
             }
             return true;
@@ -70,14 +71,16 @@ namespace ActivityDiagramVer.verification.lexical
         {
             if (activity.getName().Length == 0)
                 ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_NAME), node);
-            else {
+            else
+            {
 
                 // проверка на заглавную букву
-                if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1)))) {
+                if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1))))
+                {
                     ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), node);
                 }
                 // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
-                String firstWord = activity.getName().Split(' ')[0];
+                string firstWord = activity.getName().Split(' ')[0];
                 //Console.WriteLine(firstWord);
 
                 if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
@@ -88,7 +91,7 @@ namespace ActivityDiagramVer.verification.lexical
         {
             // добавляем вопрос для перехода
             BaseNode flowIn = diagramElements.get(decision.getInId(0));
-            String quest = ((ControlFlow)flowIn).getText();
+            string quest = ((ControlFlow)flowIn).getText();
             decision.setQuestion(quest.Trim());
 
             // добавляем альтернативы -> проходим по всем выходящим переходам и получаем подписи

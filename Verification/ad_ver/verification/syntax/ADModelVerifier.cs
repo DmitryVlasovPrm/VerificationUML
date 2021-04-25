@@ -16,9 +16,10 @@ namespace ActivityDiagramVer.verification.syntax
         private int initialCount = 0;
         private int finalCount = 0;
         private int activityCount = 0;
-        private LexicalAnalizator lexicalAnalizator;
+        private readonly LexicalAnalizator lexicalAnalizator;
 
-        public ADModelVerifier(LexicalAnalizator lexicalAnalizator) {
+        public ADModelVerifier(LexicalAnalizator lexicalAnalizator)
+        {
             this.lexicalAnalizator = lexicalAnalizator ?? throw new ArgumentNullException(nameof(lexicalAnalizator));
         }
 

@@ -58,9 +58,9 @@ namespace Verification.cd_ver
                                     minX = curX;
                             }
                             else
-							{
+                            {
                                 continue;
-							}
+                            }
                             var curY = minY;
                             if (curElement.Attributes["y"] != null)
                             {
@@ -72,9 +72,9 @@ namespace Verification.cd_ver
                                     minY = curY;
                             }
                             else
-							{
+                            {
                                 continue;
-							}
+                            }
 
                             if (curElement.Attributes["width"] == null || curElement.Attributes["height"] == null)
                                 continue;
@@ -105,9 +105,9 @@ namespace Verification.cd_ver
                 }
             }
             else
-			{
+            {
                 isThereImage = false;
-			}
+            }
 
             // Сами элементы диаграммы
             var xmlElements = root.GetElementsByTagName("packagedElement");
@@ -234,7 +234,7 @@ namespace Verification.cd_ver
                             }
 
                             var newClass = new Class(elementId, elementName, box, attributes, operations, generalClassesIdxs, isInterface, interfaceSuppliersIdxs);
-                            
+
                             // Проверим на дублирование
                             var isExist = allElements.Classes.Exists(a => a.Name == elementName);
                             if (isExist)

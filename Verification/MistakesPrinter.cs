@@ -11,10 +11,12 @@ namespace Verification
             Print(mistakes, "Mistakes.txt");
         }
 
-        public static void Print(List<Mistake> mistakes, string path, string diagramName) {
-            using (var sw = new StreamWriter(path, true, Encoding.Unicode)) {
+        public static void Print(List<Mistake> mistakes, string path, string diagramName)
+        {
+            using (var sw = new StreamWriter(path, true, Encoding.Unicode))
+            {
                 sw.WriteLine("--------------------------");
-                sw.WriteLine("-- Диаграмма "+diagramName+": --");
+                sw.WriteLine("-- Диаграмма " + diagramName + ": --");
                 mistakes
                     .ForEach(mistake => sw.WriteLine(@mistake.Text));
             }

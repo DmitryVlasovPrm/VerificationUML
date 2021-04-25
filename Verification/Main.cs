@@ -104,25 +104,29 @@ namespace Verification
             progressBar.Dispose();
         }
 
-        private void WriteLog() {
+        private void WriteLog()
+        {
             string filename = @"\verificationResults.txt";
             // Get the current directory.
             string path = Directory.GetCurrentDirectory();
             string target = path + @"\results";
 
-            if (!Directory.Exists(target)) {
+            if (!Directory.Exists(target))
+            {
                 Directory.CreateDirectory(target);
             }
-            foreach (DataGridViewRow row in diagramsGV.Rows) {
+            foreach (DataGridViewRow row in diagramsGV.Rows)
+            {
                 var selectedKey = row.Cells[0].Value.ToString();
                 var curDiagram = Distribution.AllDiagrams[selectedKey];
-                if (curDiagram.Verificated) {
+                if (curDiagram.Verificated)
+                {
                     MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name);
                 }
             }
             Console.WriteLine(File.Exists(target + filename));
-            
-            
+
+
         }
         private void Verificate(Diagram diagram)
         {
@@ -281,5 +285,5 @@ namespace Verification
             }
 
         }
-	}
+    }
 }
