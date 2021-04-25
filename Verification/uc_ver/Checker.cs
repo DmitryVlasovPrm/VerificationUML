@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Verification.uc_ver
@@ -129,7 +130,8 @@ namespace Verification.uc_ver
                             element.Value));
                     }
                 }
-                if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]))
+                var words = precedentName.Key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]) || !IsVerb(words[0]))
                 {
                     var errorElements = elements
                         .Where(element => element.Value.Type == ElementTypes.Precedent && element.Value.Name == precedentName.Key);
@@ -220,6 +222,14 @@ namespace Verification.uc_ver
                     return true;
                 return false;
             }).Count() > 0;
+        }
+
+        private bool IsVerb(string name)
+        {
+            var isVerv = false;
+            var ends = new List<string>() { "ть", "ся", "сь", "ти" };
+            ends.ForEach(end => isVerv = isVerv || name.EndsWith(end));
+            return isVerv;
         }
         #endregion
     }
