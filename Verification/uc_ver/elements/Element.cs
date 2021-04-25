@@ -20,7 +20,8 @@ namespace Verification.uc_ver
             Type = type;
             Name = name;
             Parent = parent;
-            X = Y = H = W = -1;
+            X = Y = int.MaxValue;
+            H = W = -1;
         }
     }
 

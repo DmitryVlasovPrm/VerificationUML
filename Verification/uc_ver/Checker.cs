@@ -193,21 +193,35 @@ namespace Verification.uc_ver
 
                 if (haveIncluding)
                 {
-                    int includesCount = elements.Where(element =>
-                    {
-                        if (element.Value.Type != ElementTypes.Include) return false;
-                        if (((Arrow)element.Value).From.Equals(precedent.Key))
-                            return true;
-                        return false;
-                    }).Count();
+                    var includesFrom = elements
+                        .Where(element =>
+                        {
+                            if (element.Value.Type != ElementTypes.Include) return false;
+                            if (((Arrow)element.Value).From.Equals(precedent.Key))
+                                return true;
+                            return false;
+                        });
 
-                    if (includesCount > 0 && includesCount < 2)
-                    {
+                    var includesTo = elements
+                        .Where(element =>
+                        {
+                            if (element.Value.Type != ElementTypes.Include) return false;
+                            if (((Arrow)element.Value).To.Equals(precedent.Key))
+                                return true;
+                            return false;
+                        });
+
+                    if (includesFrom.Count() > 0 && includesFrom.Count() < 2)
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.WARNING,
                            $"Прецедент включает всего один прецедент: {precedent.Value.Name}",
                            precedent.Value));
-                    }
+
+                    if (includesFrom.Count() > 0 && includesTo.Count() > 0)
+                        mistakes.Add(UCMistakeFactory.Create(
+                           MistakesTypes.WARNING,
+                           $"Злоупотребление отношением включения: {precedent.Value.Name}",
+                           precedent.Value));
                 }
             }
         }
