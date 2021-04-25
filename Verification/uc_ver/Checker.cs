@@ -73,7 +73,7 @@ namespace Verification.uc_ver
         {
             var comments = elements.Where(element => element.Value.Type == ElementTypes.Comment);
             foreach (var comment in comments)
-                if (string.IsNullOrEmpty(comment.Value.Name.Trim()))
+                if (string.IsNullOrEmpty(comment.Value.Name))
                 {
                     mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,

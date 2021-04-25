@@ -99,8 +99,9 @@ namespace Verification.uc_ver
             try
             {
                 coordRoot = root.GetElementsByTagName("plane")[0];
+                if (coordRoot == null) throw new NullReferenceException();
             }
-            catch (NullReferenceException)
+            catch (Exception)
             {
                 return false;
             }
@@ -119,6 +120,9 @@ namespace Verification.uc_ver
 
                 int intX = ConvertCoordinates(x);
                 int intY = ConvertCoordinates(y);
+                int intW = ConvertCoordinates(w);
+                int intH = ConvertCoordinates(h);
+
                 minX = minX > intX ? intX : minX;
                 minY = minY > intY ? intY : minY;
 
@@ -127,8 +131,11 @@ namespace Verification.uc_ver
                 var element = elements[id];
                 element.X = intX;
                 element.Y = intY;
-                element.W = ConvertCoordinates(w);
-                element.H = ConvertCoordinates(h);
+
+                if (intW != int.MaxValue)
+                    element.W = intW;
+                if (intH != int.MaxValue)
+                    element.H = intH;
             }
 
             var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
