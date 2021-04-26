@@ -145,7 +145,7 @@ namespace ActivityDiagramVer.verification.syntax
         private void checkInitial()
         {
             initialCount++;
-            if (initialCount > 1) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));
+            if (initialCount > 1) ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));
 
         }
         private void checkFinal()
