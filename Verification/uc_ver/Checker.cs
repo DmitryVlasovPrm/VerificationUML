@@ -39,7 +39,8 @@ namespace Verification.uc_ver
                             element.Value));
                     }
                 }
-                if (string.IsNullOrEmpty(actorName.Key.Trim()) || !char.IsUpper(actorName.Key[0]))
+                var firstWord = actorName.Key.Split(' ')[0];
+                if (string.IsNullOrEmpty(actorName.Key.Trim()) || !char.IsUpper(actorName.Key[0]) || !IsNoun(firstWord))
                 {
                     var errorElements = elements
                        .Where(element => element.Value.Type == ElementTypes.Actor && element.Value.Name == actorName.Key);
@@ -70,7 +71,7 @@ namespace Verification.uc_ver
         {
             var comments = elements.Where(element => element.Value.Type == ElementTypes.Comment);
             foreach (var comment in comments)
-                if (string.IsNullOrEmpty(comment.Value.Name.Trim()))
+                if (string.IsNullOrEmpty(comment.Value.Name))
                 {
                     mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
@@ -82,6 +83,15 @@ namespace Verification.uc_ver
         private void СheckPackages()
         {
             var packages = elements.Where(element => element.Value.Type == ElementTypes.Package);
+
+            if (packages.Count() == 0)
+            {
+                mistakes.Add(UCMistakeFactory.Create(
+                            MistakesTypes.ERROR,
+                            $"Отсутствует граница системы"));
+            }
+
+
             foreach (var package in packages)
                 if (string.IsNullOrEmpty(package.Value.Name.Trim()))
                 {
@@ -120,7 +130,8 @@ namespace Verification.uc_ver
                             element.Value));
                     }
                 }
-                if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]))
+                var firstWord = precedentName.Key.Split(' ')[0];
+                if (string.IsNullOrEmpty(precedentName.Key.Trim()) || !char.IsUpper(precedentName.Key[0]) || !IsVerb(firstWord))
                 {
                     var errorElements = elements
                         .Where(element => element.Value.Type == ElementTypes.Precedent && element.Value.Name == precedentName.Key);
@@ -180,21 +191,35 @@ namespace Verification.uc_ver
 
                 if (haveIncluding)
                 {
-                    int includesCount = elements.Where(element =>
-                    {
-                        if (element.Value.Type != ElementTypes.Include) return false;
-                        if (((Arrow)element.Value).From.Equals(precedent.Key))
-                            return true;
-                        return false;
-                    }).Count();
+                    var includesFrom = elements
+                        .Where(element =>
+                        {
+                            if (element.Value.Type != ElementTypes.Include) return false;
+                            if (((Arrow)element.Value).From.Equals(precedent.Key))
+                                return true;
+                            return false;
+                        });
 
-                    if (includesCount > 0 && includesCount < 2)
-                    {
+                    var includesTo = elements
+                        .Where(element =>
+                        {
+                            if (element.Value.Type != ElementTypes.Include) return false;
+                            if (((Arrow)element.Value).To.Equals(precedent.Key))
+                                return true;
+                            return false;
+                        });
+
+                    if (includesFrom.Count() > 0 && includesFrom.Count() < 2)
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.WARNING,
                            $"Прецедент включает всего один прецедент: {precedent.Value.Name}",
                            precedent.Value));
-                    }
+
+                    if (includesFrom.Count() > 0 && includesTo.Count() > 0)
+                        mistakes.Add(UCMistakeFactory.Create(
+                           MistakesTypes.WARNING,
+                           $"Злоупотребление отношением включения: {precedent.Value.Name}",
+                           precedent.Value));
                 }
             }
         }
@@ -211,6 +236,20 @@ namespace Verification.uc_ver
                     return true;
                 return false;
             }).Count() > 0;
+        }
+
+        private bool IsNoun(string name)
+        {
+            var results = Main.morph.Parse(new string[] { name }).ToArray();
+            var morphInfo = results[0];
+            return morphInfo.BestTag["чр"] == "сущ";
+        }
+
+        private bool IsVerb(string name)
+        {
+            var results = Main.morph.Parse(new string[] { name }).ToArray();
+            var morphInfo = results[0];
+            return morphInfo.BestTag["чр"].Contains("гл");
         }
         #endregion
     }

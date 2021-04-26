@@ -10,7 +10,7 @@
 
         public static Mistake Create(int seriousness, string text)
         {
-            var bbox = new BoundingBox(-1, -1, -1, -1);
+            var bbox = new BoundingBox(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
             return new Mistake(seriousness, text, bbox);
         }
     }

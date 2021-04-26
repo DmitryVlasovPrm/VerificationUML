@@ -11,6 +11,7 @@ namespace Verification.uc_ver
         private readonly List<Mistake> mistakes;
         private readonly Diagram diagram;
 
+
         public Reader(Dictionary<string, Element> elements, Diagram diagram)
         {
             this.elements = elements;
@@ -87,8 +88,9 @@ namespace Verification.uc_ver
                         $"Недопустимый элемент: {type} - {name}"));
             }
 
-            if (!ReadCoordinates(root))
-                mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
+            if (diagram.Image != null)
+                if (!ReadCoordinates(root))
+                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
         }
 
         private bool ReadCoordinates(XmlElement root)
@@ -97,29 +99,63 @@ namespace Verification.uc_ver
             try
             {
                 coordRoot = root.GetElementsByTagName("plane")[0];
+                if (coordRoot == null) throw new NullReferenceException();
             }
-            catch (NullReferenceException)
+            catch (Exception)
             {
                 return false;
             }
 
+            int minX = int.MaxValue, minY = int.MaxValue;
+
             foreach (XmlNode node in coordRoot.ChildNodes)
             {
-                if (node.Attributes["xsi:type"] == null) continue;
-
                 string id = node.Attributes["modelElement"]?.Value,
                 x = node.Attributes["x"]?.Value,
                 y = node.Attributes["y"]?.Value,
                 w = node.Attributes["width"]?.Value,
-                h = node.Attributes["height"]?.Value;
+                h = node.Attributes["height"]?.Value,
+                type = node.Attributes["xsi:type"]?.Value;
 
-                if (!elements.ContainsKey(id)) continue;
+                if (type == null || type.Contains("Association")) continue;
+
+                int intX = ConvertCoordinates(x);
+                int intY = ConvertCoordinates(y);
+                int intW = ConvertCoordinates(w);
+                int intH = ConvertCoordinates(h);
+
+                minX = minX > intX ? intX : minX;
+                minY = minY > intY ? intY : minY;
+
+                if (id == null || !elements.ContainsKey(id)) continue;
 
                 var element = elements[id];
-                element.X = ConvertCoordinates(x);
-                element.Y = ConvertCoordinates(y);
-                element.W = ConvertCoordinates(w);
-                element.H = ConvertCoordinates(h);
+
+                if (element.Type == ElementTypes.Actor && minX == intX)
+                {
+                    var words = element.Name.Split(' ').ToList();
+                    words.Sort();
+                    words.Reverse();
+                    if (words[0].Count() > 5)
+                        minX += (int)((words[0].Count() - 5) * 1.5);
+                }
+
+                element.X = element.X == int.MaxValue ? intX : element.X;
+                element.Y = element.Y == int.MaxValue ? intY : element.Y;
+
+                if (intW != int.MaxValue && element.W == -1)
+                    element.W = intW;
+                if (intH != int.MaxValue && element.H == -1)
+                    element.H = intH;
+            }
+
+            var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
+            var diffX = realMinX - minX;
+            var diffY = realMinY - minY;
+            foreach (var element in elements)
+            {
+                element.Value.X += diffX;
+                element.Value.Y += diffY;
             }
 
             return true;
@@ -133,7 +169,7 @@ namespace Verification.uc_ver
             }
             catch (Exception)
             {
-                return -1;
+                return int.MaxValue;
             }
         }
 
