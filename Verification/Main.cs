@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.ComponentModel;
 using System.Windows.Forms;
 using Verification.ad_ver;
 using Verification.cd_ver;
@@ -18,6 +19,7 @@ namespace Verification
         public Distribution Distribution;
         private Helper helperForm;
         private bool isClearingRows;
+        private bool firstSessionCheck = true;
 
         public Main()
         {
@@ -43,7 +45,7 @@ namespace Verification
         // Сохранение результата
         private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ExportDiagramMistakes();
         }
 
         /// <summary>
@@ -79,54 +81,63 @@ namespace Verification
         }
 
         // Кнопка "верифицировать"
-        private void btVerify_Click(object sender, EventArgs e)
-        {
-            var progressBar = new ProgressBar();
-            var diagramsCount = Distribution.AllDiagrams.Count;
-            progressBar.SetStep(100 / diagramsCount);
+        private void btVerify_Click(object sender, EventArgs e) {
+            string waitingFormMsg = "";
+            var bw = new BackgroundWorker();
+            waitingFormMsg = "Верификация";
+            bw.DoWork += (obj, ex) => VerificateAll(ex);
 
+            WaitingForm waitingForm = new WaitingForm();
+            waitingForm.InitializationWaitingForm(this, waitingFormMsg);        // инициализация прогресс бара
+            waitingForm.show();
+            bw.RunWorkerCompleted += waitingForm.bw_RunWorkerCompleted;
+            bw.RunWorkerCompleted += (obj, ex) => updateGUI(ex);     
+
+            bw.RunWorkerAsync();
+
+        }
+        private void updateGUI(RunWorkerCompletedEventArgs e) {
+            UpdateDiagramOnGUI((List<string>)e.Result);
+            WriteLog();
+        }
+
+        private void VerificateAll(DoWorkEventArgs args) {
             var verificatedNames = new List<string>();
+            var diagramsCount = Distribution.AllDiagrams.Count;
+
             var keys = new string[diagramsCount];
             Distribution.AllDiagrams.Keys.CopyTo(keys, 0);
-            foreach (var key in keys)
-            {
+            foreach (var key in keys) {
                 var curDiagram = Distribution.AllDiagrams[key];
-                if (!curDiagram.Verificated)
-                {
+                if (!curDiagram.Verificated) {
                     Verificate(curDiagram);
                     verificatedNames.Add(key);
                 }
-                progressBar.PerformProgress();
             }
-            UpdateDiagramOnGUI(verificatedNames);
-            WriteLog();
-
-            progressBar.SetValue(100);
-            progressBar.Close();
-            progressBar.Dispose();
+            args.Result = verificatedNames;
         }
 
-        private void WriteLog()
-        {
+        // записать ошибки в файл
+        private void WriteLog() {
+
             string filename = @"\verificationResults.txt";
             // Get the current directory.
             string path = Directory.GetCurrentDirectory();
             string target = path + @"\results";
+            bool append = true;
 
             if (!Directory.Exists(target))
-            {
                 Directory.CreateDirectory(target);
-            }
-            foreach (DataGridViewRow row in diagramsGV.Rows)
-            {
+            // если первая проверка в сессии, то надо почистить существующий файл
+            append = !firstSessionCheck;
+            firstSessionCheck = false;
+
+            foreach (DataGridViewRow row in diagramsGV.Rows) {
                 var selectedKey = row.Cells[0].Value.ToString();
                 var curDiagram = Distribution.AllDiagrams[selectedKey];
                 if (curDiagram.Verificated)
-                {
-                    MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name);
-                }
+                    MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name, append);
             }
-            Console.WriteLine(File.Exists(target + filename));
 
 
         }
@@ -246,22 +257,25 @@ namespace Verification
 
         private void btOutput_Click(object sender, EventArgs e)
         {
+            ExportDiagramMistakes();
+        }
+        private void ExportDiagramMistakes() {
+            if (diagramsGV==null|| diagramsGV.CurrentCell==null|| diagramsGV.CurrentCell.Value == null) {
+                ShowMsg("Выберите диаграмму", "Экспорт ошибок");
+                return;
+            }
             var selectedKey = diagramsGV.CurrentCell.Value.ToString();
             var curDiagram = Distribution.AllDiagrams[selectedKey];
 
-            if (curDiagram.Verificated)
-            {
-                var saveDialog = new SaveFileDialog
-                {
+            if (curDiagram.Verificated) {
+                var saveDialog = new SaveFileDialog {
                     Title = "Сохранение списка ошибок",
                     FileName = "Mistakes.txt",
                     Filter = "Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*"
                 };
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                     MistakesPrinter.Print(curDiagram.Mistakes, saveDialog.FileName);
-            }
-            else
-            {
+            } else {
                 var result = MessageBox.Show(
                     "Диаграмма не прошла верификацию.\nВерифицировать?",
                     "Верификация диаграмм UML",

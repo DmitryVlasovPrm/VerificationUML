@@ -1,12 +1,49 @@
-﻿using System;
+﻿using ActivityDiagramVer.verification;
+using System;
+using System.Collections.Generic;
 
-namespace Verification.ad_ver.verification
-{
+namespace Verification.ad_ver.verification {
     /// <summary>
     /// Перечисление возможных ошибок
     /// </summary>
-    internal enum MISTAKES
-    {
+    internal static class MistakesSeriousness {
+        public static Dictionary<MISTAKES, Level> mistakes = new Dictionary<MISTAKES, Level> {
+            { MISTAKES.MORE_THAN_ONE_INIT, Level.FATAL },
+            { MISTAKES.NO_FINAL, Level.FATAL },
+            { MISTAKES.NO_INITIAL, Level.FATAL },
+            { MISTAKES.NO_ACTIVITIES, Level.FATAL },
+            { MISTAKES.MORE_THAN_ONE_OUT, Level.FATAL },
+            { MISTAKES.DO_NOT_HAVE_ALT, Level.FATAL },
+            { MISTAKES.ONLY_ONE_ALT, Level.HARD },
+            { MISTAKES.NO_OUT, Level.FATAL }, //1
+            { MISTAKES.NO_IN, Level.FATAL }, //1
+            { MISTAKES.NO_PARTION, Level.EASY },
+            { MISTAKES.REPEATED_ACT, Level.HARD },
+            { MISTAKES.SAME_TARGET, Level.HARD },
+            { MISTAKES.OUT_NOT_IN_ACT, Level.FATAL },
+            { MISTAKES.NEXT_DECISION, Level.HARD },
+            { MISTAKES.HAS_1_IN, Level.HARD },
+
+            { MISTAKES.FORBIDDEN_ELEMENT, Level.FATAL },//1
+            { MISTAKES.SMALL_LETTER, Level.HARD },
+            { MISTAKES.NO_NAME, Level.HARD },
+            { MISTAKES.NOT_NOUN, Level.EASY },
+            { MISTAKES.END_WITH_QUEST, Level.EASY },
+            { MISTAKES.HAVE_NOT_QUEST, Level.HARD },
+            { MISTAKES.REPEATED_ALT, Level.HARD },
+            { MISTAKES.HAVE_EMPTY_ALT, Level.HARD },
+            { MISTAKES.HAVE_MARK, Level.HARD },
+            { MISTAKES.STRANGE_SYMBOL, Level.HARD },
+            { MISTAKES.EMPTY_SWIMLANE, Level.EASY },
+
+            { MISTAKES.TWO_TOKENS, Level.FATAL },
+            { MISTAKES.DEAD_ROAD, Level.FATAL },
+            { MISTAKES.MANY_TOKENS_IN_END, Level.FATAL },
+            { MISTAKES.COULD_NOT_REACH_FINAL, Level.FATAL },
+            { MISTAKES.FINAL_COLOR_TOKEN, Level.FATAL }
+        };
+    }
+    internal enum MISTAKES {
         MORE_THAN_ONE_INIT,
         NO_FINAL,
         NO_INITIAL,
@@ -21,7 +58,7 @@ namespace Verification.ad_ver.verification
         SAME_TARGET,
         OUT_NOT_IN_ACT,
         NEXT_DECISION,
-        MERGE_HAS_1_IN,
+        HAS_1_IN,
         // лексические
         FORBIDDEN_ELEMENT,
         SMALL_LETTER,
@@ -41,13 +78,9 @@ namespace Verification.ad_ver.verification
         COULD_NOT_REACH_FINAL,
         FINAL_COLOR_TOKEN
     }
-    internal class MistakeAdapter
-    {
-
-        public static string toString(MISTAKES mistake)
-        {
-            switch (mistake)
-            {
+    internal class MistakeAdapter {
+        public static string toString(MISTAKES mistake) {
+            switch (mistake) {
                 case MISTAKES.MORE_THAN_ONE_INIT:
                     return "В диаграмме больше одного начального состояния";
                 case MISTAKES.NO_FINAL:
@@ -62,7 +95,7 @@ namespace Verification.ad_ver.verification
                     return "не имеет альтернатив";
                 case MISTAKES.ONLY_ONE_ALT:
                     return "всего одна альтернатива";
-                case MISTAKES.MERGE_HAS_1_IN:
+                case MISTAKES.HAS_1_IN:
                     return "всего один входной переход";
                 case MISTAKES.NO_IN:
                     return "отсутствует входящий переход";

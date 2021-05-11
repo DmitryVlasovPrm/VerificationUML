@@ -144,12 +144,6 @@
     <Compile Include="check_consistency\IActor.cs" />
     <Compile Include="check_consistency\ConsistencyVerifier.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgressBar.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ProgressBar.Designer.cs">
-      <DependentUpon>ProgressBar.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Distribution.cs" />
     <Compile Include="type_definer\EDiagramTypes.cs" />
@@ -161,14 +155,14 @@
     <Compile Include="uc_ver\Reader.cs" />
     <Compile Include="uc_ver\UCMistakeFactory.cs" />
     <Compile Include="uc_ver\VerificatorUC.cs" />
+    <Compile Include="WaitingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="help_form\Helper.resx">
       <DependentUpon>Helper.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ProgressBar.resx">
-      <DependentUpon>ProgressBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

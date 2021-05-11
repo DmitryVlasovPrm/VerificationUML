@@ -5,51 +5,44 @@ using System;
 using System.Collections.Generic;
 using Verification.ad_ver.verification;
 
-namespace ActivityDiagramVer.verification.syntax
-{
+namespace ActivityDiagramVer.verification.syntax {
     /// <summary>
     /// Класс, отвечающий за проверку диаграммы без графа
     /// </summary>
-    internal class ADModelVerifier
-    {
+    internal class ADModelVerifier {
         private ADNodesList diagramElements;
         private int initialCount = 0;
         private int finalCount = 0;
         private int activityCount = 0;
         private readonly LexicalAnalizator lexicalAnalizator;
 
-        public ADModelVerifier(LexicalAnalizator lexicalAnalizator)
-        {
+        public ADModelVerifier(LexicalAnalizator lexicalAnalizator) {
             this.lexicalAnalizator = lexicalAnalizator ?? throw new ArgumentNullException(nameof(lexicalAnalizator));
         }
 
-        public void setDiagramElements(ADNodesList diagramElements)
-        {
+        public void setDiagramElements(ADNodesList diagramElements) {
             this.diagramElements = diagramElements;
         }
 
-        public void check()
-        {
+        public void check() {
             lexicalAnalizator.setDiagramElements(diagramElements);
 
-            for (int i = 0; i < diagramElements.size(); i++)
-            {
+            for (int i = 0; i < diagramElements.size(); i++) {
                 BaseNode currentNode = diagramElements.get(i);
-                switch (diagramElements.get(i).getType())
-                {
+                switch (diagramElements.get(i).getType()) {
                     case ElementType.FLOW:
                         lexicalAnalizator.checkFlow((ControlFlow)diagramElements.get(i));
                         break;
                     case ElementType.INITIAL_NODE:
                         checkIfInPartion((DiagramElement)currentNode, "", diagramElements.getNode(i));
                         if (((DiagramElement)currentNode).outSize() == 0)
-                            ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_OUT), diagramElements.getNode(i));
+                            ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_OUT), diagramElements.getNode(i));
                         checkInitial();
                         break;
                     case ElementType.FINAL_NODE:
                         checkIfInPartion((DiagramElement)currentNode, "", diagramElements.getNode(i));
                         if (((DiagramElement)currentNode).inSize() == 0)
-                            ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_IN), diagramElements.getNode(i));
+                            ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_IN), diagramElements.getNode(i));
                         checkFinal();
                         break;
                     case ElementType.FORK:
@@ -87,20 +80,18 @@ namespace ActivityDiagramVer.verification.syntax
                 }
             }
             if (finalCount == 0)
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_FINAL));
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_FINAL], MistakeAdapter.toString(MISTAKES.NO_FINAL));
             if (initialCount == 0)
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_INITIAL));
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_INITIAL], MistakeAdapter.toString(MISTAKES.NO_INITIAL));
             if (activityCount == 0)
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_ACTIVITIES));
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_ACTIVITIES], MistakeAdapter.toString(MISTAKES.NO_ACTIVITIES));
 
             // проверка, что имена активностей уникальны
             List<ActivityNode> activities = diagramElements.getAllActivities();
-            for (int i = 0; i < activities.Count - 1; i++)
-            {
-                for (int j = i + 1; j < activities.Count; j++)
-                {
+            for (int i = 0; i < activities.Count - 1; i++) {
+                for (int j = i + 1; j < activities.Count; j++) {
                     if (activities[i].getName().Equals(activities[j].getName()))
-                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.REPEATED_ACT), diagramElements.getNode(activities[i].getId()));
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_ACT], MistakeAdapter.toString(MISTAKES.REPEATED_ACT), diagramElements.getNode(activities[i].getId()));
                 }
             }
         }
@@ -110,10 +101,9 @@ namespace ActivityDiagramVer.verification.syntax
          * @param currentNode
          * @param name
          */
-        private void checkIfInPartion(DiagramElement currentNode, string name, ADNodesList.ADNode node)
-        {
+        private void checkIfInPartion(DiagramElement currentNode, string name, ADNodesList.ADNode node) {
             if (currentNode.getInPartition().Equals(""))
-                ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NO_PARTION), node);
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_PARTION], MistakeAdapter.toString(MISTAKES.NO_PARTION), node);
         }
 
         /**
@@ -121,81 +111,69 @@ namespace ActivityDiagramVer.verification.syntax
          * @param currentNode
          * @param name
          */
-        private void checkInOut(DiagramElement currentNode, string name, ADNodesList.ADNode node)
-        {
-            if (currentNode is MergeNode)
+        private void checkInOut(DiagramElement currentNode, string name, ADNodesList.ADNode node) {
+            if (currentNode is MergeNode || currentNode is JoinNode)
                 if ((currentNode).inSize() == 1)
-                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.MERGE_HAS_1_IN), node);
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.HAS_1_IN], MistakeAdapter.toString(MISTAKES.HAS_1_IN), node);
             if ((currentNode).inSize() == 0)
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_IN), node);
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_IN], MistakeAdapter.toString(MISTAKES.NO_IN), node);
             if ((currentNode).outSize() == 0)
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.NO_OUT), node);
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_OUT), node);
         }
 
-        private void checkFork(ForkNode fork, ADNodesList.ADNode node)
-        {
-            for (int i = 0; i < fork.outSize(); i++)
-            {
+        private void checkFork(ForkNode fork, ADNodesList.ADNode node) {
+            for (int i = 0; i < fork.outSize(); i++) {
                 ElementType elementType = diagramElements.get(((ControlFlow)diagramElements.get(fork.getOutId(i))).getTarget()).getType();
                 if (elementType != ElementType.ACTIVITY && elementType != ElementType.DECISION && elementType != ElementType.FORK)
-                    ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.OUT_NOT_IN_ACT), node);
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.OUT_NOT_IN_ACT], MistakeAdapter.toString(MISTAKES.OUT_NOT_IN_ACT), node);
             }
         }
 
-        private void checkInitial()
-        {
+        private void checkInitial() {
             initialCount++;
-            if (initialCount > 1) ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));
+            if (initialCount > 1) ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MORE_THAN_ONE_INIT], MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_INIT));
 
         }
-        private void checkFinal()
-        {
+        private void checkFinal() {
             finalCount++;
         }
-        private void checkActivity(ActivityNode activity, ADNodesList.ADNode node)
-        {
+        private void checkActivity(ActivityNode activity, ADNodesList.ADNode node) {
             activityCount++;
             // активность имеет больше одного выходящего перехода
             if (activity.outSize() >= 2)
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MORE_THAN_ONE_OUT], MistakeAdapter.toString(MISTAKES.MORE_THAN_ONE_OUT), node);
         }
 
-        private void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
-        {
+        private void checkDecision(DecisionNode decision, ADNodesList.ADNode node) {
             bool checkAlt = true;
             // проверка, что альтернативы есть
-            if (decision.alternativeSize() == 0)
-            {
-                ADMistakeFactory.createMistake(Level.FATAL, MistakeAdapter.toString(MISTAKES.DO_NOT_HAVE_ALT), node);
+            if (decision.alternativeSize() == 0) {
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.DO_NOT_HAVE_ALT], MistakeAdapter.toString(MISTAKES.DO_NOT_HAVE_ALT), node);
                 checkAlt = false;
             }
 
             // проверка, что альтернатив больше одной
             if (checkAlt)
-                if (decision.alternativeSize() == 1)
-                {
-                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.ONLY_ONE_ALT), node);
+                if (decision.alternativeSize() == 1) {
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.ONLY_ONE_ALT], MistakeAdapter.toString(MISTAKES.ONLY_ONE_ALT), node);
                 }
 
             // проверка, что альтернативы не ведут в один и тот же элемент
-            if (checkAlt)
-            {
-                for (int i = 0; i < decision.outSize() - 1; i++)
-                {
+            if (checkAlt) {
+                for (int i = 0; i < decision.outSize() - 1; i++) {
                     string targetId = ((ControlFlow)diagramElements.get(decision.getOutId(i))).getTarget();
-                    for (int j = i + 1; j < decision.outSize(); j++)
-                    {
+                    for (int j = i + 1; j < decision.outSize(); j++) {
                         if (targetId.Equals(((ControlFlow)diagramElements.get(decision.getOutId(j))).getTarget()))
-                            ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SAME_TARGET), node);
+                            ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.SAME_TARGET], MistakeAdapter.toString(MISTAKES.SAME_TARGET), node);
 
                     }
                     if (diagramElements.get(targetId).getType() == ElementType.DECISION)
-                        ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NEXT_DECISION], MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
                 }
                 // проверка на последовательность условных операторов
                 string targetId2 = ((ControlFlow)diagramElements.get(decision.getOutId(decision.outSize() - 1))).getTarget();
                 if (diagramElements.get(targetId2).getType() == ElementType.DECISION)
-                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NEXT_DECISION], MistakeAdapter.toString(MISTAKES.NEXT_DECISION), node);
 
             }
 

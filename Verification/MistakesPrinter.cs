@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 namespace Verification
 {
@@ -11,12 +12,10 @@ namespace Verification
             Print(mistakes, "Mistakes.txt");
         }
 
-        public static void Print(List<Mistake> mistakes, string path, string diagramName)
-        {
-            using (var sw = new StreamWriter(path, true, Encoding.Unicode))
-            {
+        public static void Print(List<Mistake> mistakes, string path, string diagramName, bool append) {
+            using (var sw = new StreamWriter(path, append, Encoding.Unicode)) {
                 sw.WriteLine("--------------------------");
-                sw.WriteLine("-- Диаграмма " + diagramName + ": --");
+                sw.WriteLine($"-- Диаграмма {diagramName} [{System.DateTime.Now}]: --");     // TODO:(добавить дату и время)
                 mistakes
                     .ForEach(mistake => sw.WriteLine(@mistake.Text));
             }
