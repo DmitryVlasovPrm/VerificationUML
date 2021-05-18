@@ -2,7 +2,6 @@
 using ActivityDiagramVer.result;
 using ActivityDiagramVer.verification.lexical;
 using System;
-using System.Collections.Generic;
 using Verification.ad_ver.verification;
 
 namespace ActivityDiagramVer.verification.syntax {
@@ -85,21 +84,10 @@ namespace ActivityDiagramVer.verification.syntax {
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_INITIAL], MistakeAdapter.toString(MISTAKES.NO_INITIAL));
             if (activityCount == 0)
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_ACTIVITIES], MistakeAdapter.toString(MISTAKES.NO_ACTIVITIES));
-
-            // проверка, что имена активностей уникальны
-            List<ActivityNode> activities = diagramElements.getAllActivities();
-            for (int i = 0; i < activities.Count - 1; i++) {
-                for (int j = i + 1; j < activities.Count; j++) {
-                    if (activities[i].getName().Equals(activities[j].getName()))
-                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_ACT], MistakeAdapter.toString(MISTAKES.REPEATED_ACT), diagramElements.getNode(activities[i].getId()));
-                }
-            }
         }
 
         /**
          * Проверка, что элемент принадлежит какому-либо участнику
-         * @param currentNode
-         * @param name
          */
         private void checkIfInPartion(DiagramElement currentNode, string name, ADNodesList.ADNode node) {
             if (currentNode.getInPartition().Equals(""))
@@ -108,8 +96,6 @@ namespace ActivityDiagramVer.verification.syntax {
 
         /**
          * Проверка, что имеется хотя бы один входящий\выходящий переход
-         * @param currentNode
-         * @param name
          */
         private void checkInOut(DiagramElement currentNode, string name, ADNodesList.ADNode node) {
             if (currentNode is MergeNode || currentNode is JoinNode)

@@ -17,8 +17,6 @@ namespace ActivityDiagramVer.result {
             var tmp = (DiagramElement)element.getValue();
             string descr = tmp is DecisionNode ? ((DecisionNode)tmp).getQuestion() : tmp.getDescription();
 
-
-
             var bbox = new BoundingBox(tmp.X, tmp.Y, tmp.Width, tmp.Height);
             diagram.Mistakes.Add(new Mistake(levelAdapter(level), ElementTypeAdapter.toString(tmp.getType()) + " '" + descr + "': " + mistake, bbox));
 

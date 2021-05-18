@@ -18,7 +18,7 @@ namespace Verification.ad_ver.verification {
             { MISTAKES.NO_OUT, Level.FATAL }, //1
             { MISTAKES.NO_IN, Level.FATAL }, //1
             { MISTAKES.NO_PARTION, Level.EASY },
-            { MISTAKES.REPEATED_ACT, Level.HARD },
+            { MISTAKES.REPEATED_NAME, Level.HARD },
             { MISTAKES.SAME_TARGET, Level.HARD },
             { MISTAKES.OUT_NOT_IN_ACT, Level.FATAL },
             { MISTAKES.NEXT_DECISION, Level.HARD },
@@ -54,7 +54,7 @@ namespace Verification.ad_ver.verification {
         NO_OUT,
         NO_IN,
         NO_PARTION,
-        REPEATED_ACT,
+        REPEATED_NAME,
         SAME_TARGET,
         OUT_NOT_IN_ACT,
         NEXT_DECISION,
@@ -103,7 +103,7 @@ namespace Verification.ad_ver.verification {
                     return "отсутствует выходящий переход";
                 case MISTAKES.NO_PARTION:
                     return "не принадлежит никакому участнику";
-                case MISTAKES.REPEATED_ACT:
+                case MISTAKES.REPEATED_NAME:
                     return "имя не уникально";
                 case MISTAKES.SAME_TARGET:
                     return "альтернативы ведут в один и тот же элемент";

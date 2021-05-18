@@ -1,5 +1,6 @@
 ﻿using ActivityDiagramVer.entities;
 using ActivityDiagramVer.result;
+using System.Collections.Generic;
 using Verification.ad_ver.verification;
 
 namespace ActivityDiagramVer.verification.lexical
@@ -10,6 +11,8 @@ namespace ActivityDiagramVer.verification.lexical
     internal class LexicalAnalizator
     {
         private ADNodesList diagramElements;
+        private ISet<string> activityNames = new HashSet<string>();
+        private ISet<string> participantNames = new HashSet<string>();
         public void setDiagramElements(ADNodesList diagramElements)
         {
             this.diagramElements = diagramElements;
@@ -41,6 +44,13 @@ namespace ActivityDiagramVer.verification.lexical
 
         public void checkSwimlane(Swimlane swimlane)
         {
+            // проверка на уникальность имени
+            if (participantNames.Contains(swimlane.getName().ToLower())) {
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), swimlane);
+                return;
+            } else {
+                participantNames.Add(swimlane.getName().ToLower());
+            }
             // проверка на заглавную букву
             if ((!swimlane.getName().Substring(0, 1).ToUpper().Equals(swimlane.getName().Substring(0, 1))))
             {
@@ -73,6 +83,13 @@ namespace ActivityDiagramVer.verification.lexical
                 ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_NAME), node);
             else
             {
+                // проверка на уникальность имени
+                if (activityNames.Contains(activity.getName().ToLower())) {
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), diagramElements.getNode(activity.getId()));
+                    return;
+                } else {
+                    activityNames.Add(activity.getName().ToLower());
+                }
 
                 // проверка на заглавную букву
                 if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1))))

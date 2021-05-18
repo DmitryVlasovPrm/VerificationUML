@@ -2,6 +2,7 @@
 using ActivityDiagramVer.result;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Verification;
 using Verification.ad_ver.entities;
@@ -194,7 +195,7 @@ namespace ActivityDiagramVer.parser {
         }
 
         private string AttrAdapter(XmlAttribute attr) {
-            return attr == null ? "" : attr.Value.Trim();
+            return attr == null ? "" : Regex.Replace(attr.Value.Trim(), @"\s+", " ");
         }
         /**
          * Добавляет координаты к элементам
