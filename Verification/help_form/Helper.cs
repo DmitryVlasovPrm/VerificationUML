@@ -146,7 +146,7 @@ namespace Verification
                     break;
                 case TreeTags.UCD_MISTAKES:
                     changeVisible(false);
-                    fillTable(Properties.Resources.ADMistakes);
+                    fillTable(Properties.Resources.UCDMistakes);
                     break;
                 default:
                     break;
