@@ -13,6 +13,8 @@ namespace ActivityDiagramVer.parser {
         private XmlDocument xmlFile = null;
         private readonly ADNodesList adNodesList;
         private readonly List<BaseNode> unknownNodes = new List<BaseNode>();
+        private int elCounts = 0;
+        private static int d_number = 0;
 
         public XmiParser(ADNodesList adNodesList) {
             this.adNodesList = adNodesList;
@@ -28,6 +30,7 @@ namespace ActivityDiagramVer.parser {
             return null;
         }
         public bool Parse(Diagram diagram, ref bool hasJoinOrFork) {
+            d_number++;
             xmlFile = diagram.doc;
             XmlNodeList xPackagedList;
             try {
@@ -59,8 +62,7 @@ namespace ActivityDiagramVer.parser {
                 var elAttr = node.Attributes["xsi:type"];
                 if (elAttr == null) continue;
 
-                Console.WriteLine(elAttr.Value);
-
+                elCounts++;
                 if (elAttr.Value == "uml:OpaqueAction" || elAttr.Value == "uml:InitialNode" || elAttr.Value == "uml:ActivityFinalNode" ||
                     elAttr.Value == "uml:FlowFinalNode" || elAttr.Value == "uml:DecisionNode" || elAttr.Value == "uml:MergeNode" ||
                     elAttr.Value == "uml:ForkNode" || elAttr.Value == "uml:JoinNode") {
@@ -119,6 +121,7 @@ namespace ActivityDiagramVer.parser {
                         string idsOut = node.Attributes["outgoing"]?.Value;
                         nodeFromXMI.addIn(idsIn ?? "");
                         nodeFromXMI.addOut(idsOut ?? "");
+                        
                     }
                 }
                 // создаем переход
@@ -132,6 +135,7 @@ namespace ActivityDiagramVer.parser {
                     temp.setSrc(AttrAdapter(node.Attributes["source"]));
                     temp.setTarget(AttrAdapter(node.Attributes["target"]));
                     adNodesList.addLast(temp);
+                    elCounts--;
                 }
                 // создаем дорожку
                 else if (node.Attributes["xsi:type"].Value.Equals("uml:ActivityPartition")) {
@@ -148,6 +152,7 @@ namespace ActivityDiagramVer.parser {
                     var unknownNode = new UnknownNode(node.Attributes["xmi:id"].Value);
                     unknownNode.setType(ElementType.UNKNOWN);
                     unknownNodes.Add(unknownNode);
+                    elCounts--;
                 }
             }
 
@@ -191,6 +196,7 @@ namespace ActivityDiagramVer.parser {
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.FORBIDDEN_ELEMENT], MistakeAdapter.toString(MISTAKES.FORBIDDEN_ELEMENT), node);
             }
 
+            System.Console.WriteLine($"[{d_number}]: {elCounts}");
             return true;
         }
 

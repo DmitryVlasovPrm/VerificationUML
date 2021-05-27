@@ -124,19 +124,21 @@ namespace Verification
             // Get the current directory.
             string path = Directory.GetCurrentDirectory();
             string target = path + @"\results";
-            bool append = true;
+            bool clearFile = true;
 
             if (!Directory.Exists(target))
                 Directory.CreateDirectory(target);
             // если первая проверка в сессии, то надо почистить существующий файл
-            append = !firstSessionCheck;
+            clearFile = firstSessionCheck;
             firstSessionCheck = false;
 
             foreach (DataGridViewRow row in diagramsGV.Rows) {
                 var selectedKey = row.Cells[0].Value.ToString();
                 var curDiagram = Distribution.AllDiagrams[selectedKey];
-                if (curDiagram.Verificated)
-                    MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name, append);
+                if (curDiagram.Verificated) {
+                    MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name, clearFile);
+                    clearFile = false;
+                }
             }
 
 
