@@ -142,7 +142,7 @@ namespace Verification
                     break;
                 case TreeTags.CD_MISTAKES:
                     changeVisible(false);
-                    fillTable(Properties.Resources.ADMistakes);
+                    fillTable(Properties.Resources.CDMistakes);
                     break;
                 case TreeTags.UCD_MISTAKES:
                     changeVisible(false);
