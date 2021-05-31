@@ -10,6 +10,8 @@ using Verification.cd_ver;
 using Verification.package_ver;
 using Verification.type_definer;
 using Verification.uc_ver;
+using Verification.settings;
+using Verification.rating_system;
 
 namespace Verification
 {
@@ -18,8 +20,10 @@ namespace Verification
         public static MorphAnalyzer morph = new MorphAnalyzer();
         public Distribution Distribution;
         private Helper helperForm;
+        private SettingsController settings;
         private bool isClearingRows;
         private bool firstSessionCheck = true;
+
 
         public Main()
         {
@@ -29,6 +33,7 @@ namespace Verification
             Distribution.SomethingChanged += UpdateDiagramOnGUI;
 
             helperForm = null;
+            settings = new SettingsController();
             isClearingRows = false;
 
             errorsGV.Font = new Font("Microsoft Sans Serif", 10);
@@ -136,6 +141,7 @@ namespace Verification
                 var selectedKey = row.Cells[0].Value.ToString();
                 var curDiagram = Distribution.AllDiagrams[selectedKey];
                 if (curDiagram.Verificated) {
+                    //TODO(добавить итоговый балл)
                     MistakesPrinter.Print(curDiagram.Mistakes, target + filename, curDiagram.Name, clearFile);
                     clearFile = false;
                 }
@@ -302,6 +308,26 @@ namespace Verification
                 helperForm.Show();
             }
 
+        }
+
+        private void menuSettings_Click(object sender, EventArgs e) {
+            settings.createView();
+        }
+
+        private void menuRate_Click(object sender, EventArgs e) {
+            return;
+            // TODO(в процессе разработки)
+            if (diagramsGV == null || diagramsGV.CurrentCell == null || diagramsGV.CurrentCell.Value == null) {
+                ShowMsg("Выберите диаграмму", "Оценивание");
+                return;
+            }
+            var selectedKey = diagramsGV.CurrentCell.Value.ToString();
+            var curDiagram = Distribution.AllDiagrams[selectedKey];
+            if (!curDiagram.Verificated) {
+                ShowMsg("Диаграмма не прошла верификацию", "Верификация диаграмм UML");
+                return;
+            }
+            RateDefiner.defineGrade(curDiagram, settings.Max, settings.Min);
         }
     }
 }
