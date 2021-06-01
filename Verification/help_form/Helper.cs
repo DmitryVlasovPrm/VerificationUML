@@ -10,7 +10,7 @@ namespace Verification
         private DataGridView dgvMistakes;
 
         private const int MISTAKE_COL_NUM = 5;
-        private const int Panel1MaxWidth = 200;
+        private const int Panel1MaxWidth = 220;
 
         public Helper()
         {
