@@ -1,4 +1,5 @@
 ﻿using System;
+using Verification.rating_system;
 
 namespace Verification
 {
@@ -8,6 +9,7 @@ namespace Verification
         public int Seriousness;
         public string Text;
         public BoundingBox Bbox;
+        public ALL_MISTAKES type;
 
         public Mistake(int seriousness, string text, BoundingBox bbox)
         {
@@ -15,6 +17,7 @@ namespace Verification
             Seriousness = seriousness;
             Text = text;
             Bbox = bbox;
+            //this.type = type;
         }
     }
 }
