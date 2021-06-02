@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Verification.cd_ver.Entities;
+using Verification.rating_system;
 
 namespace Verification.cd_ver
 {
@@ -33,7 +34,7 @@ namespace Verification.cd_ver
                             {
                                 var parent = allElements.Classes.Find(a => a.GeneralClassesIdxs.Contains(curItemId));
                                 if (parent == null)
-                                    diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" не имеет связей", curItem.Box));
+                                    diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" не имеет связей", curItem.Box, ALL_MISTAKES.CDNOLINK));
                             }
                         }
                     }
@@ -43,14 +44,14 @@ namespace Verification.cd_ver
                         curItem.Operations.Find(a => a.Visibility == Visibility.@protected) != null)
                     {
                         if (allElements.Classes.Find(a => a.GeneralClassesIdxs.Contains(curItemId)) == null)
-                            diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" с элементами \"protected\" не имеет потомков", curItem.Box));
+                            diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" с элементами \"protected\" не имеет потомков", curItem.Box, ALL_MISTAKES.CDNOCHILDREN));
                     }
 
                     // Проверка названий
                     if (!char.IsUpper(curItemName[0]))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" начинается с маленькой буквы", curItem.Box, ALL_MISTAKES.CDSMALLLETTER));
                     if (curItemName.Contains(" "))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" содержит пробелы", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType}а \"{curItemName}\" содержит пробелы", curItem.Box, ALL_MISTAKES.CDGETBLANKS));
 
                     // Проверка наличия атрибутов и операторов
                     var attributes = curItem.Attributes;
@@ -59,7 +60,7 @@ namespace Verification.cd_ver
                     var operationsCount = operations.Count;
                     if (attributesCount == 0 && operationsCount == 0)
                     {
-                        diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" должен иметь хотя бы один параметр или операцию", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{curItemName}\" должен иметь хотя бы один параметр или операцию", curItem.Box, ALL_MISTAKES.CDMUSTBEOPER));
                         continue;
                     }
 
@@ -72,9 +73,9 @@ namespace Verification.cd_ver
                         if (curAttributeName != "")
                         {
                             if (char.IsUpper(curAttributeName[0]))
-                                diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                                diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDBIGLETTER));
                             if (curAttributeName.Contains(" "))
-                                diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
+                                diagram.Mistakes.Add(new Mistake(1, $"Имя атрибута \"{curAttributeName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDGETBLANKS2));
                         }
                         // Проверяем типы
                         if (curAttribute.TypeId == "primitive")
@@ -95,23 +96,23 @@ namespace Verification.cd_ver
                             if (curItemName.ToLower() == curOperationName.ToLower())
                             {
                                 if (char.IsLower(curOperationName[0]))
-                                    diagram.Mistakes.Add(new Mistake(1, $"Имя конструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                                    diagram.Mistakes.Add(new Mistake(1, $"Имя конструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDCONSTRUCTORHASSMALLLETTER));
                                 constr = true;
                             }
                             // Деструктор
                             else if (curOperationName[0] == '~')
                             {
                                 if (char.IsLower(curOperationName.Substring(1).TrimStart()[0]))
-                                    diagram.Mistakes.Add(new Mistake(1, $"Имя деструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                                    diagram.Mistakes.Add(new Mistake(1, $"Имя деструктора \"{curOperationName}\" начинается с маленькой буквы ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDDESTRUCTORHASSMALLLETTER));
                                 destr = true;
                             }
                             // Остальные типы
                             else
                             {
                                 if (char.IsUpper(curOperationName[0]))
-                                    diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box));
+                                    diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" начинается с большой буквы ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDOPERSTARTWITHBIGLETTER));
                                 if (curOperationName.Contains(" "))
-                                    diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box));
+                                    diagram.Mistakes.Add(new Mistake(1, $"Имя операции \"{curOperationName}\" содержит пробелы ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDOPERHASBLANKS));
                             }
                         }
 
@@ -129,10 +130,10 @@ namespace Verification.cd_ver
                         if ((constr || destr) && curOperation.ReturnDataTypeId != "")
                         {
                             var typeStr = constr ? "Конструктор" : "Деструктор";
-                            diagram.Mistakes.Add(new Mistake(2, $"{typeStr} \"{curOperationName}\" имеет возвращаемый тип ({elementType} \"{curItemName}\")", curItem.Box));
+                            diagram.Mistakes.Add(new Mistake(2, $"{typeStr} \"{curOperationName}\" имеет возвращаемый тип ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDHASOUTPUTTYPE));
                         }
                         if (!constr && !destr && curOperation.ReturnDataTypeId == "")
-                            diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{curOperationName}\" ({elementType} \"{curItemName}\")", curItem.Box));
+                            diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{curOperationName}\" ({elementType} \"{curItemName}\")", curItem.Box, ALL_MISTAKES.CDPOINTOUTPUTOPERATIONTYPE));
                     }
                 }
 
@@ -148,12 +149,12 @@ namespace Verification.cd_ver
                     // Проверка наличия связей (семантика)
                     var dependency = allElements.Dependences.Find(a => a.ClientElementId == curItemId || a.SupplierElementId == curItemId);
                     if (dependency == null)
-                        diagram.Mistakes.Add(new Mistake(2, $"Перечисление \"{curItemName}\" не имеет допустимых связей", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(2, $"Перечисление \"{curItemName}\" не имеет допустимых связей", curItem.Box, ALL_MISTAKES.CDNOAVAILABLELINKS));
 
                     if (!char.IsUpper(curItemName[0]))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" начинается с маленькой буквы", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" начинается с маленькой буквы", curItem.Box, ALL_MISTAKES.CDENUMSTARTWITHSMALLLETTER));
                     if (curItemName.Contains(" "))
-                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" содержит пробелы", curItem.Box));
+                        diagram.Mistakes.Add(new Mistake(1, $"Имя перечисления \"{curItemName}\" содержит пробелы", curItem.Box, ALL_MISTAKES.CDENUMHASBLANKS));
                 }
 
                 // Комментарии в скобках {}
@@ -163,7 +164,7 @@ namespace Verification.cd_ver
                     var curComment = allElements.Comments[i];
                     var body = curComment.Body;
                     if (body != "" && (body[0] != '{' || body[body.Length - 1] != '}'))
-                        diagram.Mistakes.Add(new Mistake(0, "Ограничение должно записываться в скобках {}", curComment.Box));
+                        diagram.Mistakes.Add(new Mistake(0, "Ограничение должно записываться в скобках {}", curComment.Box, ALL_MISTAKES.CDRESTRICTIONHASNOTBRANKETS));
                 }
             }
             catch (Exception ex)
@@ -179,7 +180,7 @@ namespace Verification.cd_ver
             {
                 // Наличие элемента Package
                 if (allElements.Packages.Count == 0)
-                    diagram.Mistakes.Add(new Mistake(0, "Отсутствует элемент Package", null));
+                    diagram.Mistakes.Add(new Mistake(0, "Отсутствует элемент Package", null, ALL_MISTAKES.CDNOPACKAGE));
 
                 var connectionsCount = allElements.Connections.Count;
                 for (var i = 0; i < connectionsCount; i++)
@@ -238,7 +239,7 @@ namespace Verification.cd_ver
             {
                 var mainElementType = mainClass.IsInterface ? "Интерфейс" : "Класс";
                 var subordinateElementType = subordinateClass.IsInterface ? "интерфейс" : "класс";
-                diagram.Mistakes.Add(new Mistake(0, $"{mainElementType} \"{mainClass.Name}\" не имеет контейнера для объектов {subordinateElementType}а \"{subordinateClass.Name}\"", mainClass.Box));
+                diagram.Mistakes.Add(new Mistake(0, $"{mainElementType} \"{mainClass.Name}\" не имеет контейнера для объектов {subordinateElementType}а \"{subordinateClass.Name}\"", mainClass.Box, ALL_MISTAKES.CDNOCONTAINER));
             }
         }
 
@@ -260,9 +261,9 @@ namespace Verification.cd_ver
                         var num2 = numbers[1] == "*" ? int.MaxValue : int.Parse(numbers[1]);
 
                         if (num1 < 0 || num2 < 0)
-                            diagram.Mistakes.Add(new Mistake(1, $"Значение кратности {multiplicity} меньше нуля", bbox));
+                            diagram.Mistakes.Add(new Mistake(1, $"Значение кратности {multiplicity} меньше нуля", bbox, ALL_MISTAKES.CDLESSZERO));
                         if (num1 > num2)
-                            diagram.Mistakes.Add(new Mistake(1, $"Диапазон {multiplicity} записан неверно", bbox));
+                            diagram.Mistakes.Add(new Mistake(1, $"Диапазон {multiplicity} записан неверно", bbox, ALL_MISTAKES.CDWRONGDIAPOSON));
                     }
                 }
             }

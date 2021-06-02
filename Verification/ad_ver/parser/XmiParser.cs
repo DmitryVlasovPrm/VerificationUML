@@ -7,6 +7,7 @@ using System.Xml;
 using Verification;
 using Verification.ad_ver.entities;
 using Verification.ad_ver.verification;
+using Verification.rating_system;
 
 namespace ActivityDiagramVer.parser {
     internal class XmiParser {
@@ -166,27 +167,27 @@ namespace ActivityDiagramVer.parser {
                         case ElementType.FINAL_NODE:
                             if (nodeFromXMI.inSize() == 0) {
                                 // ошибка
-                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_IN], MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI));
+                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_IN], MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI), ALL_MISTAKES.NO_IN);
                             }
                             break;
                         case ElementType.INITIAL_NODE:
                             if (nodeFromXMI.outSize() == 0) {
                                 // ошибка
-                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI));
+                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI), ALL_MISTAKES.NO_OUT);
                             }
                             break;
                         default:
                             if (nodeFromXMI.inSize() == 0 || nodeFromXMI.outSize() == 0) {
                                 // ошибка
-                                if (nodeFromXMI.inSize() == 0) ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_IN], MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI));
-                                if (nodeFromXMI.outSize() == 0) ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI));
+                                if (nodeFromXMI.inSize() == 0) ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_IN], MistakeAdapter.toString(MISTAKES.NO_IN), new ADNodesList.ADNode(nodeFromXMI), ALL_MISTAKES.NO_IN);
+                                if (nodeFromXMI.outSize() == 0) ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_OUT], MistakeAdapter.toString(MISTAKES.NO_OUT), new ADNodesList.ADNode(nodeFromXMI), ALL_MISTAKES.NO_OUT);
                             }
                             break;
                     }
                 }
             }
             foreach (var node in unknownNodes) {
-                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.FORBIDDEN_ELEMENT], MistakeAdapter.toString(MISTAKES.FORBIDDEN_ELEMENT), node);
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.FORBIDDEN_ELEMENT], MistakeAdapter.toString(MISTAKES.FORBIDDEN_ELEMENT), node, ALL_MISTAKES.FORBIDDEN_ELEMENT);
             }
 
             return true;

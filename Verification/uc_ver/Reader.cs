@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Verification.rating_system;
 
 namespace Verification.uc_ver
 {
@@ -77,7 +78,7 @@ namespace Verification.uc_ver
                                 else
                                     mistakes.Add(UCMistakeFactory.Create(
                                         MistakesTypes.ERROR,
-                                        $"Элемент находится за пределами системы: {type} - {name}"));
+                                        $"Элемент находится за пределами системы: {type} - {name}", ALL_MISTAKES.UCBEHINDBORDER));
                                 break;
                             }
                     }
@@ -85,12 +86,12 @@ namespace Verification.uc_ver
                 else
                     mistakes.Add(UCMistakeFactory.Create(
                         MistakesTypes.ERROR,
-                        $"Недопустимый элемент: {type} - {name}"));
+                        $"Недопустимый элемент: {type} - {name}", ALL_MISTAKES.UCNOAVALABELELEMENT));
             }
 
             if (diagram.Image != null)
                 if (!ReadCoordinates(root))
-                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют"));
+                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют", ALL_MISTAKES.UCNOCOORDINATE));
         }
 
         private bool ReadCoordinates(XmlElement root)
@@ -213,7 +214,7 @@ namespace Verification.uc_ver
                             else
                                 mistakes.Add(UCMistakeFactory.Create(
                                     MistakesTypes.ERROR,
-                                    $"Недопустимый элемент внутри системы {getName(package)}: {id} - {name}"));
+                                    $"Недопустимый элемент внутри системы {getName(package)}: {id} - {name}", ALL_MISTAKES.UCNOAVALABELELEMENTINSYSTEM));
                             break;
                         }
                 }
@@ -258,7 +259,7 @@ namespace Verification.uc_ver
                         {
                             mistakes.Add(UCMistakeFactory.Create(
                                 MistakesTypes.ERROR,
-                                $"Недопустимый элемент элемент внутри системы {getName(precedent.ParentNode)}: {type} - {name}"));
+                                $"Недопустимый элемент элемент внутри системы {getName(precedent.ParentNode)}: {type} - {name}", ALL_MISTAKES.UCNOAVALABELELEMENTINSYSTEM));
                             break;
                         }
                 }
@@ -286,7 +287,7 @@ namespace Verification.uc_ver
                     elements.Add(id, new Arrow(id, type, name, parent, from, to));
                 }
                 else
-                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.ERROR, $"Недопустимый элемент: {type} - {name}"));
+                    mistakes.Add(UCMistakeFactory.Create(MistakesTypes.ERROR, $"Недопустимый элемент: {type} - {name}", ALL_MISTAKES.UCNOAVALABELELEMENT));
             }
         }
 

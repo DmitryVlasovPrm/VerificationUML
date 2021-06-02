@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Verification.rating_system;
 
 namespace Verification.package_ver
 {
@@ -24,11 +25,11 @@ namespace Verification.package_ver
                 ucAd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДП и АД - в ДП имеется актор {x}, которого нет в АД",
-                    new BoundingBox(-1, -1, -1, -1))));
+                    new BoundingBox(-1, -1, -1, -1), ALL_MISTAKES.ALLUCDAD)));
                 adUc.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДП и АД - в АД имеется актор {x}, которого нет в ДП",
-                    new BoundingBox(-1, -1, -1, -1))));
+                    new BoundingBox(-1, -1, -1, -1), ALL_MISTAKES.ALLUCDAD)));
             }
             if (uc != null && cd != null)
             {
@@ -37,11 +38,11 @@ namespace Verification.package_ver
                 ucCd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДП и ДК - в ДП имеется актор {x}, которого нет в ДК",
-                    new BoundingBox(-1, -1, -1, -1))));
+                    new BoundingBox(-1, -1, -1, -1), ALL_MISTAKES.ALLUCDAD)));
                 cdUc.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДП и ДК - в ДК имеется актор {x}, которого нет в ДП",
-                    new BoundingBox(-1, -1, -1, -1))));
+                    new BoundingBox(-1, -1, -1, -1), ALL_MISTAKES.ALLUCDAD)));
             }
             if (ad != null && cd != null)
             {
@@ -50,11 +51,11 @@ namespace Verification.package_ver
                 adCd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между АД и ДК - в АД имеется актор {x}, которого нет в ДК",
-                    new BoundingBox(-1, -1, -1, -1))));
+                    new BoundingBox(-1, -1, -1, -1), ALL_MISTAKES.ALLUCDAD)));
                 cdAd.ForEach(x => mistakes.Add(
                     new Mistake(
                     MistakesTypes.WARNING, $"Несогласованность между ДК и АД - в ДК имеется актор {x}, которого нет в АД",
-                    new BoundingBox(-1, -1, -1, -1))));
+                    new BoundingBox(-1, -1, -1, -1), ALL_MISTAKES.ALLUCDAD)));
             }
 
 
