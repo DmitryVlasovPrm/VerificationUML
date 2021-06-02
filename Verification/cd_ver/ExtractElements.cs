@@ -10,7 +10,6 @@ namespace Verification.cd_ver
 {
 	public static class ExtractElements
 	{
-		private static readonly string[] connectionTypes = { "association", "composite", "shared" };
 		private static bool isThereImage = true;
 
 		public static void Extract(XmlElement root, ref Elements allElements, ref Diagram diagram)
@@ -267,7 +266,7 @@ namespace Verification.cd_ver
 
 								var curConnectionType = ConnectionType.Association;
 								if (curOwnedEnd.Attributes["aggregation"] != null)
-									curConnectionType = (ConnectionType)Array.IndexOf(connectionTypes,
+									curConnectionType = (ConnectionType)Array.IndexOf(ReservedNames.ConnectionTypes,
 										curOwnedEnd.Attributes["aggregation"].Value);
 
 								var curNavigation = false;
@@ -309,7 +308,7 @@ namespace Verification.cd_ver
 							break;
 
 						case "uml:DataType":
-							allElements.Types.Add(new DataType(elementId, elementName, false));
+							allElements.Types.Add(new DataType(elementId, elementName));
 							break;
 
 						case "uml:Usage":

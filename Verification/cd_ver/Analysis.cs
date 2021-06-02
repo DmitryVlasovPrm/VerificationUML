@@ -6,11 +6,6 @@ namespace Verification.cd_ver
 {
     public static class Analysis
     {
-        private static readonly string[] AllTypes =
-        {
-            "int", "string", "float", "double", "bool", "char"
-        };
-
         // Лексический анализ с элементами семантики (для простоты кода)
         public static void LexicalAnalysis(Elements allElements, ref Diagram diagram)
         {
@@ -232,7 +227,7 @@ namespace Verification.cd_ver
                 var curTypeId = curAttribute.TypeId;
                 var curType = allElements.Types.Find(a => a.Id == curTypeId);
 
-                if (curType != null && curType.IsContainer && curType.Name.Contains(subordinateClass.Name))
+                if (curType != null && curType.IsContainer(subordinateClass.Name))
                 {
                     isExist = true;
                     break;

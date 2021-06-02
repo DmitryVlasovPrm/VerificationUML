@@ -142,6 +142,7 @@
     <Compile Include="cd_ver\Entities\Operation.cs" />
     <Compile Include="cd_ver\Entities\Package.cs" />
     <Compile Include="cd_ver\Entities\Parameter.cs" />
+    <Compile Include="cd_ver\Entities\ReservedNames.cs" />
     <Compile Include="cd_ver\Entities\Visibility.cs" />
     <Compile Include="cd_ver\ExtractElements.cs" />
     <Compile Include="cd_ver\CDVerificator.cs" />
