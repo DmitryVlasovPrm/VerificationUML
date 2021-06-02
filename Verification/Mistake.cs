@@ -11,13 +11,13 @@ namespace Verification
         public BoundingBox Bbox;
         public ALL_MISTAKES type;
 
-        public Mistake(int seriousness, string text, BoundingBox bbox)
+        public Mistake(int seriousness, string text, BoundingBox bbox, ALL_MISTAKES type)
         {
             Id = Guid.NewGuid();
             Seriousness = seriousness;
             Text = text;
             Bbox = bbox;
-            //this.type = type;
+            this.type = type;
         }
     }
 }

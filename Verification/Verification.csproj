@@ -172,6 +172,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Distribution.cs" />
+    <Compile Include="rating_system\AllUMLMistakes.cs" />
     <Compile Include="rating_system\RateDefiner.cs" />
     <Compile Include="settings\SettingsController.cs" />
     <Compile Include="settings\SettingsForm.cs">
