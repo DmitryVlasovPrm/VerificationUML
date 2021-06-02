@@ -14,9 +14,9 @@ namespace Verification
         {
             var openFileDialog = new OpenFileDialog
             {
-                Title = "Выберите xmi, png или jpeg файлы",
+                Title = "Выберите xmi, png или jpeg(jpg) файлы",
                 Multiselect = true,
-                Filter = "Файлы xmi, png или jpeg|*.xmi; *.png; *.jpeg"
+                Filter = "Файлы xmi, png или jpeg{jpg)|*.xmi; *.png; *.jpeg; *.jpg"
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)

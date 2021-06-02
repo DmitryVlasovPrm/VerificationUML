@@ -4,13 +4,40 @@ namespace Verification.cd_ver.Entities
     {
         public string Id;
         public string Name;
-        public bool IsContainer;
 
-        public DataType(string id, string name, bool isContainer)
+        public DataType(string id, string name)
         {
             Id = id;
             Name = name;
-            IsContainer = isContainer;
         }
+
+        public bool IsContainer(string className)
+		{
+            var containerNamesCount = ReservedNames.ContainerNames.Length;
+            for (var i = 0; i < containerNamesCount; i++)
+			{
+                var curContainer = ReservedNames.ContainerNames[i];
+                var startIdx = Name.IndexOf(curContainer);
+
+                if (startIdx != -1)
+				{
+                    startIdx = startIdx + curContainer.Length;
+                    if (Name[startIdx + 1] == '<')
+					{
+                        startIdx++;
+                        var endIdx = Name.IndexOf(">", startIdx);
+                        if (endIdx != -1)
+						{
+                            var typeInsideContainer = Name.Substring(startIdx, endIdx - startIdx);
+                            if (typeInsideContainer.Contains(className))
+                                return true;
+						}
+                    }
+				}
+                continue;
+			}
+            
+            return false;
+		}
     }
 }

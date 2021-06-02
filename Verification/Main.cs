@@ -314,8 +314,9 @@ namespace Verification
             settings.createView();
         }
 
-        private void menuRate_Click(object sender, EventArgs e) {
-            return;
+        private void menuRate_Click(object sender, EventArgs e)
+        {
+            /*
             // TODO(в процессе разработки)
             if (diagramsGV == null || diagramsGV.CurrentCell == null || diagramsGV.CurrentCell.Value == null) {
                 ShowMsg("Выберите диаграмму", "Оценивание");
@@ -328,6 +329,7 @@ namespace Verification
                 return;
             }
             RateDefiner.defineGrade(curDiagram, settings.Max, settings.Min);
+            */
         }
     }
 }
