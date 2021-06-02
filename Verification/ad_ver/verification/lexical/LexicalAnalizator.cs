@@ -2,6 +2,7 @@
 using ActivityDiagramVer.result;
 using System.Collections.Generic;
 using Verification.ad_ver.verification;
+using Verification.rating_system;
 
 namespace ActivityDiagramVer.verification.lexical
 {
@@ -36,9 +37,9 @@ namespace ActivityDiagramVer.verification.lexical
             {
                 if (!flow.getText().Equals(""))
                 {
-                    if (!isCond) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);
+                    if (!isCond) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow, ALL_MISTAKES.HAVE_MARK);
                 }
-                else if (notCondButHaveMark) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow);//writeMistake(Level.HARD.toString(), flow.getType().toString(), "", MISTAKES.HAVE_MARK.toString() + " - \"" + flow.getText() + "\"");
+                else if (notCondButHaveMark) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow, ALL_MISTAKES.HAVE_MARK);
             }
         }
 
@@ -46,7 +47,7 @@ namespace ActivityDiagramVer.verification.lexical
         {
             // проверка на уникальность имени
             if (participantNames.Contains(swimlane.getName().ToLower())) {
-                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), swimlane);
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), swimlane, ALL_MISTAKES.REPEATED_NAME);
                 return;
             } else {
                 participantNames.Add(swimlane.getName().ToLower());
@@ -54,16 +55,16 @@ namespace ActivityDiagramVer.verification.lexical
             // проверка на заглавную букву
             if ((!swimlane.getName().Substring(0, 1).ToUpper().Equals(swimlane.getName().Substring(0, 1))))
             {
-                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), swimlane);
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), swimlane, ALL_MISTAKES.SMALL_LETTER);
             }
             // проверка на колво дочерних элементов
             if (swimlane.ChildCount == 0)
             {
-                ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.EMPTY_SWIMLANE), swimlane);
+                ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.EMPTY_SWIMLANE), swimlane, ALL_MISTAKES.EMPTY_SWIMLANE);
             }
             // проверка на спец символ
             if (hasSpecialSymbol(swimlane.getName()))
-                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.STRANGE_SYMBOL), swimlane);
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.STRANGE_SYMBOL), swimlane, ALL_MISTAKES.STRANGE_SYMBOL);
         }
         private bool hasSpecialSymbol(string str)
         {
@@ -80,12 +81,12 @@ namespace ActivityDiagramVer.verification.lexical
         public void checkActivity(ActivityNode activity, ADNodesList.ADNode node)
         {
             if (activity.getName().Length == 0)
-                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_NAME), node);
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.NO_NAME), node, ALL_MISTAKES.NO_NAME);
             else
             {
                 // проверка на уникальность имени
                 if (activityNames.Contains(activity.getName().ToLower())) {
-                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), diagramElements.getNode(activity.getId()));
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), diagramElements.getNode(activity.getId()), ALL_MISTAKES.REPEATED_NAME);
                     return;
                 } else {
                     activityNames.Add(activity.getName().ToLower());
@@ -94,14 +95,14 @@ namespace ActivityDiagramVer.verification.lexical
                 // проверка на заглавную букву
                 if ((!activity.getName().Substring(0, 1).ToUpper().Equals(activity.getName().Substring(0, 1))))
                 {
-                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), node, ALL_MISTAKES.SMALL_LETTER);
                 }
                 // получаем первое слово существительного и проверяем, что оно не заканчивается на ь или т
                 string firstWord = activity.getName().Split(' ')[0];
                 //Console.WriteLine(firstWord);
 
                 if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
-                    ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NOT_NOUN), node);
+                    ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NOT_NOUN), node, ALL_MISTAKES.NOT_NOUN);
             }
         }
         public void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
@@ -123,12 +124,12 @@ namespace ActivityDiagramVer.verification.lexical
 
             // поиск совпадающих названий
             if (checkAlt)
-                decision.findEqualAlternatives().ForEach(x => ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.REPEATED_ALT) + " - " + x, node));
+                decision.findEqualAlternatives().ForEach(x => ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.REPEATED_ALT) + " - " + x, node, ALL_MISTAKES.REPEATED_ALT));
 
             // проверка на альтернативу без подписи
             if (checkAlt)
                 if (decision.findEmptyAlternative())
-                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_EMPTY_ALT), node);
+                    ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_EMPTY_ALT), node, ALL_MISTAKES.HAVE_EMPTY_ALT);
 
             // проверка, что альтернативы начинаются с заглавных букв
             //if (checkAlt)
@@ -145,7 +146,7 @@ namespace ActivityDiagramVer.verification.lexical
             // проверка, что имеется условие
             if (decision.getQuestion().Equals(""))
             {
-                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_NOT_QUEST), node);
+                ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_NOT_QUEST), node, ALL_MISTAKES.HAVE_NOT_QUEST);
                 checkQuest = false; // дальнейшие проверки условия не требуются (его нет)
             }
 
@@ -153,12 +154,12 @@ namespace ActivityDiagramVer.verification.lexical
             if (checkQuest)
                 if ((!decision.getQuestion().Substring(0, 1).ToUpper().Equals(decision.getQuestion().Substring(0, 1))))
                 {
-                    ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), node);
+                    ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.SMALL_LETTER), node, ALL_MISTAKES.SMALL_LETTER);
                 }
             // заканчивается на знак вопроса
             if (checkQuest)
                 if ((!decision.getQuestion().EndsWith("?")))
-                    ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.END_WITH_QUEST), node);
+                    ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.END_WITH_QUEST), node, ALL_MISTAKES.END_WITH_QUEST);
         }
     }
 }

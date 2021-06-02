@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Verification.rating_system;
 
 namespace Verification.uc_ver
 {
@@ -36,7 +37,7 @@ namespace Verification.uc_ver
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                             $"Имя актора повторяется: {actorName.Key}",
-                            element.Value));
+                            element.Value, ALL_MISTAKES.UCREPEAT));
                     }
                 }
                 var firstWord = actorName.Key.Split(' ')[0];
@@ -50,7 +51,7 @@ namespace Verification.uc_ver
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.ERROR,
                            $"Имя актора должно быть представлено в виде существительного с заглавной буквы: {actorName.Key}",
-                           element.Value));
+                           element.Value, ALL_MISTAKES.UCNOUN));
                     }
                 }
             }
@@ -62,7 +63,7 @@ namespace Verification.uc_ver
                     mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.ERROR,
                            $"Актор не имеет ни одной связи типа ассоцияция с прецедентами: {actor.Value.Name}",
-                           actor.Value));
+                           actor.Value, ALL_MISTAKES.UCNOLINK));
                 }
             }
         }
@@ -76,7 +77,7 @@ namespace Verification.uc_ver
                     mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                              $"Отсутствует текст в условии расширения",
-                            comment.Value));
+                            comment.Value, ALL_MISTAKES.UCNOTEXT));
                 }
         }
 
@@ -88,7 +89,7 @@ namespace Verification.uc_ver
             {
                 mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
-                            $"Отсутствует граница системы"));
+                            $"Отсутствует граница системы", ALL_MISTAKES.UCNOBORDER));
             }
 
 
@@ -98,7 +99,7 @@ namespace Verification.uc_ver
                     mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                             $"Отсутствует назние системы",
-                            package.Value));
+                            package.Value, ALL_MISTAKES.UCNONAME));
                 }
         }
 
@@ -111,7 +112,7 @@ namespace Verification.uc_ver
                     mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                             $"Отсутствует текст в точке расширения прецедента",
-                            point.Value));
+                            point.Value, ALL_MISTAKES.UCNOTEXTINPRECEDENT));
                 }
 
             var precedents = elements.Where(element => element.Value.Type == ElementTypes.Precedent);
@@ -127,7 +128,7 @@ namespace Verification.uc_ver
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                             $"Имя прецедента повторяется: {precedentName.Key}",
-                            element.Value));
+                            element.Value, ALL_MISTAKES.UCREPETEDNAME));
                     }
                 }
                 var firstWord = precedentName.Key.Split(' ')[0];
@@ -141,7 +142,7 @@ namespace Verification.uc_ver
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                             $"Имя прецедента должно быть представлено в виде действия, начинаясь с заглавной буквы: {precedentName.Key}",
-                            element.Value));
+                            element.Value, ALL_MISTAKES.UCBIGLETTER));
                     }
                 }
             }
@@ -160,7 +161,7 @@ namespace Verification.uc_ver
                         $"Прецедент должен иметь связь с актором в виде ассоциации," +
                         $" либо иметь отношения расширения," +
                         $" дополнения или включения с другими прецедентами: {precedent.Value.Name}",
-                        precedent.Value));
+                        precedent.Value, ALL_MISTAKES.UCASSOSIATION));
                 }
 
                 if (haveExtendsion)
@@ -185,7 +186,7 @@ namespace Verification.uc_ver
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
                             $"Отсутствие точки расширения у прецедента с связью расширения: {precedent.Value.Name}",
-                            precedent.Value));
+                            precedent.Value, ALL_MISTAKES.UCNOPRECEDENTDOT));
                     }
                 }
 
@@ -213,13 +214,13 @@ namespace Verification.uc_ver
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.WARNING,
                            $"Прецедент включает всего один прецедент: {precedent.Value.Name}",
-                           precedent.Value));
+                           precedent.Value, ALL_MISTAKES.UCONLYONEPRECEDENT));
 
                     if (includesFrom.Count() > 0 && includesTo.Count() > 0)
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.WARNING,
                            $"Злоупотребление отношением включения: {precedent.Value.Name}",
-                           precedent.Value));
+                           precedent.Value, ALL_MISTAKES.UCINCLUDE));
                 }
             }
         }

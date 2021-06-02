@@ -316,7 +316,7 @@ namespace Verification
 
         private void menuRate_Click(object sender, EventArgs e)
         {
-            /*
+
             // TODO(в процессе разработки)
             if (diagramsGV == null || diagramsGV.CurrentCell == null || diagramsGV.CurrentCell.Value == null) {
                 ShowMsg("Выберите диаграмму", "Оценивание");
@@ -328,8 +328,9 @@ namespace Verification
                 ShowMsg("Диаграмма не прошла верификацию", "Верификация диаграмм UML");
                 return;
             }
-            RateDefiner.defineGrade(curDiagram, settings.Max, settings.Min);
-            */
+            var grade = RateDefiner.defineGrade(curDiagram, settings.Max, settings.Min);
+            ShowMsg("Рекомендуемая оценка\n"+(grade.Item2==""?grade.Item1.ToString():grade.Item2), "Оценка");
+
         }
     }
 }

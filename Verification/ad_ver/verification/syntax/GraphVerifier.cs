@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verification.ad_ver.verification;
+using Verification.rating_system;
 
 namespace ActivityDiagramVer.verification.syntax {
     internal class GraphVerifier {
@@ -168,7 +169,7 @@ namespace ActivityDiagramVer.verification.syntax {
                 // заканчиваем тогда, когда leaves пустой или невозможно передвинуть ни один токен
                 // не был передвинут ни один токен, но не все листья просмотрены
                 if (stepResultMasks.Count == 0 && leaves.Count != 0) {
-                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.DEAD_ROAD], MistakeAdapter.toString(MISTAKES.DEAD_ROAD));
+                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.DEAD_ROAD], MistakeAdapter.toString(MISTAKES.DEAD_ROAD), ALL_MISTAKES.DEAD_ROAD);
                 }
                 // проверяем, что новой маски нет во множестве обработанных и добавляем в необработанные в таком случае
                 foreach (List<Token> resultMask in stepResultMasks) {
@@ -185,7 +186,7 @@ namespace ActivityDiagramVer.verification.syntax {
                         if (indexOfFinalNode != -1) {
                             canReachFinal = true;
                             if (resultMask[indexOfFinalNode].peekLastColor() != NO_COLOR) {
-                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.FINAL_COLOR_TOKEN], MistakeAdapter.toString(MISTAKES.FINAL_COLOR_TOKEN));
+                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.FINAL_COLOR_TOKEN], MistakeAdapter.toString(MISTAKES.FINAL_COLOR_TOKEN), ALL_MISTAKES.FINAL_COLOR_TOKEN);
                                 return;
                             }
                             //Проверка, что не осталось токенов
@@ -196,7 +197,7 @@ namespace ActivityDiagramVer.verification.syntax {
                                 }
                             }
                             if (tokenCount > 1) {
-                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MANY_TOKENS_IN_END], MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END));
+                                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MANY_TOKENS_IN_END], MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), ALL_MISTAKES.MANY_TOKENS_IN_END);
                                 return;
                             }
                         } else leaves.Enqueue(copyMask(resultMask));
@@ -207,7 +208,7 @@ namespace ActivityDiagramVer.verification.syntax {
 
             // проверяем, что конечное состояние было достигнуто
             if (!canReachFinal)
-                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.COULD_NOT_REACH_FINAL], MistakeAdapter.toString(MISTAKES.COULD_NOT_REACH_FINAL));
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.COULD_NOT_REACH_FINAL], MistakeAdapter.toString(MISTAKES.COULD_NOT_REACH_FINAL), ALL_MISTAKES.COULD_NOT_REACH_FINAL);
         }
 
         private void setNewPaleToken(List<Token> mask, int index) {
@@ -252,9 +253,9 @@ namespace ActivityDiagramVer.verification.syntax {
             foreach (List<Token> stepResultMask in stepResultMasks) {
                 if (stepResultMask[tokenIndex].type != NO_TOKEN) {
                     if (curNode.getValue().getType() != ElementType.FINAL_NODE)
-                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.TWO_TOKENS], MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode);
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.TWO_TOKENS], MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode, ALL_MISTAKES.TWO_TOKENS);
                     else
-                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MANY_TOKENS_IN_END], MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode);
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MANY_TOKENS_IN_END], MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode, ALL_MISTAKES.MANY_TOKENS_IN_END);
                     return true;
                 }
             }

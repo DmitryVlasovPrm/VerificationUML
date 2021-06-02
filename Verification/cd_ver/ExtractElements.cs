@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using Verification.cd_ver.Entities;
+using Verification.rating_system;
 using Attribute = Verification.cd_ver.Entities.Attribute;
 
 namespace Verification.cd_ver
@@ -229,7 +230,7 @@ namespace Verification.cd_ver
 							var isExist = allElements.Classes.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box));
+								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CDHASNAME));
 								break;
 							}
 
@@ -344,7 +345,7 @@ namespace Verification.cd_ver
 							isExist = allElements.Enumerations.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box));
+								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CDENUMHASNAME));
 								break;
 							}
 
@@ -356,7 +357,7 @@ namespace Verification.cd_ver
 							if (elementGraphicInfo == null && isThereImage)
 								break;
 							box = elementGraphicInfo.Item3;
-							diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box));
+							diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box, ALL_MISTAKES.CDIMPROPRATETYPE));
 							break;
 					}
 				}
@@ -411,7 +412,7 @@ namespace Verification.cd_ver
 				{
 					var nameInfo = typeNode.Attributes["href"].Value;
 					var name = nameInfo.Substring(nameInfo.LastIndexOf("//") + 2);
-					diagram.Mistakes.Add(new Mistake(1, $"Имя типа \"{name}\" не соответствует целевому языку программирования", box));
+					diagram.Mistakes.Add(new Mistake(1, $"Имя типа \"{name}\" не соответствует целевому языку программирования", box, ALL_MISTAKES.CDIMPROPRATETYPE));
 					dataTypeId = "primitiveType";
 				}
 			}
