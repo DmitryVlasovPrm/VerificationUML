@@ -25,6 +25,7 @@ namespace Verification.ad_ver.verification {
             { MISTAKES.HAS_1_IN, Level.HARD },
 
             { MISTAKES.FORBIDDEN_ELEMENT, Level.FATAL },//1
+            { MISTAKES.NO_SWIMLANE, Level.HARD },//1
             { MISTAKES.SMALL_LETTER, Level.HARD },
             { MISTAKES.NO_NAME, Level.HARD },
             { MISTAKES.NOT_NOUN, Level.EASY },
@@ -44,6 +45,7 @@ namespace Verification.ad_ver.verification {
         };
     }
     internal enum MISTAKES {
+        // синтаксис 1
         MORE_THAN_ONE_INIT,
         NO_FINAL,
         NO_INITIAL,
@@ -61,12 +63,12 @@ namespace Verification.ad_ver.verification {
         HAS_1_IN,
         // лексические
         FORBIDDEN_ELEMENT,
+        NO_SWIMLANE,
         SMALL_LETTER,
         NO_NAME,
         NOT_NOUN,
         END_WITH_QUEST,
         HAVE_NOT_QUEST,
-        REPEATED_ALT,
         HAVE_EMPTY_ALT,
         HAVE_MARK,
         STRANGE_SYMBOL,
@@ -76,7 +78,10 @@ namespace Verification.ad_ver.verification {
         DEAD_ROAD,
         MANY_TOKENS_IN_END,
         COULD_NOT_REACH_FINAL,
-        FINAL_COLOR_TOKEN
+        FINAL_COLOR_TOKEN,
+
+        // семантические
+        REPEATED_ALT
     }
     internal class MistakeAdapter {
         public static string toString(MISTAKES mistake) {
@@ -115,6 +120,8 @@ namespace Verification.ad_ver.verification {
                 // лексические
                 case MISTAKES.FORBIDDEN_ELEMENT:
                     return "Использовался недопустимый элемент";
+                case MISTAKES.NO_SWIMLANE:
+                    return "Отсутствуют акторы или используется не верный элемент";
                 case MISTAKES.SMALL_LETTER:
                     return "имя начинается с маленькой буквы";
                 case MISTAKES.NO_NAME:
@@ -139,14 +146,15 @@ namespace Verification.ad_ver.verification {
 
                 // синтаксис 2
                 // просто пересечение двух токенов
-                case MISTAKES.TWO_TOKENS: return "Возможно отсутствие синхронизатора";// "в элементе пересеклись токены. Возможно отсутствие синхронизатора";
+                // Отсутствует синхронизатор или существует поток, выходящий из зоны между синхронизатором\разветвителем
+                case MISTAKES.TWO_TOKENS: return "Отсутствует синхронизатор или существует поток, выходящий из зоны между синхронизатором-разветвителем";// "в элементе пересеклись токены. Возможно отсутствие синхронизатора";
                 case MISTAKES.DEAD_ROAD: return "Тупик";        // на определенном шаге не был передвинут ни один токен
                                                                 // возможно пересечение двух токенов в конечном состоянии из-за отсутствия синхронизатора
-                case MISTAKES.MANY_TOKENS_IN_END: return "Возможно отсутствие синхронизатора";//"при достижении конечного состояния остались токены";
+                case MISTAKES.MANY_TOKENS_IN_END: return "Отсутствует синхронизатор или существует поток, выходящий из зоны между синхронизатором-разветвителем";//"при достижении конечного состояния остались токены";
                 case MISTAKES.COULD_NOT_REACH_FINAL:
                     return "недостижимое конечное состояние. Возможно имеется синхронизатор, " +
 "который невозможно активировать";       // проверьте, что все переходы, ведущие в синхронизаторы могут быть активны одновременно 
-                case MISTAKES.FINAL_COLOR_TOKEN: return "Отсутствует парный синхронизатор";//"достигли конечное состояние с цветным токеном. Отсутствует парный синхронизатор";
+                case MISTAKES.FINAL_COLOR_TOKEN: return "Отсутствует синхронизатор или существует поток, выходящий из зоны между синхронизатором-разветвителем";//"достигли конечное состояние с цветным токеном. Отсутствует парный синхронизатор";
                 default:
                     throw new ArgumentException();
             }

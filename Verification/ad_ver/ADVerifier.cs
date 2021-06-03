@@ -26,13 +26,15 @@ namespace Verification.ad_ver {
             } else return;
             // adNodesList.print();
 
-            ADModelVerifier syntaxAnalizator = new ADModelVerifier(new LexicalAnalizator());
-            syntaxAnalizator.setDiagramElements(adNodesList);
-            syntaxAnalizator.check();
+            // проверка без использования графа
+            ADModelVerifier verificationWithoutGraph = new ADModelVerifier(new LexicalAnalizator());
+            verificationWithoutGraph.setDiagramElements(adNodesList);
+            verificationWithoutGraph.check();
 
+            // проверка с использованием графа
             if (hasJoinOrFork && !diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL)) {
-                GraphVerifier petriNet = new GraphVerifier();
-                petriNet.check(adNodesList);
+                GraphVerifier graphVerifier = new GraphVerifier();
+                graphVerifier.check(adNodesList);
             }
         }
         private static void changeMistakeSeriousness(ActivityDiagramVer.verification.Level level) {

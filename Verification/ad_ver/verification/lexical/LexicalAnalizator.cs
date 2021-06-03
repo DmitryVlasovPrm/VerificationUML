@@ -14,6 +14,7 @@ namespace ActivityDiagramVer.verification.lexical
         private ADNodesList diagramElements;
         private ISet<string> activityNames = new HashSet<string>();
         private ISet<string> participantNames = new HashSet<string>();
+        public int swimlaneCount=0;
         public void setDiagramElements(ADNodesList diagramElements)
         {
             this.diagramElements = diagramElements;
@@ -45,6 +46,7 @@ namespace ActivityDiagramVer.verification.lexical
 
         public void checkSwimlane(Swimlane swimlane)
         {
+            swimlaneCount++;
             // проверка на уникальность имени
             if (participantNames.Contains(swimlane.getName().ToLower())) {
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.REPEATED_NAME], MistakeAdapter.toString(MISTAKES.REPEATED_NAME), swimlane, ALL_MISTAKES.REPEATED_NAME);

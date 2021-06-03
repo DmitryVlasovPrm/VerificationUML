@@ -85,6 +85,8 @@ namespace ActivityDiagramVer.verification.syntax {
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_INITIAL], MistakeAdapter.toString(MISTAKES.NO_INITIAL), ALL_MISTAKES.NO_INITIAL);
             if (activityCount == 0)
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_ACTIVITIES], MistakeAdapter.toString(MISTAKES.NO_ACTIVITIES), ALL_MISTAKES.NO_ACTIVITIES);
+            if (lexicalAnalizator.swimlaneCount == 0)
+                ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.NO_SWIMLANE], MistakeAdapter.toString(MISTAKES.NO_SWIMLANE), ALL_MISTAKES.NO_SWIMLANE);
         }
 
         /**

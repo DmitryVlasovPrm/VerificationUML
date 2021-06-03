@@ -24,6 +24,7 @@ namespace Verification.rating_system {
         HAS_1_IN,
         // лексические
         FORBIDDEN_ELEMENT,
+        NO_SWIMLANE,
         SMALL_LETTER,
         NO_NAME,
         NOT_NOUN,

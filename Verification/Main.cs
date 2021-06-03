@@ -317,7 +317,6 @@ namespace Verification
         private void menuRate_Click(object sender, EventArgs e)
         {
 
-            // TODO(в процессе разработки)
             if (diagramsGV == null || diagramsGV.CurrentCell == null || diagramsGV.CurrentCell.Value == null) {
                 ShowMsg("Выберите диаграмму", "Оценивание");
                 return;

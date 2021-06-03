@@ -253,9 +253,9 @@ namespace ActivityDiagramVer.verification.syntax {
             foreach (List<Token> stepResultMask in stepResultMasks) {
                 if (stepResultMask[tokenIndex].type != NO_TOKEN) {
                     if (curNode.getValue().getType() != ElementType.FINAL_NODE)
-                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.TWO_TOKENS], MistakeAdapter.toString(MISTAKES.TWO_TOKENS), curNode, ALL_MISTAKES.TWO_TOKENS);
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.TWO_TOKENS], MistakeAdapter.toString(MISTAKES.TWO_TOKENS), ALL_MISTAKES.TWO_TOKENS);
                     else
-                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MANY_TOKENS_IN_END], MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), curNode, ALL_MISTAKES.MANY_TOKENS_IN_END);
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.MANY_TOKENS_IN_END], MistakeAdapter.toString(MISTAKES.MANY_TOKENS_IN_END), ALL_MISTAKES.MANY_TOKENS_IN_END);
                     return true;
                 }
             }

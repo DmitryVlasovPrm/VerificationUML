@@ -30,6 +30,7 @@ namespace Verification.rating_system {
             { ALL_MISTAKES.HAS_1_IN, 1.0 },
 
             { ALL_MISTAKES.FORBIDDEN_ELEMENT, 1.0 },//1
+            { ALL_MISTAKES.NO_SWIMLANE, 1.0 },//1
             { ALL_MISTAKES.SMALL_LETTER, 1.0 },
             { ALL_MISTAKES.NO_NAME, 1.0 },
             { ALL_MISTAKES.NOT_NOUN, 1.0 },
