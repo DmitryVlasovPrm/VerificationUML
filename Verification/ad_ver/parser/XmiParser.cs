@@ -241,12 +241,14 @@ namespace ActivityDiagramVer.parser {
                 BaseNode node = adNodesList.get(id);
                 if (node == default) {
                     node = unknownNodes.Find(n => n.getId().Equals(id));
-                    if (node == default) continue;
+                    if (node == default && attr.Value != "com.genmymodel.graphic.uml:GroupWidget") continue;
                 }
-                node.X = x;
-                node.Y = y;
-                node.Width = width;
-                node.Height = height;
+                if (node != null) {
+                    node.X = x;
+                    node.Y = y;
+                    node.Width = width;
+                    node.Height = height;
+                }
 
                 // ищем минимальный 
                 if (x != -1) {

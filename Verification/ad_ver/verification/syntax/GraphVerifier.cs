@@ -53,10 +53,12 @@ namespace ActivityDiagramVer.verification.syntax {
             bool canReachFinal = false;
 
             List<List<Token>> stepResultMasks = new List<List<Token>>();       // содержит маски, кот могут получиться на каждом шаге
+            string originMaskString = "";
 
             // главный цикл прохода по всем элементам, участвующих в проверке
             while (leaves.Count > 0) {
                 List<Token> originMask = leaves.Dequeue();  // берем первую маску
+                originMaskString = maskToString(originMask);
                 stepResultMasks.Clear();
                 List<Token> stepMask = copyMask(originMask); // маска, которую будем изменять по мере деактивации токенов
                 stepResultMasks.Add(copyMask(stepMask));   // Если список масок не изменится, то будет тупик, тк текущая маска уже добавлена в использованные
@@ -164,14 +166,13 @@ namespace ActivityDiagramVer.verification.syntax {
                 foreach (List<Token> stepResultMask in stepResultMasks) {
                     stepResultMask.ForEach(x => x.type = x.type == NEW_TOKEN ? TOKEN : x.type);
                     //Console.WriteLine("Re: " + maskToString(stepResultMask));
+                    if (originMaskString == maskToString(stepResultMask)) {
+                        ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.DEAD_ROAD], MistakeAdapter.toString(MISTAKES.DEAD_ROAD), ALL_MISTAKES.DEAD_ROAD);
+                        //Console.WriteLine("Again?: "+originMaskString);
+                        return;
+                    }
                 }
-
-                // заканчиваем тогда, когда leaves пустой или невозможно передвинуть ни один токен
-                // не был передвинут ни один токен, но не все листья просмотрены
-                if (stepResultMasks.Count == 0 && leaves.Count != 0) {
-                    ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.DEAD_ROAD], MistakeAdapter.toString(MISTAKES.DEAD_ROAD), ALL_MISTAKES.DEAD_ROAD);
-                }
-                // проверяем, что новой маски нет во множестве обработанных и добавляем в необработанные в таком случае
+                    // проверяем, что новой маски нет во множестве обработанных и добавляем в необработанные в таком случае
                 foreach (List<Token> resultMask in stepResultMasks) {
                     if (!findInMasksInUsed(masksInUsed, resultMask)) {
                         int indexOfFinalNode = -1;
@@ -202,7 +203,7 @@ namespace ActivityDiagramVer.verification.syntax {
                             }
                         } else leaves.Enqueue(copyMask(resultMask));
                         masksInUsed.Add(maskToString(resultMask));      // добавляем полученную маску в множество обработанных
-                    }
+                    } 
                 }
             }
 

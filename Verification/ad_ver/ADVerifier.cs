@@ -19,19 +19,22 @@ namespace Verification.ad_ver {
 
             bool hasJoinOrFork = false;
             parser.Parse(diagram, ref hasJoinOrFork);
+            // если нет join\fork понижаем серьезность фатальных ошибок до серьезных
             if (hasJoinOrFork)
                 changeMistakeSeriousness(ActivityDiagramVer.verification.Level.HARD);
+
+            // находим предшествующие\последующие элементы для каждого объекта
             if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL)) {
                 adNodesList.connect();
             } else return;
             // adNodesList.print();
 
-            // проверка без использования графа
+            // осуществляем проверку без использования графа
             ADModelVerifier verificationWithoutGraph = new ADModelVerifier(new LexicalAnalizator());
             verificationWithoutGraph.setDiagramElements(adNodesList);
             verificationWithoutGraph.check();
 
-            // проверка с использованием графа
+            // осуществляем проверку с использованием графа
             if (hasJoinOrFork && !diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL)) {
                 GraphVerifier graphVerifier = new GraphVerifier();
                 graphVerifier.check(adNodesList);
