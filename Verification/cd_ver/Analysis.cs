@@ -233,6 +233,16 @@ namespace Verification.cd_ver
                     isExist = true;
                     break;
                 }
+
+                if (curType == null)
+                {
+                    var typeName = allElements.Classes.Find(a => a.Id == curTypeId);
+                    if (typeName != null && typeName.Name == subordinateClass.Name)
+					{
+                        isExist = true;
+                        break;
+                    }
+                }
             }
 
             if (!isExist)

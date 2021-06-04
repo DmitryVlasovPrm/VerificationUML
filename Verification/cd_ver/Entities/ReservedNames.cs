@@ -3,6 +3,6 @@
 	public static class ReservedNames
 	{
 		public static readonly string[] ConnectionTypes = { "association", "composite", "shared" };
-		public static readonly string[] ContainerNames = { "List", "Dictionary", "Queue", "Stack", "Vector", "Tuple", "Pair" };
+		public static readonly string[] ContainerNames = { "list", "dictionary", "queue", "stack", "vector", "tuple", "pair" };
 	}
 }

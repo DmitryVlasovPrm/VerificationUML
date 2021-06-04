@@ -17,12 +17,12 @@ namespace Verification.cd_ver.Entities
             for (var i = 0; i < containerNamesCount; i++)
 			{
                 var curContainer = ReservedNames.ContainerNames[i];
-                var startIdx = Name.IndexOf(curContainer);
+                var startIdx = Name.ToLower().IndexOf(curContainer);
 
                 if (startIdx != -1)
 				{
                     startIdx = startIdx + curContainer.Length;
-                    if (Name[startIdx + 1] == '<')
+                    if (Name[startIdx] == '<')
 					{
                         startIdx++;
                         var endIdx = Name.IndexOf(">", startIdx);
