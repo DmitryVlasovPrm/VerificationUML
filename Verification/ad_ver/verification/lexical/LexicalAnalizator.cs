@@ -20,6 +20,7 @@ namespace ActivityDiagramVer.verification.lexical
             this.diagramElements = diagramElements;
         }
 
+        // проверка перехода
         public void checkFlow(ControlFlow flow)
         {
             bool notCondButHaveMark = false;
@@ -43,7 +44,7 @@ namespace ActivityDiagramVer.verification.lexical
                 else if (notCondButHaveMark) ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.HAVE_MARK) + " - \"" + flow.getText() + "\"", flow, ALL_MISTAKES.HAVE_MARK);
             }
         }
-
+        // проверка дорожки участника
         public void checkSwimlane(Swimlane swimlane)
         {
             swimlaneCount++;
@@ -68,6 +69,7 @@ namespace ActivityDiagramVer.verification.lexical
             if (hasSpecialSymbol(swimlane.getName()))
                 ADMistakeFactory.createMistake(Level.HARD, MistakeAdapter.toString(MISTAKES.STRANGE_SYMBOL), swimlane, ALL_MISTAKES.STRANGE_SYMBOL);
         }
+        // проверка на специальный символ 
         private bool hasSpecialSymbol(string str)
         {
             // проверка на спец символ
@@ -79,7 +81,7 @@ namespace ActivityDiagramVer.verification.lexical
             }
             return true;
         }
-
+        // проверка активности
         public void checkActivity(ActivityNode activity, ADNodesList.ADNode node)
         {
             if (activity.getName().Length == 0)
@@ -107,6 +109,7 @@ namespace ActivityDiagramVer.verification.lexical
                     ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NOT_NOUN), node, ALL_MISTAKES.NOT_NOUN);
             }
         }
+        // проверка условного перехода
         public void checkDecision(DecisionNode decision, ADNodesList.ADNode node)
         {
             // добавляем вопрос для перехода

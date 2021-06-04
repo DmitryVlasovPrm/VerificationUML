@@ -19,6 +19,11 @@ namespace ActivityDiagramVer.parser {
             this.adNodesList = adNodesList;
         }
 
+        /// <summary>
+        /// Нахождение родительского тег 
+        /// </summary>
+        /// <param name="xPackagedList">Теги AD</param>
+        /// <returns></returns>
         private XmlNode FindActivePackageEl(XmlNodeList xPackagedList) {
             foreach (XmlNode node in xPackagedList) {
                 var attr = node.Attributes["xsi:type"];
@@ -28,6 +33,12 @@ namespace ActivityDiagramVer.parser {
             }
             return null;
         }
+        /// <summary>
+        /// Распарсить XMI файл и создать объекты соответствующих классов
+        /// </summary>
+        /// <param name="diagram">Исходная диаграмма</param>
+        /// <param name="hasJoinOrFork">Имеется ли join\fork</param>
+        /// <returns></returns>
         public bool Parse(Diagram diagram, ref bool hasJoinOrFork) {
             xmlFile = diagram.doc;
             XmlNodeList xPackagedList;
@@ -56,6 +67,7 @@ namespace ActivityDiagramVer.parser {
                 return false;
             }
 
+            // пройтись по всем тегам и создать объекты
             foreach (XmlNode node in xRoot.ChildNodes) {
                 var elAttr = node.Attributes["xsi:type"];
                 if (elAttr == null) continue;
@@ -186,6 +198,7 @@ namespace ActivityDiagramVer.parser {
                     }
                 }
             }
+            // ошибка - тип элемента не принадлежит AD
             foreach (var node in unknownNodes) {
                 ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.FORBIDDEN_ELEMENT], MistakeAdapter.toString(MISTAKES.FORBIDDEN_ELEMENT), node, ALL_MISTAKES.FORBIDDEN_ELEMENT);
             }

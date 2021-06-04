@@ -27,6 +27,7 @@ namespace ActivityDiagramVer.verification.syntax {
         public void check() {
             lexicalAnalizator.setDiagramElements(diagramElements);
 
+            // прохождение по всем элементам и их проверка
             for (int i = 0; i < diagramElements.size(); i++) {
                 BaseNode currentNode = diagramElements.get(i);
                 switch (diagramElements.get(i).getType()) {
