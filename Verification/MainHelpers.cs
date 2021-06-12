@@ -45,6 +45,7 @@ namespace Verification
             }
 
             diagramsGV.Rows.Add(name);
+            diagramsGB.Text = $"Диаграммы ({diagramsGV.Rows.Count})";
             btVerify.Enabled = btDelete.Enabled = btOutput.Enabled = true;
         }
 
@@ -138,6 +139,7 @@ namespace Verification
 
             var mistakes = diagram.Mistakes.OrderByDescending(a => a.Seriousness).ThenBy(a => a.Text).ToList();
             var mistakesCount = mistakes.Count;
+            errorsGB.Text = string.Format($"Ошибки ({mistakesCount}) (Тип диаграммы: {typeStr})");
             for (var i = 0; i < mistakesCount; i++)
             {
                 var curMistake = mistakes[i];

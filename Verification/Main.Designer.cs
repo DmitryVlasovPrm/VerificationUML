@@ -41,7 +41,7 @@ namespace Verification
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.diagramPicture = new System.Windows.Forms.PictureBox();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.diagramsGB = new System.Windows.Forms.GroupBox();
 			this.diagramsGV = new System.Windows.Forms.DataGridView();
 			this.errorsGB = new System.Windows.Forms.GroupBox();
 			this.errorsGV = new System.Windows.Forms.DataGridView();
@@ -56,7 +56,7 @@ namespace Verification
 			this.tableLayoutPanel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.diagramPicture)).BeginInit();
 			this.tableLayoutPanel4.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.diagramsGB.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.diagramsGV)).BeginInit();
 			this.errorsGB.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorsGV)).BeginInit();
@@ -75,7 +75,7 @@ namespace Verification
             this.menuRate});
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(1199, 27);
+			this.menu.Size = new System.Drawing.Size(1199, 31);
 			this.menu.TabIndex = 0;
 			this.menu.Text = "menu";
 			// 
@@ -85,41 +85,41 @@ namespace Verification
             this.выбратьToolStripMenuItem,
             this.сохранитьToolStripMenuItem});
 			this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-			this.файлToolStripMenuItem.Size = new System.Drawing.Size(53, 23);
+			this.файлToolStripMenuItem.Size = new System.Drawing.Size(64, 27);
 			this.файлToolStripMenuItem.Text = "Файл";
 			// 
 			// выбратьToolStripMenuItem
 			// 
 			this.выбратьToolStripMenuItem.Name = "выбратьToolStripMenuItem";
-			this.выбратьToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+			this.выбратьToolStripMenuItem.Size = new System.Drawing.Size(259, 28);
 			this.выбратьToolStripMenuItem.Text = "Добавить файл(ы)";
 			this.выбратьToolStripMenuItem.Click += new System.EventHandler(this.выбратьToolStripMenuItem_Click);
 			// 
 			// сохранитьToolStripMenuItem
 			// 
 			this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-			this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+			this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(259, 28);
 			this.сохранитьToolStripMenuItem.Text = "Сохранить результат";
 			this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
 			// 
 			// справкаToolStripMenuItem
 			// 
 			this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-			this.справкаToolStripMenuItem.Size = new System.Drawing.Size(74, 23);
+			this.справкаToolStripMenuItem.Size = new System.Drawing.Size(90, 27);
 			this.справкаToolStripMenuItem.Text = "Справка";
 			this.справкаToolStripMenuItem.Click += new System.EventHandler(this.справкаToolStripMenuItem_Click);
 			// 
 			// menuSettings
 			// 
 			this.menuSettings.Name = "menuSettings";
-			this.menuSettings.Size = new System.Drawing.Size(89, 23);
+			this.menuSettings.Size = new System.Drawing.Size(108, 27);
 			this.menuSettings.Text = "Настройки";
 			this.menuSettings.Click += new System.EventHandler(this.menuSettings_Click);
 			// 
 			// menuRate
 			// 
 			this.menuRate.Name = "menuRate";
-			this.menuRate.Size = new System.Drawing.Size(76, 23);
+			this.menuRate.Size = new System.Drawing.Size(92, 27);
 			this.menuRate.Text = "Оценить";
 			this.menuRate.Click += new System.EventHandler(this.menuRate_Click);
 			// 
@@ -130,13 +130,13 @@ namespace Verification
 			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 31);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.03771F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.962288F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(1199, 712);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(1199, 708);
 			this.tableLayoutPanel1.TabIndex = 1;
 			// 
 			// tableLayoutPanel2
@@ -153,7 +153,7 @@ namespace Verification
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(1199, 641);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(1199, 637);
 			this.tableLayoutPanel2.TabIndex = 0;
 			// 
 			// diagramPicture
@@ -163,7 +163,7 @@ namespace Verification
 			this.diagramPicture.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.diagramPicture.Location = new System.Drawing.Point(3, 3);
 			this.diagramPicture.Name = "diagramPicture";
-			this.diagramPicture.Size = new System.Drawing.Size(788, 635);
+			this.diagramPicture.Size = new System.Drawing.Size(788, 631);
 			this.diagramPicture.TabIndex = 0;
 			this.diagramPicture.TabStop = false;
 			// 
@@ -171,7 +171,7 @@ namespace Verification
 			// 
 			this.tableLayoutPanel4.ColumnCount = 1;
 			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Controls.Add(this.groupBox2, 0, 1);
+			this.tableLayoutPanel4.Controls.Add(this.diagramsGB, 0, 1);
 			this.tableLayoutPanel4.Controls.Add(this.errorsGB, 0, 0);
 			this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 2);
 			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -182,20 +182,20 @@ namespace Verification
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(405, 641);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(405, 637);
 			this.tableLayoutPanel4.TabIndex = 1;
 			// 
-			// groupBox2
+			// diagramsGB
 			// 
-			this.groupBox2.Controls.Add(this.diagramsGV);
-			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.groupBox2.Location = new System.Drawing.Point(3, 291);
-			this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(399, 285);
-			this.groupBox2.TabIndex = 1;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Диаграммы";
+			this.diagramsGB.Controls.Add(this.diagramsGV);
+			this.diagramsGB.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.diagramsGB.Location = new System.Drawing.Point(3, 289);
+			this.diagramsGB.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+			this.diagramsGB.Name = "diagramsGB";
+			this.diagramsGB.Size = new System.Drawing.Size(399, 283);
+			this.diagramsGB.TabIndex = 1;
+			this.diagramsGB.TabStop = false;
+			this.diagramsGB.Text = "Диаграммы";
 			// 
 			// diagramsGV
 			// 
@@ -205,7 +205,7 @@ namespace Verification
 			this.diagramsGV.BackgroundColor = System.Drawing.Color.White;
 			this.diagramsGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.diagramsGV.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.diagramsGV.Location = new System.Drawing.Point(3, 19);
+			this.diagramsGV.Location = new System.Drawing.Point(3, 23);
 			this.diagramsGV.MultiSelect = false;
 			this.diagramsGV.Name = "diagramsGV";
 			this.diagramsGV.ReadOnly = true;
@@ -213,7 +213,7 @@ namespace Verification
 			this.diagramsGV.RowHeadersWidth = 51;
 			this.diagramsGV.RowTemplate.Height = 24;
 			this.diagramsGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.diagramsGV.Size = new System.Drawing.Size(393, 263);
+			this.diagramsGV.Size = new System.Drawing.Size(393, 257);
 			this.diagramsGV.TabIndex = 0;
 			this.diagramsGV.SelectionChanged += new System.EventHandler(this.diagramsGV_SelectionChanged);
 			// 
@@ -224,7 +224,7 @@ namespace Verification
 			this.errorsGB.Location = new System.Drawing.Point(3, 0);
 			this.errorsGB.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.errorsGB.Name = "errorsGB";
-			this.errorsGB.Size = new System.Drawing.Size(399, 285);
+			this.errorsGB.Size = new System.Drawing.Size(399, 283);
 			this.errorsGB.TabIndex = 0;
 			this.errorsGB.TabStop = false;
 			this.errorsGB.Text = "Ошибки";
@@ -237,7 +237,7 @@ namespace Verification
 			this.errorsGV.BackgroundColor = System.Drawing.Color.White;
 			this.errorsGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.errorsGV.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.errorsGV.Location = new System.Drawing.Point(3, 19);
+			this.errorsGV.Location = new System.Drawing.Point(3, 23);
 			this.errorsGV.MultiSelect = false;
 			this.errorsGV.Name = "errorsGV";
 			this.errorsGV.ReadOnly = true;
@@ -245,7 +245,7 @@ namespace Verification
 			this.errorsGV.RowHeadersWidth = 51;
 			this.errorsGV.RowTemplate.Height = 24;
 			this.errorsGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.errorsGV.Size = new System.Drawing.Size(393, 263);
+			this.errorsGV.Size = new System.Drawing.Size(393, 257);
 			this.errorsGV.TabIndex = 0;
 			this.errorsGV.SelectionChanged += new System.EventHandler(this.errorsGV_SelectionChanged);
 			// 
@@ -259,7 +259,7 @@ namespace Verification
 			this.tableLayoutPanel5.Controls.Add(this.btDelete, 1, 0);
 			this.tableLayoutPanel5.Controls.Add(this.btAdd, 2, 0);
 			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 576);
+			this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 572);
 			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
 			this.tableLayoutPanel5.RowCount = 1;
@@ -312,7 +312,7 @@ namespace Verification
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 27.27273F));
 			this.tableLayoutPanel3.Controls.Add(this.btVerify, 2, 0);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 641);
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 637);
 			this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
 			this.tableLayoutPanel3.RowCount = 1;
@@ -335,7 +335,7 @@ namespace Verification
 			// 
 			// Main
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1199, 739);
 			this.Controls.Add(this.tableLayoutPanel1);
@@ -354,7 +354,7 @@ namespace Verification
 			this.tableLayoutPanel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.diagramPicture)).EndInit();
 			this.tableLayoutPanel4.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
+			this.diagramsGB.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.diagramsGV)).EndInit();
 			this.errorsGB.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.errorsGV)).EndInit();
@@ -378,7 +378,7 @@ namespace Verification
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Button btVerify;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox diagramsGB;
         private System.Windows.Forms.DataGridView diagramsGV;
         private System.Windows.Forms.GroupBox errorsGB;
         private System.Windows.Forms.DataGridView errorsGV;

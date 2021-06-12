@@ -22,7 +22,7 @@ namespace Verification.cd_ver.Entities
                 if (startIdx != -1)
 				{
                     startIdx = startIdx + curContainer.Length;
-                    if (Name[startIdx] == '<')
+                    if (startIdx < Name.Length && Name[startIdx] == '<')
 					{
                         startIdx++;
                         var endIdx = Name.IndexOf(">", startIdx);

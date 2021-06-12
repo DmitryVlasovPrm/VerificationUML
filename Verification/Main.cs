@@ -232,9 +232,12 @@ namespace Verification
             var selectedName = curRow.Cells[0].Value.ToString();
             Distribution.AllDiagrams.Remove(selectedName);
             diagramsGV.Rows.RemoveAt(curRow.Index);
+            diagramsGB.Text = $"Диаграммы ({diagramsGV.Rows.Count})";
 
             if (diagramsGV.Rows.Count == 0)
             {
+                diagramsGB.Text = "Диаграммы";
+                errorsGB.Text = "Ошибки";
                 btVerify.Enabled = btDelete.Enabled = btOutput.Enabled = false;
             }
         }
