@@ -11,6 +11,7 @@ using System.IO;
 namespace Verification.settings {
     public class SettingsController {
         private SettingsForm view = null;
+        JsonHandler<Settings> jsonHandler = new JsonHandler<Settings>();
         // значения при открытии
         private int meassureIndex = 1;
         private string min = "40";
@@ -142,23 +143,44 @@ namespace Verification.settings {
             }
         }
 
+        
         private void deserializeSettings(string fileName) {
-            var jsonString = File.ReadAllText(fileName);
+            Func<object, Boolean> checker = (o) => {
+                var settings = (Settings)o;
+                try {
+                    Double.Parse(settings.Min);
+                    Double.Parse(settings.Max);
+                    if (settings.Index > 1 || settings.Index < 0)
+                        throw new InvalidCastException();
+                } catch (Exception e) { throw e; }
+                return true;
+            };
+            var sett = new Settings();
             try {
-                var settings = JsonSerializer.Deserialize<Settings>(jsonString);
-                Double.Parse(settings.Min);
-                Double.Parse(settings.Max);
-                int meassureIndex = settings.Index;
-                if (meassureIndex > 1 || meassureIndex < 0)
-                    throw new InvalidCastException();
-                this.meassureIndex = meassureIndex;
-                max = settings.Max;
-                min = settings.Min;
-            } catch(Exception e) when(e is ArgumentNullException || e is JsonException || e is NotSupportedException) {
-                view.ShowMsg("Проблема с чтением файла", "");
-            }catch(Exception e) when(e is InvalidCastException || e is FormatException) {
-                view.ShowMsg("Значения настроек не соответствуют требуемым. Проверьте, что используются только действительные и целые числа", "");
+                sett = jsonHandler.desserialize(fileName, sett, checker);
+                this.meassureIndex = sett.Index;
+                max = sett.Max;
+                min = sett.Min;
+            } catch (Exception e) {
+                view.ShowMsg(e.Message, "Exception!");
             }
+            
+            //var jsonString = File.ReadAllText(fileName);
+            //try {
+            //    var settings = JsonSerializer.Deserialize<Settings>(jsonString);
+            //    Double.Parse(settings.Min);
+            //    Double.Parse(settings.Max);
+            //    int meassureIndex = settings.Index;
+            //    if (meassureIndex > 1 || meassureIndex < 0)
+            //        throw new InvalidCastException();
+            //    this.meassureIndex = meassureIndex;
+            //    max = settings.Max;
+            //    min = settings.Min;
+            //} catch(Exception e) when(e is ArgumentNullException || e is JsonException || e is NotSupportedException) {
+            //    view.ShowMsg("Проблема с чтением файла", "");
+            //}catch(Exception e) when(e is InvalidCastException || e is FormatException) {
+            //    view.ShowMsg("Значения настроек не соответствуют требуемым. Проверьте, что используются только действительные и целые числа", "");
+            //}
             
         }
         private void openSaveFileDialog() {

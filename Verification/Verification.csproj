@@ -174,6 +174,7 @@
     <Compile Include="Distribution.cs" />
     <Compile Include="rating_system\AllUMLMistakes.cs" />
     <Compile Include="rating_system\RateDefiner.cs" />
+    <Compile Include="settings\JsonHandler.cs" />
     <Compile Include="settings\SettingsController.cs" />
     <Compile Include="settings\SettingsForm.cs">
       <SubType>Form</SubType>
