@@ -332,7 +332,7 @@ namespace Verification
             rateSettings.createView();
         }
 
-        private void ошибкиToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void aDToolStripMenuItem_Click(object sender, EventArgs e) {
 
         }
     }

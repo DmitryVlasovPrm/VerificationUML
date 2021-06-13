@@ -36,6 +36,8 @@ namespace Verification
             this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.баллыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ошибкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRate = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -51,8 +53,9 @@ namespace Verification
             this.btAdd = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.btVerify = new System.Windows.Forms.Button();
-            this.баллыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ошибкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uCDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menu.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -119,6 +122,23 @@ namespace Verification
             this.menuSettings.Name = "menuSettings";
             this.menuSettings.Size = new System.Drawing.Size(89, 23);
             this.menuSettings.Text = "Настройки";
+            // 
+            // баллыToolStripMenuItem
+            // 
+            this.баллыToolStripMenuItem.Name = "баллыToolStripMenuItem";
+            this.баллыToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.баллыToolStripMenuItem.Text = "Баллы";
+            this.баллыToolStripMenuItem.Click += new System.EventHandler(this.баллыToolStripMenuItem_Click);
+            // 
+            // ошибкиToolStripMenuItem
+            // 
+            this.ошибкиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.uCDToolStripMenuItem,
+            this.aDToolStripMenuItem,
+            this.cDToolStripMenuItem});
+            this.ошибкиToolStripMenuItem.Name = "ошибкиToolStripMenuItem";
+            this.ошибкиToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.ошибкиToolStripMenuItem.Text = "Ошибки";
             // 
             // menuRate
             // 
@@ -337,19 +357,24 @@ namespace Verification
             this.btVerify.UseVisualStyleBackColor = true;
             this.btVerify.Click += new System.EventHandler(this.btVerify_Click);
             // 
-            // баллыToolStripMenuItem
+            // uCDToolStripMenuItem
             // 
-            this.баллыToolStripMenuItem.Name = "баллыToolStripMenuItem";
-            this.баллыToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.баллыToolStripMenuItem.Text = "Баллы";
-            this.баллыToolStripMenuItem.Click += new System.EventHandler(this.баллыToolStripMenuItem_Click);
+            this.uCDToolStripMenuItem.Name = "uCDToolStripMenuItem";
+            this.uCDToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.uCDToolStripMenuItem.Text = "UCD";
             // 
-            // ошибкиToolStripMenuItem
+            // aDToolStripMenuItem
             // 
-            this.ошибкиToolStripMenuItem.Name = "ошибкиToolStripMenuItem";
-            this.ошибкиToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.ошибкиToolStripMenuItem.Text = "Ошибки";
-            this.ошибкиToolStripMenuItem.Click += new System.EventHandler(this.ошибкиToolStripMenuItem_Click);
+            this.aDToolStripMenuItem.Name = "aDToolStripMenuItem";
+            this.aDToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.aDToolStripMenuItem.Text = "AD";
+            this.aDToolStripMenuItem.Click += new System.EventHandler(this.aDToolStripMenuItem_Click);
+            // 
+            // cDToolStripMenuItem
+            // 
+            this.cDToolStripMenuItem.Name = "cDToolStripMenuItem";
+            this.cDToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.cDToolStripMenuItem.Text = "CD";
             // 
             // Main
             // 
@@ -408,6 +433,9 @@ namespace Verification
         private System.Windows.Forms.ToolStripMenuItem menuRate;
         private System.Windows.Forms.ToolStripMenuItem баллыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ошибкиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uCDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cDToolStripMenuItem;
     }
 }
 
