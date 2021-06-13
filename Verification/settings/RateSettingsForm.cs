@@ -11,9 +11,9 @@ using System.Windows.Forms;
 namespace Verification.settings {
     // Если возникла ошибка [NonComVisibleBaseClass]
     // https://stackoverflow.com/questions/1049742/noncomvisiblebaseclass-was-detected-how-do-i-fix-this
-    public partial class SettingsForm : Form {
-        private SettingsController controller;
-        public SettingsForm(SettingsController controller) {
+    public partial class RateSettingsForm : Form {
+        private RateSettingsController controller;
+        public RateSettingsForm(RateSettingsController controller) {
             InitializeComponent();
             new ToolTip().SetToolTip(tbMax, "Положительное целое или действительное число через запятую");
             new ToolTip().SetToolTip(tbMin, "Положительное целое или действительное число через запятую");

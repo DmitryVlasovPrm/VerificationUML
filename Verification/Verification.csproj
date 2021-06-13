@@ -174,13 +174,13 @@
     <Compile Include="Distribution.cs" />
     <Compile Include="rating_system\AllUMLMistakes.cs" />
     <Compile Include="rating_system\RateDefiner.cs" />
-    <Compile Include="settings\JsonHandler.cs" />
-    <Compile Include="settings\SettingsController.cs" />
-    <Compile Include="settings\SettingsForm.cs">
+    <Compile Include="settings\FileSettingHandler.cs" />
+    <Compile Include="settings\RateSettingsController.cs" />
+    <Compile Include="settings\RateSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="settings\SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
+    <Compile Include="settings\RateSettingsForm.Designer.cs">
+      <DependentUpon>RateSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="type_definer\EDiagramTypes.cs" />
     <Compile Include="type_definer\TypeDefiner.cs" />
@@ -210,8 +210,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="settings\SettingsForm.resx">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="settings\RateSettingsForm.resx">
+      <DependentUpon>RateSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

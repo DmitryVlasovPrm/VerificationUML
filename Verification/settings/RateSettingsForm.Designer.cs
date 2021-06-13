@@ -1,6 +1,6 @@
 ﻿
 namespace Verification.settings {
-    partial class SettingsForm {
+    partial class RateSettingsForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
