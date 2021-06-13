@@ -230,7 +230,7 @@ namespace Verification.cd_ver
 							var isExist = allElements.Classes.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CDHASNAME));
+								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CD_HAS_NAME));
 								break;
 							}
 
@@ -345,7 +345,7 @@ namespace Verification.cd_ver
 							isExist = allElements.Enumerations.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CDENUMHASNAME));
+								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CD_ENUM_HAS_NAME));
 								break;
 							}
 
@@ -357,7 +357,7 @@ namespace Verification.cd_ver
 							if (elementGraphicInfo == null && isThereImage)
 								break;
 							box = elementGraphicInfo.Item3;
-							diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box, ALL_MISTAKES.CDIMPROPRATETYPE));
+							diagram.Mistakes.Add(new Mistake(2, "Недопустимый элемент", box, ALL_MISTAKES.CD_IMPOSSIBLE_ELEMENT));
 							break;
 					}
 				}
@@ -412,7 +412,7 @@ namespace Verification.cd_ver
 				{
 					var nameInfo = typeNode.Attributes["href"].Value;
 					var name = nameInfo.Substring(nameInfo.LastIndexOf("//") + 2);
-					diagram.Mistakes.Add(new Mistake(1, $"Имя типа \"{name}\" не соответствует целевому языку программирования", box, ALL_MISTAKES.CDIMPROPRATETYPE));
+					diagram.Mistakes.Add(new Mistake(1, $"Имя типа \"{name}\" не соответствует целевому языку программирования", box, ALL_MISTAKES.CD_IMPOSSIBLE_TYPE));
 					dataTypeId = "primitiveType";
 				}
 			}
