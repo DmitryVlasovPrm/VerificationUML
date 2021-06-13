@@ -9,7 +9,7 @@ namespace Verification.settings {
     [Serializable]
     public class MistakeModel {
         public static IDictionary<ALL_MISTAKES, Tuple<double, String>> mistakes = new Dictionary<ALL_MISTAKES, Tuple<double, String>>() {
-                { ALL_MISTAKES.MORE_THAN_ONE_INIT, new Tuple<double, string>(1.0,"dБолее одного начального состояния") },
+                { ALL_MISTAKES.MORE_THAN_ONE_INIT, new Tuple<double, string>(1.0,"Более одного начального состояния") },
                 { ALL_MISTAKES.NO_FINAL, new Tuple<double, string>(1.0,"Более одного конечного состояния") },
                 { ALL_MISTAKES.NO_INITIAL, new Tuple<double, string>(1.0,"Отсутствует начальное состояние") },
                 { ALL_MISTAKES.NO_ACTIVITIES, new Tuple<double, string>(1.0,"Отсутствуют активности") },
@@ -44,30 +44,7 @@ namespace Verification.settings {
                 { ALL_MISTAKES.COULD_NOT_REACH_FINAL, new Tuple<double, string>(1.0,"Недостижимое конечное состояние. Возможно имеется синхронизатор, который невозможно активировать") },
                 { ALL_MISTAKES.FINAL_COLOR_TOKEN, new Tuple<double, string>(1.0,"Отсутствует синхронизатор или существует поток, выходящий из зоны между синхронизатором-разветвителем") },
 
-                {ALL_MISTAKES.CDNOLINK, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDNOCHILDREN, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDSMALLLETTER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDGETBLANKS, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDMUSTBEOPER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDBIGLETTER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDGETBLANKS2, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDCONSTRUCTORHASSMALLLETTER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDDESTRUCTORHASSMALLLETTER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDOPERSTARTWITHBIGLETTER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDOPERHASBLANKS, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDHASOUTPUTTYPE, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDPOINTOUTPUTOPERATIONTYPE, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDNOAVAILABLELINKS, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDENUMSTARTWITHSMALLLETTER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDENUMHASBLANKS, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDRESTRICTIONHASNOTBRANKETS, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDNOPACKAGE, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDNOCONTAINER, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDLESSZERO, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDWRONGDIAPOSON, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDHASNAME, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDENUMHASNAME, new Tuple<double, string>(1.0,"")},
-                {ALL_MISTAKES.CDIMPROPRATETYPE, new Tuple<double, string>(1.0,"")},
+                // TODO(добавить CD ошибки)
 
                 {ALL_MISTAKES.UCREPEAT, new Tuple<double, string>(1.0,"")},
                 {ALL_MISTAKES.UCNOUN, new Tuple<double, string>(1.0,"")},

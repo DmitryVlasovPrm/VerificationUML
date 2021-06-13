@@ -336,7 +336,7 @@ namespace Verification
         }
 
         MistakesSettingsController mController = new MistakesSettingsController();
-        private void aDToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void mistakesToolStripMenuItem_Click(object sender, EventArgs e) {
             mController.createView();
         }
     }
