@@ -175,7 +175,7 @@
     <Compile Include="rating_system\AllUMLMistakes.cs" />
     <Compile Include="rating_system\RateDefiner.cs" />
     <Compile Include="settings\FileSettingHandler.cs" />
-    <Compile Include="settings\ISettingsController.cs" />
+    <Compile Include="settings\MistakeModel.cs" />
     <Compile Include="settings\MistakesSettingsController.cs" />
     <Compile Include="settings\MistakesSettingsForm.cs">
       <SubType>Form</SubType>

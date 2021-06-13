@@ -332,8 +332,9 @@ namespace Verification
             rateSettings.createView();
         }
 
+        MistakesSettingsController mController = new MistakesSettingsController();
         private void aDToolStripMenuItem_Click(object sender, EventArgs e) {
-
+            mController.createView();
         }
     }
 }

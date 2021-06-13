@@ -13,13 +13,14 @@ namespace Verification.settings {
     // https://stackoverflow.com/questions/1049742/noncomvisiblebaseclass-was-detected-how-do-i-fix-this
     public partial class RateSettingsForm : Form {
         private RateSettingsController controller;
-        public RateSettingsForm(RateSettingsController controller) {
+
+        public RateSettingsForm() {
             InitializeComponent();
             new ToolTip().SetToolTip(tbMax, "Положительное целое или действительное число через запятую");
             new ToolTip().SetToolTip(tbMin, "Положительное целое или действительное число через запятую");
-
-            this.controller = controller;
         }
+        public void setController(RateSettingsController controller) { this.controller = controller; }
+        
         internal void ShowMsg(string msg, string title) {
             MessageBox.Show(
                 msg,
@@ -30,7 +31,7 @@ namespace Verification.settings {
                 MessageBoxOptions.DefaultDesktopOnly);
         }
 
-        internal void fillFormByDefault(string min, string max, int cbIndex) {
+        internal void fillFields(string min, string max, int cbIndex) {
             tbMax.Text = max;
             tbMin.Text = min;
             cbMeassure.SelectedIndex = cbIndex;

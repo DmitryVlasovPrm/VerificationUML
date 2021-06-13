@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Verification.settings {
     /// <summary>
@@ -27,7 +29,11 @@ namespace Verification.settings {
             return output;
         }
         public void writeInFile(string fileName, T input) {
-            var jsonString = JsonSerializer.Serialize(input);
+            var opt = new JsonSerializerOptions {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            var jsonString = JsonSerializer.Serialize(input, opt);
             File.WriteAllText(fileName, jsonString);
         }
     }
