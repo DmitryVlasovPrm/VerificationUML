@@ -97,12 +97,7 @@ namespace Verification.rating_system {
         public static Tuple<double, string> defineGrade(Diagram diagram, double max, double min) {
             maxGrade = max;
             minGrade = min;
-            switch (diagram.EType) {
-                case type_definer.EDiagramTypes.UCD: return getGrade(diagram, gradesUCD);
-                case type_definer.EDiagramTypes.AD: return getGrade(diagram, gradesAD); ;
-                case type_definer.EDiagramTypes.CD: return getGrade(diagram, gradesCD); ;
-                default: throw new Exception("Тип диаграммы не определен");
-            }
+            return getGrade(diagram, settings.MistakeModel.mistakes);
         }
 
         /// <summary>
@@ -111,10 +106,10 @@ namespace Verification.rating_system {
         /// <param name="diagram">Диаграмма, для кот необходимо определить балл</param>
         /// <param name="grades">Перечень ошибок и вычитаемых баллов</param>
         /// <returns>Полученный балл и сообщение о непрохождении проходного балла или пустую строку</returns>
-        private static Tuple<double,string> getGrade(Diagram diagram, IDictionary<ALL_MISTAKES, double> grades) {
+        private static Tuple<double,string> getGrade(Diagram diagram, IDictionary<ALL_MISTAKES, Tuple<double, string>> grades) {
             double curGrade = maxGrade;
             foreach (var mistake in diagram.Mistakes) {
-                curGrade -= grades.ContainsKey(mistake.type)? grades[mistake.type]:0;           //TODO(сменить поле TEXT)
+                curGrade -= grades.ContainsKey(mistake.type)? grades[mistake.type].Item1:0;
                 if (curGrade < minGrade)
                     return new Tuple<double, string>(curGrade, minGradeMsg);
             }

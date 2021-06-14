@@ -20,7 +20,7 @@ namespace Verification
         public static MorphAnalyzer morph = new MorphAnalyzer();
         public Distribution Distribution;
         private Helper helperForm;
-        private SettingsController settings;
+        private RateSettingsController rateSettings;
         private bool isClearingRows;
         private bool firstSessionCheck = true;
 
@@ -33,7 +33,7 @@ namespace Verification
             Distribution.SomethingChanged += UpdateDiagramOnGUI;
 
             helperForm = null;
-            settings = new SettingsController();
+            rateSettings = new RateSettingsController();
             isClearingRows = false;
 
             errorsGV.Font = new Font("Microsoft Sans Serif", 10);
@@ -313,10 +313,6 @@ namespace Verification
 
         }
 
-        private void menuSettings_Click(object sender, EventArgs e) {
-            settings.createView();
-        }
-
         private void menuRate_Click(object sender, EventArgs e)
         {
 
@@ -330,9 +326,18 @@ namespace Verification
                 ShowMsg("Диаграмма не прошла верификацию", "Верификация диаграмм UML");
                 return;
             }
-            var grade = RateDefiner.defineGrade(curDiagram, settings.Max, settings.Min);
+            var grade = RateDefiner.defineGrade(curDiagram, rateSettings.Max, rateSettings.Min);
             ShowMsg("Рекомендуемая оценка\n"+(grade.Item2==""?grade.Item1.ToString():grade.Item2), "Оценка");
 
+        }
+
+        private void баллыToolStripMenuItem_Click(object sender, EventArgs e) {
+            rateSettings.createView();
+        }
+
+        MistakesSettingsController mController = new MistakesSettingsController();
+        private void mistakesToolStripMenuItem_Click(object sender, EventArgs e) {
+            mController.createView();
         }
     }
 }
