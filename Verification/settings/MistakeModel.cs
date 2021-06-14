@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verification.rating_system;
 
 namespace Verification.settings {
@@ -44,7 +41,25 @@ namespace Verification.settings {
                 { ALL_MISTAKES.COULD_NOT_REACH_FINAL, new Tuple<double, string>(1.0,"Недостижимое конечное состояние. Возможно имеется синхронизатор, который невозможно активировать") },
                 { ALL_MISTAKES.FINAL_COLOR_TOKEN, new Tuple<double, string>(1.0,"Отсутствует синхронизатор или существует поток, выходящий из зоны между синхронизатором-разветвителем") },
 
-                // TODO(добавить CD ошибки)
+                {ALL_MISTAKES.CD_NO_LINK, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_NO_CHILDREN, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_INCORRECT_NAME, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_EMPTY_CLASS, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_MUST_BE_ATTRIB, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_HAS_OUTPUT_TYPE, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_HAS_NOT_OUTPUT_TYPE, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_NO_AVAILABLE_LINKS, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_RESTRICTION_HAS_NO_BRACKETS, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_NO_PACKAGE, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_NO_CONTAINER, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_LESS_ZERO, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_WRONG_RANGE, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_DUPLICATE_NAME, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_IMPOSSIBLE_ELEMENT, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_IMPOSSIBLE_TYPE, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_AGGREG_COMPOS_CYCLE, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_SETTER_WITHOUT_PARAMS, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_GETTER_WITH_PARAMS, new Tuple<double, string>(1.0, "")},
 
                 {ALL_MISTAKES.UCREPEAT, new Tuple<double, string>(1.0,"")},
                 {ALL_MISTAKES.UCNOUN, new Tuple<double, string>(1.0,"")},
