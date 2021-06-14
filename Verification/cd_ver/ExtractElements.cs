@@ -230,7 +230,7 @@ namespace Verification.cd_ver
 							var isExist = allElements.Classes.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CD_HAS_NAME));
+								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CD_DUPLICATE_NAME));
 								break;
 							}
 
@@ -345,7 +345,7 @@ namespace Verification.cd_ver
 							isExist = allElements.Enumerations.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CD_ENUM_HAS_NAME));
+								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CD_DUPLICATE_NAME));
 								break;
 							}
 

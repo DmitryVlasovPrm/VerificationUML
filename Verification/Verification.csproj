@@ -146,7 +146,8 @@
     <Compile Include="cd_ver\Entities\Visibility.cs" />
     <Compile Include="cd_ver\ExtractElements.cs" />
     <Compile Include="cd_ver\CDVerificator.cs" />
-    <Compile Include="cd_ver\Functions.cs" />
+    <Compile Include="cd_ver\Checkers.cs" />
+    <Compile Include="cd_ver\Graph.cs" />
     <Compile Include="Diagram.cs" />
     <Compile Include="help_form\Helper.cs">
       <SubType>Form</SubType>
