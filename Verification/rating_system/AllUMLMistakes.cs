@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Verification.rating_system {
+﻿namespace Verification.rating_system {
     public enum ALL_MISTAKES {
         // AD
         MORE_THAN_ONE_INIT,
@@ -65,6 +59,7 @@ namespace Verification.rating_system {
         CD_NO_LINK,
         CD_NO_CHILDREN,
         CD_INCORRECT_NAME,
+        CD_ATTRIB_WITH_ACTION,
         CD_EMPTY_CLASS,
         CD_MUST_BE_ATTRIB,
         CD_HAS_OUTPUT_TYPE,
@@ -81,6 +76,7 @@ namespace Verification.rating_system {
         CD_AGGREG_COMPOS_CYCLE,
         CD_SETTER_WITHOUT_PARAMS,
         CD_GETTER_WITH_PARAMS,
+        CD_SUPERFLUOUS_CONNECTION,
 
         ALLUCDAD
     }

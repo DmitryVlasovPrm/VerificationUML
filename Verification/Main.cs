@@ -18,16 +18,17 @@ namespace Verification
     public partial class Main : Form
     {
         public static MorphAnalyzer morph = new MorphAnalyzer();
+        public static Main MainFormInstance;
         public Distribution Distribution;
         private Helper helperForm;
         private RateSettingsController rateSettings;
         private bool isClearingRows;
         private bool firstSessionCheck = true;
 
-
         public Main()
         {
             InitializeComponent();
+            MainFormInstance = this;
             Distribution = new Distribution();
             Distribution.NewDiagramAdded += AddDiagram;
             Distribution.SomethingChanged += UpdateDiagramOnGUI;

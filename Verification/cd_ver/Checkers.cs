@@ -10,23 +10,50 @@ namespace Verification.cd_ver
 		{
 			if (elementName != "")
 			{
+				var isUmlElementType = false;
 				// Формирование имени типа элемента
-				if (elementType == "класс" || elementType == "интерфейс" || elementType == "атрибут")
+				if (elementType == "класс" || elementType == "интерфейс")
+				{
+					elementType += "а";
+					isUmlElementType = true;
+				}
+				if (elementType == "перечисление")
+				{
+					elementType = "перечисления";
+					isUmlElementType = true;
+				}
+				if (elementType == "атрибут")
 					elementType += "а";
 				if (elementType == "операция")
 					elementType = "операции";
-				if (elementType == "перечисление")
-					elementType = "перечисления";
 
 				if (char.IsDigit(elementName[0]))
+				{
 					Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType} \"{elementName}\" начинается с цифры", elementBox, ALL_MISTAKES.CD_INCORRECT_NAME));
+				}
+				else
+				{
+					if (!char.IsUpper(elementName[0]) && isUmlElementType)
+						Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType} \"{elementName}\" начинается с маленькой буквы", elementBox, ALL_MISTAKES.CD_INCORRECT_NAME));
 
-				if (!char.IsUpper(elementName[0]))
-					Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType} \"{elementName}\" начинается с маленькой буквы", elementBox, ALL_MISTAKES.CD_INCORRECT_NAME));
+					if (char.IsUpper(elementName[0]) && !isUmlElementType)
+						Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType} \"{elementName}\" начинается с большой буквы", elementBox, ALL_MISTAKES.CD_INCORRECT_NAME));
+				}
 
 				if (!elementName.All(char.IsLetterOrDigit))
 					Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Имя {elementType} \"{elementName}\" содержит недопустимые символы", elementBox, ALL_MISTAKES.CD_INCORRECT_NAME));
+
+				// Проверка
+				if (elementType == "атрибут")
+					CheckAttributeName(elementName, elementBox);
 			}
+		}
+
+		private static void CheckAttributeName(string name, BoundingBox elementBox)
+		{
+			var newName = name.TrimStart();
+			if (newName.StartsWith("get") || newName.StartsWith("set"))
+				Analysis.Diagram.Mistakes.Add(new Mistake(0, $"Имя атрибута \"{name}\" обозначает действие", elementBox, ALL_MISTAKES.CD_ATTRIB_WITH_ACTION));
 		}
 
 		public static (bool, bool) CheckOperationName(Operation operation, string elementName, string elementType, BoundingBox elementBox)
@@ -41,7 +68,7 @@ namespace Verification.cd_ver
 				if (operationName.TrimStart().StartsWith("set"))
 				{
 					if (operation.Parameters.Count == 0)
-						Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Setter \"{operationName}\" не имеет ни один параметр ({elementType} \"{elementName}\")",
+						Analysis.Diagram.Mistakes.Add(new Mistake(0, $"Setter \"{operationName}\" не имеет ни один параметр ({elementType} \"{elementName}\")",
 							elementBox, ALL_MISTAKES.CD_SETTER_WITHOUT_PARAMS));
 				}
 
@@ -49,8 +76,16 @@ namespace Verification.cd_ver
 				if (operationName.TrimStart().StartsWith("get"))
 				{
 					if (operation.Parameters.Count != 0)
-						Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Getter \"{operationName}\" имеет параметр(ы) ({elementType} \"{elementName}\")",
+						Analysis.Diagram.Mistakes.Add(new Mistake(0, $"Getter \"{operationName}\" имеет параметр(ы) ({elementType} \"{elementName}\")",
 							elementBox, ALL_MISTAKES.CD_GETTER_WITH_PARAMS));
+
+					var dataType = CDVerificator.AllElements.Types.Find(a => a.Id == operation.ReturnDataTypeId);
+					if (dataType != null)
+					{
+						if (dataType.Name == "void")
+							Analysis.Diagram.Mistakes.Add(new Mistake(1, $"Недопустимый тип данных результата операции (getter \"{operationName}\")",
+								elementBox, ALL_MISTAKES.CD_SETTER_WITHOUT_PARAMS));
+					}
 				}
 
 				// Конструктор

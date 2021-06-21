@@ -119,7 +119,8 @@ namespace Verification.cd_ver
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in LexicalAnalysis: " + ex.Message);
+                Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+                    "Ошибка в LexicalAnalysis: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
             }
         }
 
@@ -164,7 +165,8 @@ namespace Verification.cd_ver
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in SyntacticAnalysis: " + ex.Message);
+                Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+                    "Ошибка в SyntacticAnalysis: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
             }
         }
 
@@ -192,9 +194,7 @@ namespace Verification.cd_ver
                     }
                 }
 
-                /*
-                // Проверка циклов для обобщений
-                var generalizationGraph = new Graph();
+                // Проверка лишних ассоциаций в обобщениях
                 var curElements = allElements.Classes;
                 var elementsCount = curElements.Count;
 
@@ -202,20 +202,27 @@ namespace Verification.cd_ver
                 {
                     var element = curElements[i];
                     var elementId = element.Id;
-
-                    // Строим граф для поиска циклов в обобщениях
                     var generalClassesCount = element.GeneralClassesIdxs.Count;
-                    for (var j = 0; j < generalClassesCount; j++)
-                        generalizationGraph.AddVertex(elementId, element.GeneralClassesIdxs[j]);
-                }
 
-                if (generalizationGraph.IsCycleExist())
-                    diagram.Mistakes.Add(new Mistake(2, $"Цикл между обобщениями", null, ALL_MISTAKES.CD_GENERALIZATION_CYCLE));
-                */
+                    for (var j = 0; j < generalClassesCount; j++)
+                    {
+                        var generalClassId = element.GeneralClassesIdxs[j];
+                        var connection = allElements.Connections.Find(a => a.OwnedElementId1 == elementId && a.OwnedElementId2 == generalClassId ||
+                            a.OwnedElementId1 == generalClassId && a.OwnedElementId2 == elementId);
+                        if (connection != null)
+                        {
+                            var secondElement = allElements.Classes.Find(a => a.Id == generalClassId);
+                            if (secondElement != null)
+                                diagram.Mistakes.Add(new Mistake(2, $"Лишняя ассоциация между элементами \"{element.Name}\" и \"{secondElement.Name}\"",
+                                    null, ALL_MISTAKES.CD_SUPERFLUOUS_CONNECTION));
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in SemanticAnalysis: " + ex.Message);
+                Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+                    "Ошибка в SemanticAnalysis: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
             }
         }
     }

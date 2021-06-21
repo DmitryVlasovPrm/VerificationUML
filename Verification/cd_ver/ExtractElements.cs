@@ -82,7 +82,8 @@ namespace Verification.cd_ver
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show($"Error in extracting element coordinates: {ex.Message}");
+						Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+							"Ошибка в экспорте координат элементов: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
 					}
 				}
 
@@ -363,7 +364,8 @@ namespace Verification.cd_ver
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show($"Error in extracting elements: {ex.Message}");
+					Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+						"Ошибка в экспорте элементов: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
 				}
 			}
 
@@ -393,7 +395,8 @@ namespace Verification.cd_ver
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show($"Error in extracting comments: {ex.Message}");
+					Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+						"Ошибка в экспорте комментариев: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
 				}
 			}
 		}

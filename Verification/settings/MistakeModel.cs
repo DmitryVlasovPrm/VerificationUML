@@ -44,6 +44,7 @@ namespace Verification.settings {
                 {ALL_MISTAKES.CD_NO_LINK, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_NO_CHILDREN, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_INCORRECT_NAME, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_ATTRIB_WITH_ACTION, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_EMPTY_CLASS, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_MUST_BE_ATTRIB, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_HAS_OUTPUT_TYPE, new Tuple<double, string>(1.0, "")},
@@ -60,6 +61,7 @@ namespace Verification.settings {
                 {ALL_MISTAKES.CD_AGGREG_COMPOS_CYCLE, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_SETTER_WITHOUT_PARAMS, new Tuple<double, string>(1.0, "")},
                 {ALL_MISTAKES.CD_GETTER_WITH_PARAMS, new Tuple<double, string>(1.0, "")},
+                {ALL_MISTAKES.CD_SUPERFLUOUS_CONNECTION, new Tuple<double, string>(1.0, "")},
 
                 {ALL_MISTAKES.UCREPEAT, new Tuple<double, string>(1.0,"")},
                 {ALL_MISTAKES.UCNOUN, new Tuple<double, string>(1.0,"")},
