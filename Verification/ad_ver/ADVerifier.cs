@@ -15,14 +15,9 @@ namespace Verification.ad_ver {
             ADNodesList adNodesList = new ADNodesList();
             XmiParser parser = new XmiParser(adNodesList);
             ADMistakeFactory.diagram = diagram;
-            changeMistakeSeriousness(ActivityDiagramVer.verification.Level.FATAL);
 
             bool hasJoinOrFork = false;
             parser.Parse(diagram, ref hasJoinOrFork);
-            // если нет join\fork понижаем серьезность фатальных ошибок до серьезных
-            if (hasJoinOrFork)
-                changeMistakeSeriousness(ActivityDiagramVer.verification.Level.HARD);
-
             // находим предшествующие\последующие элементы для каждого объекта
             if (!diagram.Mistakes.Any(x => x.Seriousness == MistakesTypes.FATAL)) {
                 adNodesList.connect();
@@ -39,14 +34,6 @@ namespace Verification.ad_ver {
                 GraphVerifier graphVerifier = new GraphVerifier();
                 graphVerifier.check(adNodesList);
             }
-        }
-        private static void changeMistakeSeriousness(ActivityDiagramVer.verification.Level level) {
-            MistakesSeriousness.mistakes[MISTAKES.NO_FINAL] =
-            MistakesSeriousness.mistakes[MISTAKES.NO_INITIAL] =
-            MistakesSeriousness.mistakes[MISTAKES.NO_ACTIVITIES] =
-            MistakesSeriousness.mistakes[MISTAKES.MORE_THAN_ONE_OUT] =
-            MistakesSeriousness.mistakes[MISTAKES.DO_NOT_HAVE_ALT] =
-            MistakesSeriousness.mistakes[MISTAKES.OUT_NOT_IN_ACT] = level;
         }
     }
 

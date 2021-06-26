@@ -73,9 +73,9 @@ namespace ActivityDiagramVer.verification.lexical
         private bool hasSpecialSymbol(string str)
         {
             // проверка на спец символ
-            char firstLetter = str.Substring(0, 1).ToCharArray()[0];
-            char lastLetter = str.Substring(str.Length - 1, 1).ToCharArray()[0];
-            if ((firstLetter > 'a' && firstLetter < 'я' || firstLetter < 'a' || firstLetter > 'z') && (lastLetter > 'a' && lastLetter < 'я' || lastLetter < 'a' || lastLetter > 'z'))
+            char firstLetter = (str.Substring(0, 1).ToCharArray()[0]).ToString().ToLower().ToCharArray()[0];
+            char lastLetter = (str.Substring(str.Length - 1, 1).ToCharArray()[0].ToString()).ToLower().ToCharArray()[0];
+            if (char.IsLetter(firstLetter) && char.IsLetter(lastLetter))
             {
                 return false;
             }
@@ -105,7 +105,7 @@ namespace ActivityDiagramVer.verification.lexical
                 string firstWord = activity.getName().Split(' ')[0];
                 //Console.WriteLine(firstWord);
 
-                if (firstWord.EndsWith("ь") && !firstWord.EndsWith("ль") || firstWord.EndsWith("т"))
+                if (firstWord.EndsWith("те") || firstWord.EndsWith("чи") || firstWord.EndsWith("ти") || firstWord.EndsWith("ть") || firstWord.EndsWith("чь") || firstWord.EndsWith("т"))
                     ADMistakeFactory.createMistake(Level.EASY, MistakeAdapter.toString(MISTAKES.NOT_NOUN), node, ALL_MISTAKES.NOT_NOUN);
             }
         }

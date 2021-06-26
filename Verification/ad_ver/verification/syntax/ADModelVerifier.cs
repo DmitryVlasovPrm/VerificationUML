@@ -114,8 +114,10 @@ namespace ActivityDiagramVer.verification.syntax {
         private void checkFork(ForkNode fork, ADNodesList.ADNode node) {
             for (int i = 0; i < fork.outSize(); i++) {
                 ElementType elementType = diagramElements.get(((ControlFlow)diagramElements.get(fork.getOutId(i))).getTarget()).getType();
-                if (elementType != ElementType.ACTIVITY && elementType != ElementType.DECISION && elementType != ElementType.FORK)
+                Console.WriteLine("elementType="+elementType);
+                if (elementType != ElementType.ACTIVITY && elementType != ElementType.DECISION && elementType != ElementType.FORK && elementType != ElementType.MERGE) {
                     ADMistakeFactory.createMistake(MistakesSeriousness.mistakes[MISTAKES.OUT_NOT_IN_ACT], MistakeAdapter.toString(MISTAKES.OUT_NOT_IN_ACT), node, ALL_MISTAKES.OUT_NOT_IN_ACT);
+                }
             }
         }
 

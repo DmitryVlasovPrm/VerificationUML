@@ -113,7 +113,7 @@ namespace Verification.ad_ver.verification {
                 case MISTAKES.SAME_TARGET:
                     return "альтернативы ведут в один и тот же элемент";
                 case MISTAKES.OUT_NOT_IN_ACT:
-                    return "переход ведет не в активность, разветвитель или в условный переход";
+                    return "переход ведет не в активность, разветвитель, узел слияние или в условный переход";
                 case MISTAKES.NEXT_DECISION:
                     return "альтернатива ведет в условный переход";
 
