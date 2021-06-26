@@ -12,7 +12,7 @@ namespace Verification.cd_ver
         public static void LexicalAnalysis(Elements allElements, ref Diagram diagram)
         {
             Diagram = diagram;
-
+            
             try
             {
                 // Для классов и интерфейсов
@@ -27,20 +27,7 @@ namespace Verification.cd_ver
                     var upperElementType = elementType.Substring(0, 1).ToUpper() + elementType.Substring(1);
 
                     // Проверка наличия связей (семантика)
-                    if (element.GeneralClassesIdxs.Count == 0)
-                    {
-                        var connection = allElements.Connections.Find(a => a.OwnedElementId1 == elementId || a.OwnedElementId2 == elementId);
-                        if (connection == null)
-                        {
-                            var dependency = allElements.Dependences.Find(a => a.ClientElementId == elementId || a.SupplierElementId == elementId);
-                            if (dependency == null)
-                            {
-                                var parent = allElements.Classes.Find(a => a.GeneralClassesIdxs.Contains(elementId));
-                                if (parent == null)
-                                    diagram.Mistakes.Add(new Mistake(2, $"{upperElementType} \"{elementName}\" не имеет связей", element.Box, ALL_MISTAKES.CD_NO_LINK));
-                            }
-                        }
-                    }
+                    Checkers.CheckConnectionExistence(allElements, element, upperElementType);
 
                     // Если есть protected, смотрим, есть ли потомки
                     if (element.Attributes.Find(a => a.Visibility == Visibility.@protected) != null ||
@@ -51,7 +38,7 @@ namespace Verification.cd_ver
                     }
 
                     // Проверка имени класса (интерфейса)
-                    Functions.CheckName(elementName, elementType, element.Box);
+                    Checkers.CheckName(elementName, elementType, element.Box);
 
                     // Проверка наличия атрибутов и операторов
                     var attributes = element.Attributes;
@@ -77,9 +64,9 @@ namespace Verification.cd_ver
                     {
                         var attribute = attributes[j];
                         // Проверка имени атрибута
-                        Functions.CheckName(attribute.Name, "атрибут", element.Box);
+                        Checkers.CheckName(attribute.Name, "атрибут", element.Box);
                         // Проверка типа атрибута
-                        Functions.CheckType(attribute.DataTypeId);
+                        Checkers.CheckType(attribute.DataTypeId);
                     }
 
                     // Рассматриваем операции
@@ -87,12 +74,14 @@ namespace Verification.cd_ver
                     {
                         var operation = operations[j];
                         var operationName = operation.Name;
-                        var isConstrDestr = Functions.CheckOperationName(operationName, elementName, elementType, element.Box);
+
+                        // Проверяем название операции
+                        var isConstrDestr = Checkers.CheckOperationName(operation, elementName, elementType, element.Box);
 
                         // Проверяем типы параметров
                         var paramsCount = operation.Parameters.Count;
                         for (var k = 0; k < paramsCount; k++)
-                            Functions.CheckType(operation.Parameters[k].DataTypeId);
+                            Checkers.CheckType(operation.Parameters[k].DataTypeId);
 
                         // Синтаксическая часть
                         // Возвращаемое значение
@@ -102,7 +91,7 @@ namespace Verification.cd_ver
                             diagram.Mistakes.Add(new Mistake(2, $"{typeStr} \"{operationName}\" имеет возвращаемый тип ({elementType} \"{elementName}\")", element.Box, ALL_MISTAKES.CD_HAS_OUTPUT_TYPE));
                         }
                         if (!isConstrDestr.Item1 && !isConstrDestr.Item2 && operation.ReturnDataTypeId == "")
-                            diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{operationName}\" ({elementType} \"{elementName}\")", element.Box, ALL_MISTAKES.CD_POINT_OUTPUT_OPERATION_TYPE));
+                            diagram.Mistakes.Add(new Mistake(1, $"Не указан возвращаемый тип операции \"{operationName}\" ({elementType} \"{elementName}\")", element.Box, ALL_MISTAKES.CD_HAS_NOT_OUTPUT_TYPE));
                     }
                 }
 
@@ -120,17 +109,18 @@ namespace Verification.cd_ver
                     if (dependency == null)
                         diagram.Mistakes.Add(new Mistake(2, $"Перечисление \"{enumerationName}\" не имеет допустимых связей", enumeration.Box, ALL_MISTAKES.CD_NO_AVAILABLE_LINKS));
 
-                    Functions.CheckName(enumerationName, "перечисление", enumeration.Box);
+                    Checkers.CheckName(enumerationName, "перечисление", enumeration.Box);
                 }
 
                 // Комментарии в скобках {}
                 var commentsCount = allElements.Comments.Count;
                 for (var i = 0; i < commentsCount; i++)
-                    Functions.CheckComment(allElements.Comments[i]);
+                    Checkers.CheckComment(allElements.Comments[i]);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in LexicalAnalysis: " + ex.Message);
+                Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+                    "Ошибка в LexicalAnalysis: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
             }
         }
 
@@ -157,7 +147,7 @@ namespace Verification.cd_ver
                             continue;
 
                         // Проверка композиции или агрегации в главном элементе
-                        Functions.CheckCompositionOrAggregation(allElements, mainClass, subordinateClass);
+                        Checkers.CheckCompositionOrAggregation(allElements, mainClass, subordinateClass);
                     }
 
                     if (connection.ConnectionType2 == ConnectionType.CompositeAggregation ||
@@ -169,13 +159,14 @@ namespace Verification.cd_ver
                             continue;
 
                         // Проверка композиции или агрегации в главном элементе
-                        Functions.CheckCompositionOrAggregation(allElements, mainClass, subordinateClass);
+                        Checkers.CheckCompositionOrAggregation(allElements, mainClass, subordinateClass);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in SyntacticAnalysis: " + ex.Message);
+                Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+                    "Ошибка в SyntacticAnalysis: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
             }
         }
 
@@ -199,13 +190,39 @@ namespace Verification.cd_ver
                         if (num1 < 0 || num2 < 0)
                             diagram.Mistakes.Add(new Mistake(1, $"Значение кратности {multiplicity} меньше нуля", bbox, ALL_MISTAKES.CD_LESS_ZERO));
                         if (num1 > num2)
-                            diagram.Mistakes.Add(new Mistake(1, $"Диапазон {multiplicity} записан неверно", bbox, ALL_MISTAKES.CD_WRONG_DIAPOSON));
+                            diagram.Mistakes.Add(new Mistake(1, $"Диапазон {multiplicity} записан неверно", bbox, ALL_MISTAKES.CD_WRONG_RANGE));
+                    }
+                }
+
+                // Проверка лишних ассоциаций в обобщениях
+                var curElements = allElements.Classes;
+                var elementsCount = curElements.Count;
+
+                for (var i = 0; i < elementsCount; i++)
+                {
+                    var element = curElements[i];
+                    var elementId = element.Id;
+                    var generalClassesCount = element.GeneralClassesIdxs.Count;
+
+                    for (var j = 0; j < generalClassesCount; j++)
+                    {
+                        var generalClassId = element.GeneralClassesIdxs[j];
+                        var connection = allElements.Connections.Find(a => a.OwnedElementId1 == elementId && a.OwnedElementId2 == generalClassId ||
+                            a.OwnedElementId1 == generalClassId && a.OwnedElementId2 == elementId);
+                        if (connection != null)
+                        {
+                            var secondElement = allElements.Classes.Find(a => a.Id == generalClassId);
+                            if (secondElement != null)
+                                diagram.Mistakes.Add(new Mistake(2, $"Лишняя ассоциация между элементами \"{element.Name}\" и \"{secondElement.Name}\"",
+                                    null, ALL_MISTAKES.CD_SUPERFLUOUS_CONNECTION));
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in SemanticAnalysis: " + ex.Message);
+                Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+                    "Ошибка в SemanticAnalysis: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
             }
         }
     }

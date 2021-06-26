@@ -82,7 +82,8 @@ namespace Verification.cd_ver
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show($"Error in extracting element coordinates: {ex.Message}");
+						Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+							"Ошибка в экспорте координат элементов: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
 					}
 				}
 
@@ -230,7 +231,7 @@ namespace Verification.cd_ver
 							var isExist = allElements.Classes.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CD_HAS_NAME));
+								diagram.Mistakes.Add(new Mistake(2, $"{russianName} с таким именем уже существует", box, ALL_MISTAKES.CD_DUPLICATE_NAME));
 								break;
 							}
 
@@ -345,7 +346,7 @@ namespace Verification.cd_ver
 							isExist = allElements.Enumerations.Exists(a => a.Name == elementName);
 							if (isExist)
 							{
-								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CD_ENUM_HAS_NAME));
+								diagram.Mistakes.Add(new Mistake(2, "Перечисление с таким именем уже существует", box, ALL_MISTAKES.CD_DUPLICATE_NAME));
 								break;
 							}
 
@@ -363,7 +364,8 @@ namespace Verification.cd_ver
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show($"Error in extracting elements: {ex.Message}");
+					Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+						"Ошибка в экспорте элементов: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
 				}
 			}
 
@@ -393,7 +395,8 @@ namespace Verification.cd_ver
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show($"Error in extracting comments: {ex.Message}");
+					Main.MainFormInstance.Invoke(new Action(() => { MessageBox.Show("Ошибка",
+						"Ошибка в экспорте комментариев: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error); }));
 				}
 			}
 		}
