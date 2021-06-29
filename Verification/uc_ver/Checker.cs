@@ -36,7 +36,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
-                            $"Имя актора повторяется: {actorName.Key}",
+                            $"Имя актора не уникально: {actorName.Key}",
                             element.Value, ALL_MISTAKES.UCREPEAT));
                     }
                 }
@@ -50,7 +50,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                            MistakesTypes.ERROR,
-                           $"Имя актора должно быть представлено в виде существительного с заглавной буквы: {actorName.Key}",
+                           $"Имя актора не представлено в виде существительного с заглавной буквы: {actorName.Key}",
                            element.Value, ALL_MISTAKES.UCNOUN));
                     }
                 }
@@ -127,7 +127,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
-                            $"Имя прецедента повторяется: {precedentName.Key}",
+                            $"Имя прецедента не уникально: {precedentName.Key}",
                             element.Value, ALL_MISTAKES.UCREPETEDNAME));
                     }
                 }
@@ -141,7 +141,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
-                            $"Имя прецедента должно быть представлено в виде действия, начинаясь с заглавной буквы: {precedentName.Key}",
+                            $"Имя прецедента не представлено в виде действия, начинаясь с заглавной буквы: {precedentName.Key}",
                             element.Value, ALL_MISTAKES.UCBIGLETTER));
                     }
                 }
@@ -185,7 +185,7 @@ namespace Verification.uc_ver
                     {
                         mistakes.Add(UCMistakeFactory.Create(
                             MistakesTypes.ERROR,
-                            $"Отсутствие точки расширения у прецедента с связью расширения: {precedent.Value.Name}",
+                            $"Отсутствие точки расширения у прецедента с отношением расширения: {precedent.Value.Name}",
                             precedent.Value, ALL_MISTAKES.UCNOPRECEDENTDOT));
                     }
                 }
