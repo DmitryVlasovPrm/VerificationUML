@@ -22,21 +22,5 @@ namespace Verification.uc_ver
 
             checker.Check();
         }
-
-        //private void FixCoordinates()
-        //{
-        //    var minX = elements.Min(e => e.Value.X);
-        //    var minY = elements.Min(e => e.Value.Y);
-        //    var (realMinX, realMinY) = MinCoordinates.Compute(diagram.Image);
-
-        //    var diffX = realMinX - minX;
-        //    var diffY = realMinY - minY;
-
-        //    foreach (var element in elements)
-        //    {
-        //        element.Value.X += diffX;
-        //        element.Value.Y += diffY;
-        //    }
-        //}
     }
 }

@@ -20,6 +20,7 @@ namespace Verification.uc_ver
             this.diagram = diagram;
         }
 
+        // Считывание данных во внутреннее представление
         public void ReadData(XmlElement root)
         {
             foreach (XmlNode childnode in root.FirstChild.ChildNodes)
@@ -89,6 +90,7 @@ namespace Verification.uc_ver
                         $"Недопустимый элемент: {type} - {name}", ALL_MISTAKES.UCNOAVALABELELEMENT));
             }
 
+            // Считывание координат
             if (diagram.Image != null)
                 if (!ReadCoordinates(root))
                     mistakes.Add(UCMistakeFactory.Create(MistakesTypes.WARNING, "Координаты отсутствуют", ALL_MISTAKES.UCNOCOORDINATE));

@@ -241,16 +241,12 @@ namespace Verification.uc_ver
 
         private bool IsNoun(string name)
         {
-            var results = Main.morph.Parse(new string[] { name }).ToArray();
-            var morphInfo = results[0];
-            return morphInfo.BestTag["чр"] == "сущ";
+            return !IsVerb(name);
         }
 
         private bool IsVerb(string name)
         {
-            var results = Main.morph.Parse(new string[] { name }).ToArray();
-            var morphInfo = results[0];
-            return morphInfo.BestTag["чр"].Contains("гл");
+            return name.EndsWith("те") || name.EndsWith("чи") || name.EndsWith("ти") || name.EndsWith("ть") || name.EndsWith("чь") || name.EndsWith("т");
         }
         #endregion
     }
